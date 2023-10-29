@@ -1,3 +1,4 @@
-body {
-    background-color: lightgray;
-}
+@import "~bootstrap";
+/*@import './scss/app.scss';*/
+@import './css/app.css';
+@import '../vendor/fontawesome-free/css/all.min.css';
