@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="WebServers">
+    <option name="servers">
+      <webServer id="c93a6836-4eeb-4db3-ad0d-7a2a5ecb550e" name="Symfony_pr" url="http://185.178.45.238">
+        <fileTransfer rootFolder="/var/www/portfolio/symfony_pr" accessType="SFTP" host="185.178.45.238" port="22" sshConfigId="f013c4d8-aba6-4f1a-94b1-8820e80ce8f9" sshConfig="root@185.178.45.238:22 password">
+          <advancedOptions>
+            <advancedOptions dataProtectionLevel="Private" keepAliveTimeout="0" passiveMode="true" shareSSLContext="true" />
+          </advancedOptions>
+        </fileTransfer>
+      </webServer>
+    </option>
+  </component>
+</project>
