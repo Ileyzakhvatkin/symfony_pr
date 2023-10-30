@@ -26,6 +26,12 @@ class DashboardController extends AbstractController
         return $this->render('dashboard/history.html.twig');
     }
 
+    #[Route('/dashboard_article_detail/', name: 'db_article_detail')]
+    public function showArticle()
+    {
+        return $this->render('dashboard/article_detail.html.twig');
+    }
+
     #[Route('/dashboard_subscription/', name: 'db_subscription')]
     public function subscription()
     {
