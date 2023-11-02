@@ -51,8 +51,6 @@ class ArticleRepository extends ServiceEntityRepository
             ;
     }
 
-
-
 //    public function showArticle($id): Article
 //    {
 //        return $this->createQueryBuilder('a')

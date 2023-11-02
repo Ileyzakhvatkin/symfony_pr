@@ -10,7 +10,7 @@ class DashboardMenu
     {
         $items = [
             'dashboard' => 'Рабочий стол',
-            'create_article' => 'Создать статью',
+            'create-article' => 'Создать статью',
             'history' => 'История статей',
             'subscription' => 'Подписка',
             'profile' => 'Профиль',
