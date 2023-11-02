@@ -5,19 +5,12 @@
         <div class="bg-light border-right" id="sidebar-wrapper">
             <div class="sidebar-heading">BlaBlaArticle</div>
             <div class="list-group list-group-flush">
-{#                {% for item in dashboardMenu %}#}
-{#                    <a href="{{ path(item['url']) }}" class="list-group-item list-group-item-action#}
-{#                    {% if (item['active']) %}#}
-{#                        active#}
-{#                    {% endif %}#}
-{#                    ">{{ item['item'] }}</a>#}
-{#                {% endfor %}#}
-                <a href="{{ path('dashboard') }}" class="list-group-item list-group-item-action">Рабочий стол</a>
-                <a href="{{ path('create_article') }}" class="list-group-item list-group-item-action bg-light">Создать статью</a>
-                <a href="{{ path('history') }}" class="list-group-item list-group-item-action bg-light">История статей</a>
-                <a href="{{ path('subscription') }}" class="list-group-item list-group-item-action bg-light">Подписка</a>
-                <a href="{{ path('profile') }}" class="list-group-item list-group-item-action bg-light">Профиль</a>
-                <a href="{{ path('modules') }}" class="list-group-item list-group-item-action bg-light">Модули генератора</a>
+                <a href="{{ path('dashboard') }}" class="list-group-item list-group-item-action {{ itemActive == 1  ? 'active' : 'bg-light' }} ">Рабочий стол</a>
+                <a href="{{ path('create_article') }}" class="list-group-item list-group-item-action  {{ itemActive == 2  ? 'active' : 'bg-light' }} ">Создать статью</a>
+                <a href="{{ path('history') }}" class="list-group-item list-group-item-action {{ itemActive == 3  ? 'active' : 'bg-light' }} ">История статей</a>
+                <a href="{{ path('subscription') }}" class="list-group-item list-group-item-action {{ itemActive == 4  ? 'active' : 'bg-light' }} ">Подписка</a>
+                <a href="{{ path('profile') }}" class="list-group-item list-group-item-action {{ itemActive == 5  ? 'active' : 'bg-light' }} ">Профиль</a>
+                <a href="{{ path('modules') }}" class="list-group-item list-group-item-action {{ itemActive == 6  ? 'active' : 'bg-light' }} ">Модули генератора</a>
             </div>
         </div>
 

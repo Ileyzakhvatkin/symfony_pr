@@ -16,6 +16,7 @@ class UserController extends AbstractController
         //$user= $doctrine->getRepository(User::class)->find(1);
 
         return $this->render('dashboard/profile.html.twig', [
+            'itemActive' => 5,
             'user' => 'test',
         ]);
     }

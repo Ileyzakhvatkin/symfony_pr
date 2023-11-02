@@ -13,6 +13,7 @@ class DashboardController extends AbstractController
     public function index(ArticleRepository $articleRepository): Response
     {
         return $this->render('dashboard/dashboard.html.twig', [
+            'itemActive' => 1,
             'allArticles' => $articleRepository->getArticleCount()[0]['1'],
             'articlesLastMonth' => $articleRepository->getLastMonthArticleCount()[0]['1'],
             'lastArticle' => [],
@@ -24,6 +25,8 @@ class DashboardController extends AbstractController
     #[Route('/dashboard-subscription/', name: 'subscription')]
     public function subscription(): Response
     {
-        return $this->render('dashboard/subscription.html.twig');
+        return $this->render('dashboard/subscription.html.twig', [
+            'itemActive' => 4,
+        ]);
     }
 }

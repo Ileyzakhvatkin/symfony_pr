@@ -16,6 +16,7 @@ class ModuleController extends AbstractController
         $modules = $moduleRepository->modulesList();
 
         return $this->render('dashboard/modules.html.twig', [
+            'itemActive' => 6,
             'modules' => $modules,
         ]);
     }

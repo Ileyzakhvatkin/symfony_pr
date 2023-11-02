@@ -17,27 +17,35 @@ class ArticleController extends AbstractController
         $articles = $articleRepository->articleList();
 
         return $this->render('dashboard/history.html.twig', [
+            'itemActive' => 3,
             'articles' => $articles,
         ]);
     }
 
-    #[Route('/dashboard-create-article/', name: 'create_article')]
-    public function formCreateArticle(): Response
+    #[Route('/dashboard-create-article/{id}', name: 'create_article', defaults: ["id" => null])]
+    public function formCreateArticle($id, ArticleRepository $articleRepository): Response
     {
-        return $this->render('dashboard/create_article.html.twig');
+        if (isset($id)) {
+            dd('загружаем данные статьи');
+
+        }
+        return $this->render('dashboard/create_article.html.twig', [
+            'itemActive' => 2,
+        ]);
     }
 
     #[Route('/dashboard-article-detail/{id}', name: 'article_detail')]
     public function showArticle(Article $article): Response
     {
         return $this->render('dashboard/article_detail.html.twig', [
+            'itemActive' => 3,
             'article' => $article,
         ]);
     }
 
-    #[Route('/dashboard-created-article/', name: 'created_module', methods: ['POST'])]
-    public function createArticle(): JsonResponse
-    {
-        return $this->json(json_encode(['article' => 'created']));
-    }
+//    #[Route('/dashboard-created-article/', name: 'created_module', methods: ['POST'])]
+//    public function createArticle(): JsonResponse
+//    {
+//        return $this->json(json_encode(['article' => 'created']));
+//    }
 }
