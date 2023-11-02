@@ -5,12 +5,19 @@
         <div class="bg-light border-right" id="sidebar-wrapper">
             <div class="sidebar-heading">BlaBlaArticle</div>
             <div class="list-group list-group-flush">
-                <a href="{{ path('db_index') }}" class="list-group-item list-group-item-action active">Рабочий стол</a>
-                <a href="{{ path('db_create_article') }}" class="list-group-item list-group-item-action bg-light">Создать статью</a>
-                <a href="{{ path('db_history') }}" class="list-group-item list-group-item-action bg-light">История статей</a>
-                <a href="{{ path('db_subscription') }}" class="list-group-item list-group-item-action bg-light">Подписка</a>
-                <a href="{{ path('db_profile') }}" class="list-group-item list-group-item-action bg-light">Профиль</a>
-                <a href="{{ path('db_modules') }}" class="list-group-item list-group-item-action bg-light">Модули генератора</a>
+{#                {% for item in dashboardMenu %}#}
+{#                    <a href="{{ path(item['url']) }}" class="list-group-item list-group-item-action#}
+{#                    {% if (item['active']) %}#}
+{#                        active#}
+{#                    {% endif %}#}
+{#                    ">{{ item['item'] }}</a>#}
+{#                {% endfor %}#}
+                <a href="{{ path('dashboard') }}" class="list-group-item list-group-item-action">Рабочий стол</a>
+                <a href="{{ path('create_article') }}" class="list-group-item list-group-item-action bg-light">Создать статью</a>
+                <a href="{{ path('history') }}" class="list-group-item list-group-item-action bg-light">История статей</a>
+                <a href="{{ path('subscription') }}" class="list-group-item list-group-item-action bg-light">Подписка</a>
+                <a href="{{ path('profile') }}" class="list-group-item list-group-item-action bg-light">Профиль</a>
+                <a href="{{ path('modules') }}" class="list-group-item list-group-item-action bg-light">Модули генератора</a>
             </div>
         </div>
 

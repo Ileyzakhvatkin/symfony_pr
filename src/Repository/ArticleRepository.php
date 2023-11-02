@@ -33,6 +33,26 @@ class ArticleRepository extends ServiceEntityRepository
         ;
     }
 
+    public function getArticleCount()
+    {
+        return $this->createQueryBuilder('a')
+            ->select('count(a.id)')
+            ->getQuery()
+            ->getResult()
+            ;
+    }
+
+    public function getLastMonthArticleCount()
+    {
+        return $this->createQueryBuilder('a')
+            ->select('count(a.id)')
+            ->getQuery()
+            ->getResult()
+            ;
+    }
+
+
+
 //    public function showArticle($id): Article
 //    {
 //        return $this->createQueryBuilder('a')

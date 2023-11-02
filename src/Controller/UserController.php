@@ -10,7 +10,7 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class UserController extends AbstractController
 {
-    #[Route('/dashboard_profile/', name: 'db_profile')]
+    #[Route('/dashboard_profile/', name: 'profile')]
     public function profile(): Response
     {
         //$user= $doctrine->getRepository(User::class)->find(1);
@@ -20,15 +20,15 @@ class UserController extends AbstractController
         ]);
     }
 
-    #[Route('/dashboard_token_update/', name: 'db_token_update', methods: ['PATCH'])]
-    public function tokenUpdate(): JsonResponse
-    {
-        return $this->json(json_encode(['token' => 'updated']));
-    }
+//    #[Route('/dashboard_token_update/', name: 'token_update', methods: ['PATCH'])]
+//    public function tokenUpdate(): JsonResponse
+//    {
+//        return $this->json(json_encode(['token' => 'updated']));
+//    }
 
-    #[Route('/dashboard_payment/', name: 'db_payment', methods: ['POST'])]
-    public function licensePayment(): JsonResponse
-    {
-        return $this->json(json_encode(['license' => 'purchased']));
-    }
+//    #[Route('/dashboard_payment/', name: 'payment', methods: ['POST'])]
+//    public function licensePayment(): JsonResponse
+//    {
+//        return $this->json(json_encode(['license' => 'purchased']));
+//    }
 }

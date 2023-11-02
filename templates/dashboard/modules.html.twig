@@ -19,7 +19,7 @@
                     <th scope="row">{{ loop.index }}</th>
                     <td>{{ module.title }}</td>
                     <td>
-                        <pre class="code">{{ module.code }}</pre>
+                        <pre class="code">{{ module.code|raw }}</pre>
                     </td>
                     <td><a href="#" class="text-danger"><i class="fas fa-trash"></i></a> </td>
                 </tr>
