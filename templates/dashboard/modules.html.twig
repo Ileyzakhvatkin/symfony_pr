@@ -14,44 +14,16 @@
         </tr>
         </thead>
         <tbody>
-        <tr>
-            <th scope="row">1</th>
-            <td>Название с текстом</td>
-            <td>
-<pre class="code">
-{#&lt;h1&gt;{{ title }}&lt;/h1&gt;#}
-{#&lt;p&gt;{{ paragraph }}&lt;/p&gt;#}
-</pre>
-            </td>
-            <td><a href="#" class="text-danger"><i class="fas fa-trash"></i></a> </td>
-        </tr>
-        <tr>
-            <th scope="row">2</th>
-            <td>Текст справа</td>
-            <td>
-<pre class="code">
-{#&lt;p class="text-right"&gt;{{ paragraph }}&lt;/p&gt;#}
-</pre>
-            </td>
-            <td><a href="#" class="text-danger"><i class="fas fa-trash"></i></a> </td>
-        </tr>
-        <tr>
-            <th scope="row">3</th>
-            <td>Текст в две колонки</td>
-            <td>
-<pre class="code">
-{#&lt;div class="row"&gt;#}
-{#&lt;div class="col-sm-6"&gt;#}
-{#{{ paragraphs }}#}
-{#&lt;/div&gt;#}
-{#&lt;div class="col-sm-6"&gt;#}
-{#{{ paragraphs }}#}
-{#&lt;/div&gt;#}
-{#&lt;/div&gt;#}
-</pre>
-            </td>
-            <td><a href="#" class="text-danger"><i class="fas fa-trash"></i></a> </td>
-        </tr>
+            {% for module in modules %}
+                <tr>
+                    <th scope="row">{{ loop.index }}</th>
+                    <td>{{ module.title }}</td>
+                    <td>
+                        <pre class="code">{{ module.code }}</pre>
+                    </td>
+                    <td><a href="#" class="text-danger"><i class="fas fa-trash"></i></a> </td>
+                </tr>
+            {% endfor %}
         </tbody>
     </table>
 

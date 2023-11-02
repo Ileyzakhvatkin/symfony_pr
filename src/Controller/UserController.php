@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\User;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
@@ -12,7 +13,11 @@ class UserController extends AbstractController
     #[Route('/dashboard_profile/', name: 'db_profile')]
     public function profile(): Response
     {
-        return $this->render('dashboard/profile.html.twig');
+        //$user= $doctrine->getRepository(User::class)->find(1);
+
+        return $this->render('dashboard/profile.html.twig', [
+            'user' => 'test',
+        ]);
     }
 
     #[Route('/dashboard_token_update/', name: 'db_token_update', methods: ['PATCH'])]
