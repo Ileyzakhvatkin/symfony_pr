@@ -9,13 +9,13 @@ use Symfony\Component\Routing\Annotation\Route;
 class AuthController extends AbstractController
 {
     #[Route('/register/', name: 'auth_register')]
-    public function register()
+    public function register(): Response
     {
         return $this->render('auth/register.html.twig');
     }
 
     #[Route('/login/', name: 'auth_login')]
-    public function login()
+    public function login(): Response
     {
         return $this->render('auth/login.html.twig');
     }

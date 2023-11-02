@@ -9,13 +9,13 @@ use Symfony\Component\Routing\Annotation\Route;
 class FrontController extends AbstractController
 {
     #[Route('/', name: 'front_homepage')]
-    public function home()
+    public function home(): Response
     {
         return $this->render('front/index.html.twig');
     }
 
     #[Route('/try/', name: 'front_try')]
-    public function try()
+    public function try(): Response
     {
         return $this->render('front/try.html.twig');
     }
