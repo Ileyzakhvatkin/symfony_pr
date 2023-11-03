@@ -60,7 +60,7 @@ class LoginFormAuthenticator extends AbstractLoginFormAuthenticator
         $email = $request->request->get('email');
 
         if ( $email === 'admin@exmaple.com' ) {
-            throw new CustomUserMessageAuthenticationException('Убирайся, ты нам не нравишься!');
+            throw new CustomUserMessageAuthenticationException('Уходи, ты нам не нравишься!');
         }
 
         $request->getSession()->set(self::LAST_USERNAME, $email);
@@ -80,7 +80,7 @@ class LoginFormAuthenticator extends AbstractLoginFormAuthenticator
         $response = new Response();
         $request->getSession()->set(self::AUTHENTICATION_ERROR, $exception);
 
-        return new RedirectResponse('/login');
+        return new RedirectResponse($this->urlGenerator->generate('app_login'));
     }
 
     public function onAuthenticationSuccess(Request $request, TokenInterface $token, string $firewallName): ?Response
@@ -89,7 +89,7 @@ class LoginFormAuthenticator extends AbstractLoginFormAuthenticator
             return new RedirectResponse($targetPath);
         }
 
-        return new RedirectResponse('/');
+        return new RedirectResponse($this->urlGenerator->generate('dashboard'));
     }
 
     protected function getLoginUrl(Request $request): string

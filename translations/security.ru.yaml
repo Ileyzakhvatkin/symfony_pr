@@ -1,0 +1,4 @@
+"Username could not be found.": "Пользователь не найден"
+"Invalid CSRF token.": "Неверный CSRF токен"
+"Invalid credentials.": "Неверный логин или пароль"
+"user not active": "Вам закрыт доступ"

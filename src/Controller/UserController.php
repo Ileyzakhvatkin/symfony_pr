@@ -13,11 +13,9 @@ class UserController extends AbstractController
     #[Route('/dashboard-profile/', name: 'profile')]
     public function profile(): Response
     {
-        //$user= $doctrine->getRepository(User::class)->find(1);
-
         return $this->render('dashboard/profile.html.twig', [
             'itemActive' => 5,
-            'user' => 'test',
+            'user' => $this->getUser(),
         ]);
     }
 

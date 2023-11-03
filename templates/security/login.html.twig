@@ -10,7 +10,7 @@
                 <div class="card-body">
                     <h5 class="card-title text-center">Авторизация</h5>
                     {% if error %}
-                        <div class="alert alert-danger" role="alert">Неверный логин или пароль</div>
+                        <div class="alert alert-danger" role="alert">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
                     {% endif %}
                     <form class="form-signin" method="post">
 

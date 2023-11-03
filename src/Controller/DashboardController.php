@@ -12,8 +12,6 @@ class DashboardController extends AbstractController
     #[Route('/dashboard/', name: 'dashboard')]
     public function index(ArticleRepository $articleRepository): Response
     {
-        dd($this->getUser());
-
         return $this->render('dashboard/dashboard.html.twig', [
             'itemActive' => 1,
             'allArticles' => $articleRepository->getArticleCount()[0]['1'],

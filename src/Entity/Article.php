@@ -40,12 +40,6 @@ class Article
     #[ORM\Column]
     private ?int $max_size = null;
 
-    #[ORM\Column(length: 255)]
-    private ?string $prom_word_1 = null;
-
-    #[ORM\Column(length: 255)]
-    private ?string $prom_word_2 = null;
-
     #[ORM\Column(type: Types::TEXT)]
     private ?string $content = null;
 
@@ -149,30 +143,6 @@ class Article
     public function setMaxSize(int $max_size): static
     {
         $this->max_size = $max_size;
-
-        return $this;
-    }
-
-    public function getPromWord1(): ?string
-    {
-        return $this->prom_word_1;
-    }
-
-    public function setPromWord1(string $prom_word_1): static
-    {
-        $this->prom_word_1 = $prom_word_1;
-
-        return $this;
-    }
-
-    public function getPromWord2(): ?string
-    {
-        return $this->prom_word_2;
-    }
-
-    public function setPromWord2(string $prom_word_2): static
-    {
-        $this->prom_word_2 = $prom_word_2;
 
         return $this;
     }

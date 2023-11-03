@@ -6,6 +6,7 @@ use App\Entity\Article;
 use App\Entity\Module;
 use App\Entity\Payment;
 use App\Entity\User;
+use App\Entity\Word;
 use Doctrine\Persistence\ObjectManager;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
@@ -31,22 +32,22 @@ class UserFixtures extends BaseFixtures
     ];
 
     private static $themes = [
-        'Про еду',
-        'Про PHP',
-        'Про женщин',
+        'Про не здоровую еду',
+        'Про PHP и всякое',
+        'Про женщин и не только',
     ];
 
     private static $users = [
         [
-            'name' => 'Илья',
+            'name' => 'Илья Смирнов',
             'email' => 'ilya@ya.ru',
         ],
         [
-            'name' => 'Иван',
+            'name' => 'Иван Рудин',
             'email' => 'ivan@ya.ru',
         ],
         [
-            'name' => 'Саша',
+            'name' => 'Саша Агафонова',
             'email' => 'sasha@ya.ru',
         ],
     ];
@@ -104,6 +105,16 @@ class UserFixtures extends BaseFixtures
         $manager->persist($module);
     }
 
+    private function addWord($article, $manager)
+    {
+        $word = (new Word())
+            ->setArticle($article)
+            ->setTitle($this->faker->word)
+            ->setCount($this->faker->numberBetween(2, 6))
+        ;
+        $manager->persist($word);
+    }
+
     private function addArticle($user, $manager)
     {
         $keyWord = $this->faker->word;
@@ -116,8 +127,6 @@ class UserFixtures extends BaseFixtures
             ->setKeyWordMany($keyWord . 's')
             ->setMinSize($this->faker->numberBetween(150, 200))
             ->setMaxSize($this->faker->numberBetween(350, 400))
-            ->setPromWord1($this->faker->word)
-            ->setPromWord2($this->faker->word)
             ->setContent($this->faker->realText($this->faker->numberBetween(200, 350)))
             ->setCreatedAt(new \DateTime())
             ->setUpdatedAt(new \DateTime())

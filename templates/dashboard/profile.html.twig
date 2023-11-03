@@ -18,11 +18,11 @@
 
         <form>
             <div class="form-label-group">
-                <input type="text" id="inputName" class="form-control" placeholder="Ваше имя" required value="Волков Михаил" autofocus>
+                <input type="text" id="inputName" class="form-control" placeholder="Ваше имя" required value="{{ user.name }}" autofocus>
                 <label for="inputName">Ваше имя</label>
             </div>
             <div class="form-label-group">
-                <input type="email" id="inputEmail" class="form-control" placeholder="Ваш Email" required value="email@example.com">
+                <input type="email" id="inputEmail" class="form-control" placeholder="Ваш Email" required value="{{ user.email }}">
                 <label for="inputEmail">Ваш Email</label>
             </div>
 
