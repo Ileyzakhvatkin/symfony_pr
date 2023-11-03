@@ -16,15 +16,39 @@ class UserFixtures extends BaseFixtures
     private static array $licenseType = ['Pro','Plus'];
 
     private static $modules = [
-        '&lt;h1&gt;{{ title }}&lt;/h1&gt; &lt;p&gt;{{ paragraph }}&lt;/p&gt;',
-        '&lt;p class="text-right"&gt;{{ paragraph }}&lt;/p&gt;',
-        '&lt;div class="row"&gt; &lt;div class="col-sm-6"&gt; {{ paragraphs }} &lt;/div&gt; &lt;div class="col-sm-6"&gt; {{ paragraphs }} &lt;/div&gt; &lt;/div&gt;',
+        [
+            'title' => '',
+            'code' => '&lt;h1&gt;{{ title }}&lt;/h1&gt; &lt;p&gt;{{ paragraph }}&lt;/p&gt;',
+        ],
+        [
+            'title' => '',
+            'code' => '&lt;p class="text-right"&gt;{{ paragraph }}&lt;/p&gt;',
+        ],
+        [
+            'title' => '',
+            'code' => '&lt;div class="row"&gt; &lt;div class="col-sm-6"&gt; {{ paragraphs }} &lt;/div&gt; &lt;div class="col-sm-6"&gt; {{ paragraphs }} &lt;/div&gt; &lt;/div&gt;',
+        ],
     ];
 
     private static $themes = [
         'Про еду',
         'Про PHP',
         'Про женщин',
+    ];
+
+    private static $users = [
+        [
+            'name' => 'Илья',
+            'email' => 'ilya@ya.ru',
+        ],
+        [
+            'name' => 'Иван',
+            'email' => 'ivan@ya.ru',
+        ],
+        [
+            'name' => 'Саша',
+            'email' => 'sasha@ya.ru',
+        ],
     ];
 
     public function __construct(UserPasswordHasherInterface $passwordHasher)
@@ -34,24 +58,26 @@ class UserFixtures extends BaseFixtures
 
     public function loadData(ObjectManager $manager)
     {
-        $this->createMany(User::class, 5, function (User $user) use ($manager) {
-            $user
-                ->setEmail($this->faker->email)
-                ->setName($this->faker->firstName)
-                ->setRoles(['ROLE_USER'])
-                ->setPassword($this->passwordHasher->hashPassword($user, '123123'))
-                ->setCreatedAt(new \DateTime())
-                ->setUpdatedAt(new \DateTime());
+        foreach ( self::$users as $item ) {
+            $this->createMany(User::class, 1, function (User $user) use ($manager, $item) {
+                $user
+                    ->setName($item['name'])
+                    ->setEmail($item['email'])
+                    ->setRoles(['ROLE_USER'])
+                    ->setPassword($this->passwordHasher->hashPassword($user, '123123'))
+                    ->setCreatedAt(new \DateTime())
+                    ->setUpdatedAt(new \DateTime());
 //            $manager->persist(new ApiToken($user));
 
-            $this->addPayment($user, $manager);
-            for ($i = 0; $i < $this->faker->numberBetween(1, 3); $i++) {
-                $this->addModule($user, $manager);
-            }
-            for ($i = 0; $i < $this->faker->numberBetween(2, 5); $i++) {
-                $this->addArticle($user, $manager);
-            }
-        });
+                $this->addPayment($user, $manager);
+                for ($i = 0; $i < 3; $i++) {
+                    $this->addModule($user, $manager, $i);
+                }
+                for ($i = 0; $i < $this->faker->numberBetween(2, 5); $i++) {
+                    $this->addArticle($user, $manager);
+                }
+            });
+        }
     }
 
     private function addPayment($user, $manager)
@@ -66,12 +92,12 @@ class UserFixtures extends BaseFixtures
         $manager->persist($payment);
     }
 
-    private function addModule($user, $manager)
+    private function addModule($user, $manager, $i)
     {
         $module = (new Module())
-            ->setTitle($this->faker->word)
+            ->setTitle(self::$modules[1]['title'])
             ->setUser($user)
-            ->setCode($this->faker->randomElement(self::$modules))
+            ->setCode(self::$modules[1]['code'])
             ->setCreatedAt(new \DateTime())
             ->setUpdatedAt(new \DateTime())
         ;

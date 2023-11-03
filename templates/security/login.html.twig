@@ -9,17 +9,35 @@
             <div class="card card-signin my-5">
                 <div class="card-body">
                     <h5 class="card-title text-center">Авторизация</h5>
-                    <div class="alert alert-danger" role="alert">
-                        Неверный логин или пароль
-                    </div>
-                    <form class="form-signin">
+                    {% if error %}
+                        <div class="alert alert-danger" role="alert">Неверный логин или пароль</div>
+                    {% endif %}
+                    <form class="form-signin" method="post">
+
+                        <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+
                         <div class="form-label-group">
-                            <input type="email" id="inputEmail" class="form-control" placeholder="Ваш Email" required autofocus>
+                            <input
+                                    type="email"
+                                    id="inputEmail"
+                                    name="email"
+                                    value="{{ last_username }}"
+                                    class="form-control"
+                                    placeholder="Ваш Email"
+                                    required autofocus
+                            >
                             <label for="inputEmail">Ваш Email</label>
                         </div>
 
                         <div class="form-label-group">
-                            <input type="password" id="inputPassword" class="form-control" placeholder="Пароль" required>
+                            <input
+                                    type="password"
+                                    name="password"
+                                    id="inputPassword"
+                                    class="form-control"
+                                    placeholder="Пароль"
+                                    required
+                            >
                             <label for="inputPassword">Пароль</label>
                         </div>
 
@@ -29,7 +47,7 @@
                         </div>
                         <button class="btn btn-lg btn-primary btn-block text-uppercase" type="submit">Войти</button>
                         <hr class="my-4">
-                        <div class="text-center"><a href="{{ path('auth_register') }}">Регистрация</a></div>
+                        <div class="text-center"><a href="{{ path('app_register') }}">Регистрация</a></div>
                     </form>
                 </div>
             </div>
