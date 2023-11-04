@@ -6,7 +6,11 @@
             <span class="navbar-brand">BlaBlaArticle</span>
             <a class="js-scroll-trigger" href="#services">Сервисы</a>
             <a class="js-scroll-trigger" href="#author">Автор</a>
-            <a class="btn btn-primary" href="{{ path('app_login') }}">Войти</a>
+            {% if is_granted('ROLE_USER') %}
+                <a class="btn btn-primary" href="{{ path('app_logout') }}">Выйти</a>
+            {% else %}
+                <a class="btn btn-primary" href="{{ path('app_login') }}">Войти</a>
+            {% endif %}
         </div>
     </nav>
 
@@ -20,10 +24,15 @@
                 <div class="col-md-10 col-lg-8 col-xl-7 mx-auto">
                     <div class="form-row">
                         <div class="col-12 col-md-6 mx-auto">
-                            <a type="submit" class="btn btn-block btn-lg btn-primary" href="{{ path('front_try') }}">Попробовать</a>
+                            {% if is_granted('ROLE_USER') %}
+                                <a type="submit" class="btn btn-block btn-lg btn-primary" href="{{ path('dashboard') }}">Кабинет</a>
+                            {% else %}
+                                <a type="submit" class="btn btn-block btn-lg btn-primary" href="{{ path('front_try') }}">Попробовать</a>
+                            {% endif %}
                         </div>
                     </div>
                 </div>
+
             </div>
         </div>
     </header>
@@ -40,13 +49,18 @@
                 <div class="col-md-10 col-lg-8 col-xl-7 mx-auto">
                     <div class="form-row">
                         <div class="col-12 col-md-6 mx-auto">
-                            <a href="{{ path('app_register') }}" class="btn btn-block btn-lg btn-primary">Регистрация</a>
+                            {% if is_granted('ROLE_USER') %}
+                                <a href="{{ path('dashboard') }}" class="btn btn-block btn-lg btn-primary">Кабинет</a>
+                            {% else %}
+                                <a href="{{ path('app_register') }}" class="btn btn-block btn-lg btn-primary">Регистрация</a>
+                            {% endif %}
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </section>
+
 
     <footer class="footer bg-light">
         <div class="container">

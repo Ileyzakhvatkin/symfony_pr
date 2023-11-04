@@ -41,14 +41,17 @@ class UserFixtures extends BaseFixtures
         [
             'name' => 'Илья Смирнов',
             'email' => 'ilya@ya.ru',
+            'roles' => ['ROLE_USER']
         ],
         [
             'name' => 'Иван Рудин',
             'email' => 'ivan@ya.ru',
+            'roles' => ['ROLE_USER', 'ROLE_USER_PRO']
         ],
         [
             'name' => 'Саша Агафонова',
             'email' => 'sasha@ya.ru',
+            'roles' => ['ROLE_USER', 'ROLE_USER_PLUS']
         ],
     ];
 
@@ -59,12 +62,12 @@ class UserFixtures extends BaseFixtures
 
     public function loadData(ObjectManager $manager)
     {
-        foreach ( self::$users as $item ) {
-            $this->createMany(User::class, 1, function (User $user) use ($manager, $item) {
+        foreach ( self::$users as $itemUser ) {
+            $this->createMany(User::class, 1, function (User $user) use ($manager, $itemUser) {
                 $user
-                    ->setName($item['name'])
-                    ->setEmail($item['email'])
-                    ->setRoles(['ROLE_USER'])
+                    ->setName($itemUser['name'])
+                    ->setEmail($itemUser['email'])
+                    ->setRoles($itemUser['roles'])
                     ->setPassword($this->passwordHasher->hashPassword($user, '123123'))
                     ->setCreatedAt(new \DateTime())
                     ->setUpdatedAt(new \DateTime());

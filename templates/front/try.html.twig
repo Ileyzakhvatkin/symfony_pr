@@ -8,22 +8,27 @@
 
                 <h2 class="card-title text-center mb-4">Создание статьи</h2>
 
-                <div class="alert alert-info" role="alert">
-                    Чтобы создать статью по настоящему <a href="{{ path('app_register') }}">Зарегистрируйтесь</a>
-                </div>
 
-                <form class="form-signin">
-                    <div class="form-label-group">
-                        <input type="email" id="articleTitle" class="form-control" placeholder="Заголовок статьи" required autofocus value="Тестовая статья" disabled>
-                        <label for="articleTitle">Заголовок статьи</label>
+                {% if is_granted('ROLE_USER') %}
+                    <a href="{{ path('dashboard') }}" class="btn btn-block btn-lg btn-primary">Кабинет</a>
+                {% else %}
+                    <div class="alert alert-info" role="alert">
+                        Чтобы создать статью по настоящему <a href="{{ path('app_register') }}">Зарегистрируйтесь</a>
                     </div>
-                    <div class="form-label-group">
-                        <input type="email" id="articleWord" class="form-control" placeholder="Продвигаемое слово" required disabled>
-                        <label for="articleWord">Продвигаемое слово</label>
-                    </div>
+                    <form class="form-signin">
+                        <div class="form-label-group">
+                            <input type="email" id="articleTitle" class="form-control" placeholder="Заголовок статьи" required autofocus value="Тестовая статья" disabled>
+                            <label for="articleTitle">Заголовок статьи</label>
+                        </div>
+                        <div class="form-label-group">
+                            <input type="email" id="articleWord" class="form-control" placeholder="Продвигаемое слово" required disabled>
+                            <label for="articleWord">Продвигаемое слово</label>
+                        </div>
 
-                    <button class="btn btn-lg btn-primary btn-block text-uppercase" type="submit" disabled>Попробовать</button>
-                </form>
+                        <button class="btn btn-lg btn-primary btn-block text-uppercase" type="submit" disabled>Попробовать</button>
+                    </form>
+                {% endif %}
+
             </div>
         </div>
     </div>
