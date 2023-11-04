@@ -30,6 +30,7 @@ class ModuleController extends AbstractController
 //    }
 //
 //    #[Route('/dashboard-deleted-modules/', name: 'deleted_module', methods: ['DELETE'])]
+//    #[IsGranted('MANAGE', subject: 'module')]
 //    public function deleteModule(): JsonResponse
 //    {
 //        return $this->json(json_encode(['module' => 'deleted']));

@@ -5,14 +5,22 @@
 <div class="row">
 
     <div class="col-xl-8">
-        <div class="alert alert-success" role="alert"> Подписка Plus оформлена, до 01.01.1970</div>
+        {% if sub_info %}
+            <div class="alert alert-success" role="alert">{{ sub_info }}</div>
+        {% endif %}
         <section class="pricing py-2 row">
             <div class="container">
                 <div class="row">
                     <div class="col-lg-4">
                         <div class="card mb-5 mb-lg-0">
                             <div class="card-body">
-                                <h5 class="card-title text-muted text-uppercase text-center">Free</h5>
+                                {% if is_granted('ROLE_USER_PRO') %}
+                                    <h5 class="card-title text-muted text-uppercase text-center">Free</h5>
+                                {% elseif is_granted('ROLE_USER_PlUS') %}
+                                    <h5 class="card-title text-muted text-uppercase text-center">Free</h5>
+                                {% else %}
+                                    <h5 class="card-title text-uppercase text-center current text-warning"><i class="fas fa-check"></i> Free</h5>
+                                {% endif %}
                                 <h6 class="card-price text-center">$0<span class="period">/неделя</span></h6>
                                 <hr>
                                 <ul class="fa-ul">
@@ -27,7 +35,11 @@
                     <div class="col-lg-4">
                         <div class="card mb-5 mb-lg-0">
                             <div class="card-body">
-                                <h5 class="card-title text-uppercase text-center current text-warning"><i class="fas fa-check"></i> Plus</h5>
+                                {% if is_granted('ROLE_USER_PLUS') %}
+                                    <h5 class="card-title text-uppercase text-center current text-warning"><i class="fas fa-check"></i> Plus</h5>
+                                {% else %}
+                                    <h5 class="card-title text-muted text-uppercase text-center">Plus</h5>
+                                {% endif %}
                                 <h6 class="card-price text-center">$9<span class="period">/неделя</span></h6>
                                 <hr>
                                 <ul class="fa-ul">
@@ -36,14 +48,24 @@
                                     <li><span class="fa-li"><i class="fas fa-check"></i></span>Продвинутые возможности генератора</li>
                                     <li class="text-muted"><span class="fa-li"><i class="fas fa-times"></i></span>Свои модули</li>
                                 </ul>
-                                <a href="#" class="btn btn-block btn-secondary text-uppercase" disabled>Текущий уровень</a>
+                                {% if is_granted('ROLE_USER_PLUS') %}
+                                    <button class="btn btn-block btn-secondary text-uppercase" disabled>Текущий уровень</button>
+                                {% elseif is_granted('ROLE_USER_PRO') %}
+
+                                {% else %}
+                                    <a href="#" class="btn btn-block btn-primary text-uppercase">Оформить</a>
+                                {% endif %}
                             </div>
                         </div>
                     </div>
                     <div class="col-lg-4">
                         <div class="card">
                             <div class="card-body">
-                                <h5 class="card-title text-muted text-uppercase text-center">Pro</h5>
+                                {% if is_granted('ROLE_USER_PRO') %}
+                                    <h5 class="card-title text-uppercase text-center current text-warning"><i class="fas fa-check"></i> Pro</h5>
+                                {% else %}
+                                    <h5 class="card-title text-muted text-uppercase text-center">Pro</h5>
+                                {% endif %}
                                 <h6 class="card-price text-center">$49<span class="period">/неделя</span></h6>
                                 <hr>
                                 <ul class="fa-ul">
@@ -52,7 +74,11 @@
                                     <li><span class="fa-li"><i class="fas fa-check"></i></span>Продвинутые возможности генератора</li>
                                     <li><span class="fa-li"><i class="fas fa-check"></i></span>Свои модули</li>
                                 </ul>
-                                <a href="#" class="btn btn-block btn-primary text-uppercase">Оформить</a>
+                                {% if is_granted('ROLE_USER_PRO') %}
+                                    <button class="btn btn-block btn-secondary text-uppercase" disabled>Текущий уровень</button>
+                                {% else %}
+                                    <a href="#" class="btn btn-block btn-primary text-uppercase">Оформить</a>
+                                {% endif %}
                             </div>
                         </div>
                     </div>

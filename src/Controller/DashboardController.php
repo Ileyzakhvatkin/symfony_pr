@@ -27,8 +27,10 @@ class DashboardController extends AbstractController
     #[Route('/dashboard-subscription/', name: 'subscription')]
     public function subscription(): Response
     {
+        //  Подписка Plus оформлена, до 01.01.1970
         return $this->render('dashboard/subscription.html.twig', [
             'itemActive' => 4,
+            'sub_info' => null,
         ]);
     }
 }

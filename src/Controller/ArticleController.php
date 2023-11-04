@@ -37,6 +37,7 @@ class ArticleController extends AbstractController
     }
 
     #[Route('/dashboard-article-detail/{id}', name: 'article_detail')]
+    #[IsGranted('MANAGE', subject: 'article')]
     public function showArticle(Article $article): Response
     {
         return $this->render('dashboard/article_detail.html.twig', [
