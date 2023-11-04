@@ -20,9 +20,9 @@ class LicenseLevelControl
     public function update($authUser)
     {
         $license = $this->paymentRepository->getLastPayment($authUser)[0];
-        $licenseStatus = 'Подписка ' . $license->getLicenseType() . ' истекает ' . Carbon::parse($license->getFinishedAt())->toDateTimeString();
+        $licenseStatus = 'Подписка ' . $license->getLicenseType() . ' действует до ' . Carbon::parse($license->getFinishedAt())->toDateTimeString();
 
-        if ( Carbon::parse($license->getFinishedAt())->diffInSeconds(Carbon::now()) >= 0 ) {
+        if ( (Carbon::parse($license->getFinishedAt())->getTimestamp() - Carbon::now()->getTimestamp()) < 0 ) {
             $authUser->setRoles(["ROLE_USER"]);
             $this->em->persist($authUser);
             $this->em->flush();

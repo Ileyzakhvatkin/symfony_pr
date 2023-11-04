@@ -64,13 +64,14 @@ class UserFixtures extends BaseFixtures
     {
         foreach ( self::$users as $itemUser ) {
             $this->createMany(User::class, 1, function (User $user) use ($manager, $itemUser) {
+                $date = $this->faker->dateTimeBetween('-50 days', '0 day');
                 $user
                     ->setName($itemUser['name'])
                     ->setEmail($itemUser['email'])
                     ->setRoles($itemUser['roles'])
                     ->setPassword($this->passwordHasher->hashPassword($user, '123123'))
-                    ->setCreatedAt(new \DateTime())
-                    ->setUpdatedAt(new \DateTime());
+                    ->setCreatedAt($date)
+                    ->setUpdatedAt($date);
 //            $manager->persist(new ApiToken($user));
 
                 $this->addPayment($user, $manager);
@@ -86,11 +87,12 @@ class UserFixtures extends BaseFixtures
 
     private function addPayment($user, $manager)
     {
+        $date = $this->faker->dateTimeBetween('-50 days', '0 day');
         $payment = (new Payment())
                 ->setLicenseType($this->faker->randomElement(self::$licenseType))
                 ->setUser($user)
-                ->setCreatedAt(new \DateTime())
-                ->setUpdatedAt(new \DateTime())
+                ->setCreatedAt($date)
+                ->setUpdatedAt($date)
                 ->setFinishedAt($this->faker->dateTimeBetween('-10 days', '10 day'))
         ;
         $manager->persist($payment);
@@ -98,12 +100,13 @@ class UserFixtures extends BaseFixtures
 
     private function addModule($user, $manager, $i)
     {
+        $date = $this->faker->dateTimeBetween('-50 days', '0 day');
         $module = (new Module())
             ->setTitle(self::$modules[1]['title'])
             ->setUser($user)
             ->setCode(self::$modules[1]['code'])
-            ->setCreatedAt(new \DateTime())
-            ->setUpdatedAt(new \DateTime())
+            ->setCreatedAt($date)
+            ->setUpdatedAt($date)
         ;
         $manager->persist($module);
     }
