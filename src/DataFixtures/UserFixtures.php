@@ -77,7 +77,7 @@ class UserFixtures extends BaseFixtures
                 for ($i = 0; $i < 3; $i++) {
                     $this->addModule($user, $manager, $i);
                 }
-                for ($i = 0; $i < $this->faker->numberBetween(2, 5); $i++) {
+                for ($i = 0; $i < $this->faker->numberBetween(10, 15); $i++) {
                     $this->addArticle($user, $manager);
                 }
             });
@@ -121,6 +121,7 @@ class UserFixtures extends BaseFixtures
     private function addArticle($user, $manager)
     {
         $keyWord = $this->faker->word;
+        $date = $this->faker->dateTimeBetween('-50 days', '0 day');
         $article = (new Article())
             ->setUser($user)
             ->setTitle($this->faker->word)
@@ -131,8 +132,8 @@ class UserFixtures extends BaseFixtures
             ->setMinSize($this->faker->numberBetween(150, 200))
             ->setMaxSize($this->faker->numberBetween(350, 400))
             ->setContent($this->faker->realText($this->faker->numberBetween(200, 350)))
-            ->setCreatedAt(new \DateTime())
-            ->setUpdatedAt(new \DateTime())
+            ->setCreatedAt($date)
+            ->setUpdatedAt($date)
         ;
         $manager->persist($article);
     }

@@ -24,9 +24,11 @@ class ModuleRepository extends ServiceEntityRepository
     /**
      * @return Module[] Returns an array of Article objects
      */
-    public function modulesList(): array
+    public function modulesList($id): array
     {
         return $this->createQueryBuilder('a')
+            ->andWhere('a.user = :val')
+            ->setParameter('val', $id)
             ->orderBy('a.id', 'ASC')
             ->getQuery()
             ->getResult()

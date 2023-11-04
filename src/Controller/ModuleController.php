@@ -15,7 +15,7 @@ class ModuleController extends AbstractController
     #[Route('/dashboard-modules/', name: 'modules')]
     public function modules(ModuleRepository $moduleRepository): Response
     {
-        $modules = $moduleRepository->modulesList();
+        $modules = $moduleRepository->modulesList($this->getUser()->getId());
 
         return $this->render('dashboard/modules.html.twig', [
             'itemActive' => 6,

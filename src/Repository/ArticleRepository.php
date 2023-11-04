@@ -3,6 +3,8 @@
 namespace App\Repository;
 
 use App\Entity\Article;
+use Carbon\Carbon;
+use DateTime;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -24,28 +26,49 @@ class ArticleRepository extends ServiceEntityRepository
     /**
      * @return Article[] Returns an array of Article objects
      */
-    public function articleList(): array
+    public function articleList($id): array
     {
         return $this->createQueryBuilder('a')
+            ->andWhere('a.user = :val')
+            ->setParameter('val', $id)
             ->orderBy('a.id', 'ASC')
             ->getQuery()
             ->getResult()
         ;
     }
 
-    public function getArticleCount()
+    public function getArticleCount($id)
     {
         return $this->createQueryBuilder('a')
+            ->andWhere('a.user = :val')
+            ->setParameter('val', $id)
             ->select('count(a.id)')
             ->getQuery()
             ->getResult()
             ;
     }
 
-    public function getLastMonthArticleCount()
+    public function getLastMonthArticleCount($id)
     {
         return $this->createQueryBuilder('a')
+            ->andWhere('a.user = :val AND a.createdAt > :date ')
+            ->setParameters([
+                'val' => $id,
+                'date' => (new Carbon('first day of this month'))->toDateString(),
+            ])
             ->select('count(a.id)')
+            ->getQuery()
+            ->getResult()
+            ;
+    }
+
+    public function lastAarticle($id): array
+    {
+        return $this->createQueryBuilder('a')
+            ->andWhere('a.user = :val')
+            ->setParameter('val', $id)
+            ->orderBy('a.id', 'DESC')
+            ->setMaxResults(1)
             ->getQuery()
             ->getResult()
             ;
