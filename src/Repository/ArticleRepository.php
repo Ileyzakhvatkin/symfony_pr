@@ -3,8 +3,6 @@
 namespace App\Repository;
 
 use App\Entity\Article;
-use Carbon\Carbon;
-use DateTime;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -37,7 +35,7 @@ class ArticleRepository extends ServiceEntityRepository
         ;
     }
 
-    public function getArticleCount($id)
+    public function getAllArticleCount($id)
     {
         return $this->createQueryBuilder('a')
             ->andWhere('a.user = :val')
@@ -48,14 +46,11 @@ class ArticleRepository extends ServiceEntityRepository
             ;
     }
 
-    public function getLastMonthArticleCount($id)
+    public function getArticleCountFromPeriod($parameters)
     {
         return $this->createQueryBuilder('a')
             ->andWhere('a.user = :val AND a.createdAt > :date ')
-            ->setParameters([
-                'val' => $id,
-                'date' => (new Carbon('first day of this month'))->toDateString(),
-            ])
+            ->setParameters($parameters)
             ->select('count(a.id)')
             ->getQuery()
             ->getResult()
@@ -74,12 +69,4 @@ class ArticleRepository extends ServiceEntityRepository
             ;
     }
 
-//    public function showArticle($id): Article
-//    {
-//        return $this->createQueryBuilder('a')
-//            ->where('id', $id)
-//            ->getQuery()
-//            ->getResult()
-//            ;
-//    }
 }

@@ -4,9 +4,9 @@
 <h1 class="mt-4">Рабочий стол</h1>
 <div class="row">
     <div class="col-xl-8 border-right">
-        {% if is_granted(['ROLE_USER_PLUS', 'ROLE_USER_PRO']) %}
+        {% if licenseStatus %}
             <div class="alert alert-warning" role="alert">
-                Подписка {{ licenseType }} истекает {{ licenseLastDays|date("Y-m-d") }}
+                {{ licenseStatus }}
             </div>
         {% endif %}
         <div class="card-columns dashboard">

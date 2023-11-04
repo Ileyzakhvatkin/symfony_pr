@@ -5,8 +5,9 @@ namespace App\Controller;
 use App\Entity\Article;
 use App\Entity\User;
 use App\Repository\ArticleRepository;
+use App\Services\LicenseLevelControl;
+use Carbon\Carbon;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
@@ -26,17 +27,22 @@ class ArticleController extends AbstractController
     }
 
     #[Route('/dashboard-create-article/{id}', name: 'create_article', defaults: ["id" => null])]
-    public function formCreateArticle($id, ArticleRepository $articleRepository): Response
+    public function formCreateArticle($id, ArticleRepository $articleRepository, LicenseLevelControl $licenseLevelControl): Response
     {
+        $licenseStatus = $licenseLevelControl->update($this->getUser());
+        // Проверяем ограничения на генерацию статей
         $isBlocked = true;
         /** @var User $authUser */
         $authUser = $this->getUser();
         $rolesArr = $authUser->getRoles();
-
-        if (in_array('ROLE_USER_PRO', $rolesArr) || in_array('ROLE_USER_PLUS', $rolesArr)) {
+        if (in_array('ROLE_USER_PRO', $rolesArr) ) {
             $isBlocked = false;
         } else {
-            if ($articleRepository->getLastMonthArticleCount($authUser->getId())[0]['1'] > 0) {
+            $parameters = [
+                'val' => $authUser->getId(),
+                'date' => (new Carbon('-2 hours'))->toDateString(),
+            ];
+            if ($articleRepository->getArticleCountFromPeriod($parameters)[0]['1'] >= 2) {
                 $isBlocked = false;
             }
         }
@@ -48,6 +54,7 @@ class ArticleController extends AbstractController
         return $this->render('dashboard/create_article.html.twig', [
             'itemActive' => 2,
             'isBlocked' => $isBlocked,
+            'licenseStatus' => $licenseStatus,
         ]);
     }
 
