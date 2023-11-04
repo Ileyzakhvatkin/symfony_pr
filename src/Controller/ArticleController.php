@@ -31,19 +31,19 @@ class ArticleController extends AbstractController
     {
         $licenseStatus = $licenseLevelControl->update($this->getUser());
         // Проверяем ограничения на генерацию статей
-        $isBlocked = true;
+        $isBlocked = false;
         /** @var User $authUser */
         $authUser = $this->getUser();
         $rolesArr = $authUser->getRoles();
         if (in_array('ROLE_USER_PRO', $rolesArr) ) {
-            $isBlocked = false;
+            $isBlocked = true;
         } else {
             $parameters = [
                 'val' => $authUser->getId(),
                 'date' => (new Carbon('-2 hours'))->toDateString(),
             ];
             if ($articleRepository->getArticleCountFromPeriod($parameters)[0]['1'] >= 2) {
-                $isBlocked = false;
+                $isBlocked = true;
             }
         }
 

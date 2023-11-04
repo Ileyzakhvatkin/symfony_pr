@@ -14,9 +14,9 @@
                     <div class="col-lg-4">
                         <div class="card mb-5 mb-lg-0">
                             <div class="card-body">
-                                {% if is_granted('ROLE_USER_PRO') %}
+                                {% if is_granted('ROLE_USER_PLUS') %}
                                     <h5 class="card-title text-muted text-uppercase text-center">Free</h5>
-                                {% elseif is_granted('ROLE_USER_PlUS') %}
+                                {% elseif is_granted('ROLE_USER_PRO') %}
                                     <h5 class="card-title text-muted text-uppercase text-center">Free</h5>
                                 {% else %}
                                     <h5 class="card-title text-uppercase text-center current text-warning"><i class="fas fa-check"></i> Free</h5>
@@ -53,7 +53,7 @@
                                 {% elseif is_granted('ROLE_USER_PRO') %}
 
                                 {% else %}
-                                    <a href="#" class="btn btn-block btn-primary text-uppercase">Оформить</a>
+                                    <a href="{{ path('licence_pay', {type: 'plus'}) }}" class="btn btn-block btn-primary text-uppercase">Оформить</a>
                                 {% endif %}
                             </div>
                         </div>
@@ -77,7 +77,7 @@
                                 {% if is_granted('ROLE_USER_PRO') %}
                                     <button class="btn btn-block btn-secondary text-uppercase" disabled>Текущий уровень</button>
                                 {% else %}
-                                    <a href="#" class="btn btn-block btn-primary text-uppercase">Оформить</a>
+                                    <a href="{{ path('licence_pay', {type: 'pro'}) }}" class="btn btn-block btn-primary text-uppercase">Оформить</a>
                                 {% endif %}
                             </div>
                         </div>
