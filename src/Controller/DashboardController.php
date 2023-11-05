@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\User;
 use App\Repository\ArticleRepository;
+use App\Repository\PaymentRepository;
 use App\Services\LicenseLevelControl;
 use Carbon\Carbon;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -37,12 +38,12 @@ class DashboardController extends AbstractController
     }
 
     #[Route('/dashboard-subscription/', name: 'subscription')]
-    public function subscription(): Response
+    public function subscription(PaymentRepository $paymentRepository): Response
     {
-        //  Подписка Plus оформлена, до 01.01.1970
+
         return $this->render('dashboard/subscription.html.twig', [
             'itemActive' => 4,
-            'sub_info' => null,
+            'payments' => $paymentRepository->getList($this->getUser()->getId()),
         ]);
     }
 }

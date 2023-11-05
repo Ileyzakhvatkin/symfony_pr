@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Payment;
+use Carbon\Carbon;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -21,6 +22,16 @@ class PaymentRepository extends ServiceEntityRepository
         parent::__construct($registry, Payment::class);
     }
 
+    public function getList($id) {
+        return $this->createQueryBuilder('a')
+            ->andWhere('a.user = :val')
+            ->setParameter('val', $id)
+            ->orderBy('a.id', 'DESC')
+            ->getQuery()
+            ->getResult()
+            ;
+    }
+
     public function getLastPayment($id)
     {
         return $this->createQueryBuilder('a')
@@ -33,12 +44,15 @@ class PaymentRepository extends ServiceEntityRepository
             ;
     }
 
-//    public function add(Payment $entity, bool $flush = false): void
-//    {
-//        $this->getEntityManager()->persist($entity);
-//
-//        if ($flush) {
-//            $this->getEntityManager()->flush();
-//        }
-//    }
+    public function createPayment($type, $authUser)
+    {
+        $payment = new Payment();
+        $payment->setUser($authUser);
+        $payment->setLicenseType($type);
+        $payment->setFinishedAt(Carbon::now()->addWeek());
+        $payment->setCreatedAt(Carbon::now());
+        $payment->setUpdatedAt(Carbon::now());
+        $this->getEntityManager()->persist($payment);
+        $this->getEntityManager()->flush();
+    }
 }
