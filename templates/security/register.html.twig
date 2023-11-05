@@ -12,18 +12,18 @@
                     <div class="alert alert-success" role="alert">
                         Для завершения регистрации подтвердите ваш email
                     </div>
-                    <form class="form-signin">
+                    <form class="form-signin" method="post">
                         <div class="form-label-group">
-                            <input type="text" id="inputName" class="form-control" placeholder="Ваше имя" required autofocus>
+                            <input type="text" id="inputName" name="name" class="form-control" placeholder="Ваше имя" required autofocus>
                             <label for="inputName">Ваше имя</label>
                         </div>
                         <div class="form-label-group">
-                            <input type="email" id="inputEmail" class="form-control" placeholder="Ваш Email" required>
+                            <input type="email" id="inputEmail" name="email" class="form-control" placeholder="Ваш Email" required>
                             <label for="inputEmail">Ваш Email</label>
                         </div>
 
                         <div class="form-label-group">
-                            <input type="password" id="inputPassword" class="form-control" placeholder="Пароль" required>
+                            <input type="password" id="inputPassword" name="password" class="form-control" placeholder="Пароль" required>
                             <label for="inputPassword">Пароль</label>
                         </div>
 

@@ -2,10 +2,17 @@
 
 namespace App\Controller;
 
+use App\Entity\User;
+use App\Security\LoginFormAuthenticator;
+use Carbon\Carbon;
+use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
+use Symfony\Component\Security\Http\Authentication\UserAuthenticatorInterface;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 class SecurityController extends AbstractController
 {
@@ -25,9 +32,37 @@ class SecurityController extends AbstractController
     }
 
     #[Route('/register', name: 'app_register')]
-    public function register()
+    public function register(
+        Request $request,
+        UserPasswordHasherInterface $passwordHasher,
+        EntityManagerInterface $em,
+        LoginFormAuthenticator $authenticator,
+        UserAuthenticatorInterface $userAuthenticator,
+    )
     {
-        return $this->render('security/register.html.twig');
+        if ($request->isMethod('POST')) {
+            $user = new User();
+
+            $user
+                ->setEmail($request->request->get('email'))
+                ->setName($request->request->get('name'))
+                ->setRoles(['ROLE_USER'])
+                ->setPassword($passwordHasher->hashPassword($user, $request->request->get('password')))
+                ->setCreatedAt(Carbon::now())
+                ->setUpdatedAt(Carbon::now())
+            ;
+
+            $em->persist($user);
+            $em->flush();
+
+            // авторизация после регистрации
+            $userAuthenticator->authenticateUser($user, $authenticator, $request);
+
+            return $this->redirectToRoute('dashboard');
+        }
+        return $this->render('security/register.html.twig', [
+            'error' => '',
+        ]);
     }
 
 

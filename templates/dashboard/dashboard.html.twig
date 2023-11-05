@@ -28,7 +28,9 @@
                         {{ licenseInfo['type'] }}
                        </h5>
                     <p class="card-text">Ваш уровень подписки.</p>
-                    <a href="{{ path('subscription') }}" class="btn btn-primary">Улучшить</a>
+                    {% if licenseInfo['type'] != 'PRO' %}
+                        <a href="{{ path('subscription') }}" class="btn btn-primary">Улучшить</a>
+                    {% endif %}
                 </div>
             </div>
             <div class="card">

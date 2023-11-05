@@ -33,7 +33,7 @@ class DashboardController extends AbstractController
             'licenseInfo' => $licenseInfo,
             'allArticles' => $articleRepository->getAllArticleCount($authUserId)[0]['1'],
             'articlesLastMonth' => $articleRepository->getArticleCountFromPeriod($lastMonth)[0]['1'],
-            'latestArticle' => $articleRepository->lastAarticle($authUserId)[0],
+            'latestArticle' => $articleRepository->lastAarticle($authUserId) ? $articleRepository->lastAarticle($authUserId)[0] : null,
         ]);
     }
 
