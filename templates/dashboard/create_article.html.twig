@@ -10,7 +10,7 @@
             </div>
         {% endif %}
         {% if isBlocked %}
-            <form>
+            {{ form_start(form) }}
                 <div class="form-group">
                     <label for="fieldTheme">Тематика</label>
                     <select class="form-control" id="fieldTheme">
@@ -20,26 +20,23 @@
                     </select>
                 </div>
                 <div class="form-label-group">
-                    <input type="text" id="articleTitle" class="form-control" placeholder="Заголовок статьи" required autofocus value="Тестовая статья" disabled>
-                    <label for="articleTitle">Заголовок статьи</label>
+                    {{ form_widget(form.title, {'attr': {'class': 'form-control', placeholder: 'Заголовок статьи'}}) }}
+                    {{ form_label(form.title, 'Заголовок статьи') }}
                 </div>
                 <div class="card mb-4">
                     <div class="card-body">
                         <p class="card-title">Ключевое слово</p>
                         <div class="form-label-group">
-                            <input type="text" id="article0Word" class="form-control" placeholder="Ключевое слово" required disabled value="EXAMPLE">
-                            <label for="article0Word">Ключевое слово</label>
+                            {{ form_widget(form.key_word, {'attr': {'class': 'form-control', placeholder: 'Ключевое слово'}}) }}
+                            {{ form_label(form.key_word, 'Ключевое слово') }}
                         </div>
                         <div class="form-label-group">
-                            <input type="text" id="article1Word" class="form-control" placeholder="Родительный падеж" required disabled value="EXAMPLE">
-                            <label for="article1Word">Родительный падеж</label>
+                            {{ form_widget(form.key_word_dist, {'attr': {'class': 'form-control', placeholder: 'Родительный падеж'}}) }}
+                            {{ form_label(form.key_word_dist, 'Родительный падеж') }}
                         </div>
-
-                        ...
-
                         <div class="form-label-group">
-                            <input type="text" id="article2Word" class="form-control" placeholder="Множественное число" required disabled value="EXAMPLES">
-                            <label for="article2Word">Множественное число</label>
+                            {{ form_widget(form.key_word_many, {'attr': {'class': 'form-control', placeholder: 'Множественное число'}}) }}
+                            {{ form_label(form.key_word_many, 'Множественное число') }}
                         </div>
                     </div>
                 </div>
@@ -47,62 +44,56 @@
                 <div class="row">
                     <div class="col">
                         <div class="form-label-group">
-                            <input type="text" id="sizeFromField" class="form-control" placeholder="Размер статьи">
-                            <label for="sizeFromField">Размер статьи от</label>
+                            {{ form_widget(form.min_size, {'attr': {'class': 'form-control', placeholder: 'Размер статьи от'}}) }}
+                            {{ form_label(form.min_size, 'Размер статьи') }}
                         </div>
                     </div>
                     <div class="col">
                         <div class="form-label-group">
-                            <input type="text" id="sizeToField" class="form-control" placeholder="До">
-                            <label for="sizeToField">До</label>
+                            {{ form_widget(form.max_size, {'attr': {'class': 'form-control', placeholder: 'До'}}) }}
+                            {{ form_label(form.max_size, 'До') }}
                         </div>
                     </div>
                 </div>
-
-
                 <div class="card mb-4">
                     <div class="card-body">
                         <p class="card-title">Продвигаемые слова</p>
                         <div class="row">
                             <div class="col">
                                 <div class="form-label-group">
-                                    <input type="text" id="word1Field" class="form-control" placeholder="Продвигаемое слово">
-                                    <label for="word1Field">Продвигаемое слово</label>
+                                    {{ form_widget(form.word_1, {'attr': {'class': 'form-control', placeholder: 'Продвигаемое слово'}}) }}
+                                    {{ form_label(form.word_1, 'Продвигаемое слово') }}
                                 </div>
-                            </div>
+                              </div>
                             <div class="col">
                                 <div class="form-label-group">
-                                    <input type="text" id="word1CountField" class="form-control" placeholder="кол-во">
-                                    <label for="word1CountField">кол-во</label>
+                                    {{ form_widget(form.word_count_1, {'attr': {'class': 'form-control', placeholder: 'кол-во'}}) }}
+                                    {{ form_label(form.word_count_1, 'кол-во') }}
                                 </div>
                             </div>
                         </div>
                         <div class="row">
                             <div class="col">
                                 <div class="form-label-group">
-                                    <input type="text" id="word2Field" class="form-control" placeholder="Продвигаемое слово">
-                                    <label for="word2Field">Продвигаемое слово</label>
+                                    {{ form_widget(form.word_2, {'attr': {'class': 'form-control', placeholder: 'Продвигаемое слово'}}) }}
+                                    {{ form_label(form.word_2, 'Продвигаемое слово') }}
                                 </div>
                             </div>
                             <div class="col">
                                 <div class="form-label-group">
-                                    <input type="text" id="word2CountField" class="form-control" placeholder="кол-во">
-                                    <label for="word2CountField">кол-во</label>
+                                    {{ form_widget(form.word_count_2, {'attr': {'class': 'form-control', placeholder: 'кол-во'}}) }}
+                                    {{ form_label(form.word_count_2, 'кол-во') }}
                                 </div>
                             </div>
                         </div>
-                        ...
                     </div>
                 </div>
-
-
                 <div class="form-group">
                     <label for="exampleFormControlFile1">Изображения</label>
                     <input type="file" multiple class="form-control-file" id="exampleFormControlFile1">
                 </div>
-
-                <button class="btn btn-lg btn-primary btn-block text-uppercase" type="submit" disabled>Создать</button>
-            </form>
+                <button class="btn btn-lg btn-primary btn-block text-uppercase" type="submit">Добавить</button>
+            {{ form_end(form) }}
         {% else %}
             <div class="alert alert-danger" role="alert">
                 Превышен лимит создания статей, чтобы снять лимит <a href="{{ path('subscription') }}">Улучшите подписку</a>

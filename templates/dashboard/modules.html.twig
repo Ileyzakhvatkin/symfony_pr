@@ -51,17 +51,26 @@
         <h1 class="mt-4">Добавить модуль</h1>
         <div class="row">
             <div class="col-xl-6">
-                <form>
+                {{ form_start(form) }}
                     <div class="form-group">
-                        <label for="articleTitle">Название модуля</label>
-                        <input type="text" id="articleTitle" class="form-control" placeholder="Название статьи" required autofocus>
+                        {{ form_row(form.title, {
+                            'label': 'Название модуля',
+                            attr: {
+                                placeholder: 'Введите название модуля',
+                                class: 'form-control'
+                            },
+                        }) }}
                     </div>
                     <div class="form-group">
-                        <label for="articleWord">Код модуля</label>
-                        <textarea id="articleWord" class="form-control" required></textarea>
+                        {{ form_row(form.code, {
+                            'label': 'Код модуля',
+                            attr: {
+                                class: 'form-control'
+                            },
+                        }) }}
                     </div>
                     <button class="btn btn-lg btn-primary btn-block text-uppercase" type="submit">Добавить</button>
-                </form>
+                {{ form_end(form) }}
             </div>
         </div>
     </section>

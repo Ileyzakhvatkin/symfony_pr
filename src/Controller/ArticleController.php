@@ -8,6 +8,10 @@ use App\Repository\ArticleRepository;
 use App\Services\LicenseLevelControl;
 use Carbon\Carbon;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Form\Extension\Core\Type\NumberType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
+//use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
@@ -27,7 +31,12 @@ class ArticleController extends AbstractController
     }
 
     #[Route('/dashboard-create-article/{id}', name: 'create_article', defaults: ["id" => null])]
-    public function formCreateArticle($id, ArticleRepository $articleRepository, LicenseLevelControl $licenseLevelControl): Response
+    public function formCreateArticle(
+        $id,
+        ArticleRepository $articleRepository,
+        LicenseLevelControl $licenseLevelControl,
+        Request $request
+    ): Response
     {
         $licenseInfo = $licenseLevelControl->update($this->getUser());
         // Проверяем ограничения на генерацию статей
@@ -47,6 +56,28 @@ class ArticleController extends AbstractController
             }
         }
 
+        $form = $this->createFormBuilder()
+            ->add('title', TextType::class)
+            ->add('title', TextType::class)
+            ->add('key_word', TextType::class)
+            ->add('key_word_dist', TextType::class)
+            ->add('key_word_many', TextType::class)
+            ->add('min_size', NumberType::class)
+            ->add('max_size', NumberType::class)
+            ->add('word_1', TextType::class)
+            ->add('word_count_1', NumberType::class)
+            ->add('word_2', TextType::class)
+            ->add('word_count_2', NumberType::class)
+//            ->add('images', FileType::class)
+            ->getForm();
+
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $data = $form->getData();
+            return $this->json($data);
+        }
+
         if (isset($id)) {
             dd('загружаем данные статьи');
         }
@@ -55,6 +86,7 @@ class ArticleController extends AbstractController
             'itemActive' => 2,
             'isBlocked' => $isBlocked,
             'licenseInfo' => $licenseInfo,
+            'form' => $form,
         ]);
     }
 
@@ -67,10 +99,4 @@ class ArticleController extends AbstractController
             'article' => $article,
         ]);
     }
-
-//    #[Route('/dashboard-created-article/', name: 'created_module', methods: ['POST'])]
-//    public function createArticle(): JsonResponse
-//    {
-//        return $this->json(json_encode(['article' => 'created']));
-//    }
 }
