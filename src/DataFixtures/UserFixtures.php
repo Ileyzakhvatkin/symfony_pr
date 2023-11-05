@@ -18,15 +18,15 @@ class UserFixtures extends BaseFixtures
 
     private static $modules = [
         [
-            'title' => '',
+            'title' => 'Заголовок - параграф',
             'code' => '&lt;h1&gt;{{ title }}&lt;/h1&gt; &lt;p&gt;{{ paragraph }}&lt;/p&gt;',
         ],
         [
-            'title' => '',
+            'title' => 'Текст слева - параграф',
             'code' => '&lt;p class="text-right"&gt;{{ paragraph }}&lt;/p&gt;',
         ],
         [
-            'title' => '',
+            'title' => 'Текст по столбцам',
             'code' => '&lt;div class="row"&gt; &lt;div class="col-sm-6"&gt; {{ paragraphs }} &lt;/div&gt; &lt;div class="col-sm-6"&gt; {{ paragraphs }} &lt;/div&gt; &lt;/div&gt;',
         ],
     ];
@@ -102,7 +102,7 @@ class UserFixtures extends BaseFixtures
     {
         $date = $this->faker->dateTimeBetween('-50 days', '0 day');
         $module = (new Module())
-            ->setTitle(self::$modules[1]['title'])
+            ->setTitle(self::$modules[rand(0,2)]['title'])
             ->setUser($user)
             ->setCode(self::$modules[1]['code'])
             ->setCreatedAt($date)

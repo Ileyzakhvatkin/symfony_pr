@@ -2,12 +2,8 @@
 
 namespace App\Controller;
 
-
-use App\Entity\Module;
-use App\Entity\User;
 use App\Repository\ModuleRepository;
 use App\Services\LicenseLevelControl;
-use Carbon\Carbon;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -21,11 +17,12 @@ use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 class ModuleController extends AbstractController
 {
     #[Route('/dashboard-modules/', name: 'modules')]
+
     public function modules(
         ModuleRepository $moduleRepository,
         LicenseLevelControl $licenseLevelControl,
         EntityManagerInterface $em,
-        Request $request
+        Request $request,
     ): Response
     {
         $authUser = $this->getUser();
@@ -40,20 +37,10 @@ class ModuleController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            /** @var User $authUser */
-            $authUser = $this->getUser();
-            /** @var Module $module */
-            $data = $form->getData();
-//            $module
-//                ->setTitle($data['title'])
-//                ->setCode($data['code'])
-//                ->setUser($authUser)
-//                ->setUpdatedAt(Carbon::now())
-//                ->setUpdatedAt(Carbon::now());
-//            $em->persist($module);
-//            $em->flush();
-//            return $this->redirectToRoute('modules');
-            return $this->json($data);
+            $moduleRepository->create($this->getUser(), $form->getData());
+            $this->addFlash('flash_message', 'Модуль успешно создан');
+
+            return $this->redirectToRoute('modules');
         }
 
         return $this->render('dashboard/modules.html.twig', [
@@ -65,10 +52,19 @@ class ModuleController extends AbstractController
     }
 
 
-//    #[Route('/dashboard-deleted-modules/', name: 'deleted_module', methods: ['DELETE'])]
-//    #[IsGranted('MANAGE', subject: 'module')]
-//    public function deleteModule(): JsonResponse
-//    {
-//        return $this->json(json_encode(['module' => 'deleted']));
-//    }
+    #[Route('/delete-module/{id}', name: 'delete_module')]
+    public function deleteModule($id, ModuleRepository $moduleRepository, EntityManagerInterface $em)
+    {
+        $module = $moduleRepository->find($id);
+
+        if ($module->getUser()->getId() == $this->getUser()->getId()) {
+            $em->remove($module);
+            $em->flush();
+            $this->addFlash('flash_message', 'Модуль успешно удален');
+        } else {
+            $this->addFlash('flash_message', 'Не трогайте чужие модули');
+        }
+
+        return $this->redirectToRoute('modules');
+    }
 }

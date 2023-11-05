@@ -14,9 +14,6 @@ class ModuleFormType extends AbstractType
         $builder
             ->add('title')
             ->add('code')
-//            ->add('createdAt')
-//            ->add('updatedAt')
-//            ->add('user')
         ;
     }
 

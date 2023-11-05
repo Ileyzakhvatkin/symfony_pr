@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Module;
+use Carbon\Carbon;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -35,4 +36,16 @@ class ModuleRepository extends ServiceEntityRepository
             ;
     }
 
+    public function create($authUser, $data):void
+    {
+        $module = new Module();
+        $module
+            ->setTitle($data['title'])
+            ->setCode($data['code'])
+            ->setUser($authUser)
+            ->setCreatedAt(Carbon::now())
+            ->setUpdatedAt(Carbon::now());
+        $this->getEntityManager()->persist($module);
+        $this->getEntityManager()->flush();
+    }
 }

@@ -4,7 +4,13 @@
 {% if licenseInfo['type'] == 'PRO' %}
     <section>
         <h1 class="mt-4">Ваши модули</h1>
-        <div class="alert alert-success" role="alert">Модуль успешно добавлен</div>
+        {% if app.session.flashBag.peek('flash_message')|length > 0 %}
+            <div class="alert alert-success" role="alert">
+                {% for massage in app.flashes('flash_message') %}
+                    <div>{{ massage }}</div>
+                {% endfor %}
+            </div>
+        {% endif %}
         <table class="table table-hover table-bordered">
             <thead class="thead-light">
             <tr>
@@ -22,7 +28,7 @@
                         <td>
                             <pre class="code">{{ module.code|raw }}</pre>
                         </td>
-                        <td><a href="#" class="text-danger"><i class="fas fa-trash"></i></a> </td>
+                        <td><a href="{{ path('delete_module', {id: module.id}) }}" class="text-danger"><i class="fas fa-trash"></i></a> </td>
                     </tr>
                 {% endfor %}
             </tbody>
