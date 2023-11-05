@@ -14,7 +14,7 @@ class UserFixtures extends BaseFixtures
 {
     private $passwordHasher;
 
-    private static array $licenseType = ['Pro','Plus'];
+    private static array $licenseType = ['PRO','PLUS'];
 
     private static $modules = [
         [
@@ -46,12 +46,12 @@ class UserFixtures extends BaseFixtures
         [
             'name' => 'Иван Рудин',
             'email' => 'ivan@ya.ru',
-            'roles' => ['ROLE_USER', 'ROLE_USER_PRO']
+            'roles' => ['ROLE_USER']
         ],
         [
             'name' => 'Саша Агафонова',
             'email' => 'sasha@ya.ru',
-            'roles' => ['ROLE_USER', 'ROLE_USER_PLUS']
+            'roles' => ['ROLE_USER']
         ],
     ];
 

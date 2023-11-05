@@ -21,7 +21,7 @@ class DashboardController extends AbstractController
         /** @var User $authUser */
         $authUser = $this->getUser();
         $authUserId = $authUser->getId();
-        $licenseStatus = $licenseLevelControl->update($authUser);
+        $licenseInfo = $licenseLevelControl->update($authUser);
 
         $lastMonth = [
             'val' => $authUserId,
@@ -30,7 +30,7 @@ class DashboardController extends AbstractController
 
         return $this->render('dashboard/dashboard.html.twig', [
             'itemActive' => 1,
-            'licenseStatus' => $licenseStatus,
+            'licenseInfo' => $licenseInfo,
             'allArticles' => $articleRepository->getAllArticleCount($authUserId)[0]['1'],
             'articlesLastMonth' => $articleRepository->getArticleCountFromPeriod($lastMonth)[0]['1'],
             'latestArticle' => $articleRepository->lastAarticle($authUserId)[0],
@@ -38,11 +38,13 @@ class DashboardController extends AbstractController
     }
 
     #[Route('/dashboard-subscription/', name: 'subscription')]
-    public function subscription(PaymentRepository $paymentRepository): Response
+    public function subscription(PaymentRepository $paymentRepository, LicenseLevelControl $licenseLevelControl): Response
     {
+        $licenseInfo = $licenseLevelControl->update($this->getUser());
 
         return $this->render('dashboard/subscription.html.twig', [
             'itemActive' => 4,
+            'licenseInfo' => $licenseInfo,
             'payments' => $paymentRepository->getList($this->getUser()->getId()),
         ]);
     }

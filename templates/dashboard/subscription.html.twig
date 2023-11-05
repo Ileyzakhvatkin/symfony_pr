@@ -11,9 +11,9 @@
                     <div class="col-lg-4">
                         <div class="card mb-5 mb-lg-0">
                             <div class="card-body">
-                                {% if is_granted('ROLE_USER_PLUS') %}
+                                {% if licenseInfo['type'] == 'PLUS' %}
                                     <h5 class="card-title text-muted text-uppercase text-center">Free</h5>
-                                {% elseif is_granted('ROLE_USER_PRO') %}
+                                {% elseif licenseInfo['type'] == 'PRO' %}
                                     <h5 class="card-title text-muted text-uppercase text-center">Free</h5>
                                 {% else %}
                                     <h5 class="card-title text-uppercase text-center current text-warning"><i class="fas fa-check"></i> Free</h5>
@@ -32,7 +32,7 @@
                     <div class="col-lg-4">
                         <div class="card mb-5 mb-lg-0">
                             <div class="card-body">
-                                {% if is_granted('ROLE_USER_PLUS') %}
+                                {% if licenseInfo['type'] == 'PLUS' %}
                                     <h5 class="card-title text-uppercase text-center current text-warning"><i class="fas fa-check"></i> Plus</h5>
                                 {% else %}
                                     <h5 class="card-title text-muted text-uppercase text-center">Plus</h5>
@@ -45,9 +45,9 @@
                                     <li><span class="fa-li"><i class="fas fa-check"></i></span>Продвинутые возможности генератора</li>
                                     <li class="text-muted"><span class="fa-li"><i class="fas fa-times"></i></span>Свои модули</li>
                                 </ul>
-                                {% if is_granted('ROLE_USER_PLUS') %}
+                                {% if licenseInfo['type'] == 'PLUS' %}
                                     <button class="btn btn-block btn-secondary text-uppercase" disabled>Текущий уровень</button>
-                                {% elseif is_granted('ROLE_USER_PRO') %}
+                                {% elseif licenseInfo['type'] == 'PRO' %}
 
                                 {% else %}
                                     <a href="{{ path('licence_pay', {type: 'plus'}) }}" class="btn btn-block btn-primary text-uppercase">Оформить</a>
@@ -58,7 +58,7 @@
                     <div class="col-lg-4">
                         <div class="card">
                             <div class="card-body">
-                                {% if is_granted('ROLE_USER_PRO') %}
+                                {% if licenseInfo['type'] == 'PRO' %}
                                     <h5 class="card-title text-uppercase text-center current text-warning"><i class="fas fa-check"></i> Pro</h5>
                                 {% else %}
                                     <h5 class="card-title text-muted text-uppercase text-center">Pro</h5>
@@ -71,7 +71,7 @@
                                     <li><span class="fa-li"><i class="fas fa-check"></i></span>Продвинутые возможности генератора</li>
                                     <li><span class="fa-li"><i class="fas fa-check"></i></span>Свои модули</li>
                                 </ul>
-                                {% if is_granted('ROLE_USER_PRO') %}
+                                {% if licenseInfo['type'] == 'PRO' %}
                                     <button class="btn btn-block btn-secondary text-uppercase" disabled>Текущий уровень</button>
                                 {% else %}
                                     <a href="{{ path('licence_pay', {type: 'pro'}) }}" class="btn btn-block btn-primary text-uppercase">Оформить</a>
@@ -84,7 +84,7 @@
         </section>
         <hr>
         <section>
-            <h1 class="mt-4">История платежей</h1>
+            <h3 class="mt-4">История расширений подписки</h3>
             <div class="row">
 
                 <div class="col-xl-8">
@@ -102,9 +102,9 @@
                         {% for payment in payments %}
                             <tr>
                                 <th scope="row">{{ loop.index }}</th>
-                                <td>{{ payment.createdAt|date("Y-m-d") }}</td>
+                                <td>{{ payment.createdAt|date("Y-m-d H:m") }}</td>
                                 <td>{{ payment.licenseType }}</td>
-                                <td>{{ payment.finishedAt|date("Y-m-d") }}</td>
+                                <td>{{ payment.finishedAt|date("Y-m-d H:m") }}</td>
                             </tr>
                         {% else %}
                             <h3>Вы пока не расширяли тариф</h3>

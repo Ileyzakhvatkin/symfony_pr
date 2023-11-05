@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Repository\ModuleRepository;
+use App\Services\LicenseLevelControl;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
@@ -13,12 +14,15 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 class ModuleController extends AbstractController
 {
     #[Route('/dashboard-modules/', name: 'modules')]
-    public function modules(ModuleRepository $moduleRepository): Response
+    public function modules(ModuleRepository $moduleRepository, LicenseLevelControl $licenseLevelControl): Response
     {
-        $modules = $moduleRepository->modulesList($this->getUser()->getId());
+        $authUser = $this->getUser();
+        $licenseInfo = $licenseLevelControl->update($authUser);
+        $modules = $moduleRepository->modulesList($authUser->getId());
 
         return $this->render('dashboard/modules.html.twig', [
             'itemActive' => 6,
+            'licenseInfo' => $licenseInfo,
             'modules' => $modules,
         ]);
     }

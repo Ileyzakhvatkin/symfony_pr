@@ -29,13 +29,13 @@ class ArticleController extends AbstractController
     #[Route('/dashboard-create-article/{id}', name: 'create_article', defaults: ["id" => null])]
     public function formCreateArticle($id, ArticleRepository $articleRepository, LicenseLevelControl $licenseLevelControl): Response
     {
-        $licenseStatus = $licenseLevelControl->update($this->getUser());
+        $licenseInfo = $licenseLevelControl->update($this->getUser());
         // Проверяем ограничения на генерацию статей
         $isBlocked = false;
         /** @var User $authUser */
         $authUser = $this->getUser();
         $rolesArr = $authUser->getRoles();
-        if (in_array('ROLE_USER_PRO', $rolesArr) ) {
+        if ($licenseInfo['type'] == 'PRO') {
             $isBlocked = true;
         } else {
             $parameters = [
@@ -54,7 +54,7 @@ class ArticleController extends AbstractController
         return $this->render('dashboard/create_article.html.twig', [
             'itemActive' => 2,
             'isBlocked' => $isBlocked,
-            'licenseStatus' => $licenseStatus,
+            'licenseInfo' => $licenseInfo,
         ]);
     }
 

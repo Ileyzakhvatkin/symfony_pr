@@ -1,7 +1,7 @@
 {% extends 'base_dashboard.html.twig' %}
 
 {% block content %}
-{% if is_granted('ROLE_USER_PRO') %}
+{% if licenseInfo['type'] == 'PRO' %}
     <section>
         <h1 class="mt-4">Ваши модули</h1>
         <div class="alert alert-success" role="alert">Модуль успешно добавлен</div>
