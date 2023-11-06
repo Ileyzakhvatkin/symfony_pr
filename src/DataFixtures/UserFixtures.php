@@ -79,7 +79,7 @@ class UserFixtures extends BaseFixtures
                 for ($i = 0; $i < 3; $i++) {
                     $this->addModule($user, $manager, $i);
                 }
-                for ($i = 0; $i < $this->faker->numberBetween(15, 25); $i++) {
+                for ($i = 0; $i < 25; $i++) {
                     $this->addArticle($user, $manager);
                 }
             });
@@ -131,17 +131,6 @@ class UserFixtures extends BaseFixtures
             ->setCreatedAt($date)
             ->setUpdatedAt($date)
         ;
-
         $manager->persist($article);
-    }
-
-    private function addWord($article, $manager)
-    {
-        $word = (new Word())
-            ->setArticle($article)
-            ->setTitle($this->faker->word)
-            ->setCount($this->faker->numberBetween(2, 6))
-        ;
-        $manager->persist($word);
     }
 }
