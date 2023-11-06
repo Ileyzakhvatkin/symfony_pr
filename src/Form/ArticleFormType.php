@@ -4,6 +4,7 @@ namespace App\Form;
 
 use App\Entity\Article;
 use App\Entity\Module;
+use App\Repository\ModuleRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -14,7 +15,15 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class ArticleFormType extends AbstractType
 {
-    public function buildForm(FormBuilderInterface $builder, array $options): void
+    private ModuleRepository $moduleRepository;
+
+    public function __construct(ModuleRepository $moduleRepository)
+    {
+        $this->moduleRepository = $moduleRepository;
+    }
+
+    public function buildForm(
+        FormBuilderInterface $builder, array $options): void
     {
         $builder
             ->add('title', TextType::class)
@@ -30,23 +39,23 @@ class ArticleFormType extends AbstractType
                 'class' => Module::class,
                 'choice_label' => 'title',
                 'placeholder' => 'Выберете модуль',
-                'choices' => $moduleRepository->listAuthUser($authUser->getId())
+                'choices' => $this->moduleRepository->listAuthUser()
             ])
             ->add('keyword', TextType::class)
             ->add('keyword_dist', TextType::class)
             ->add('keyword_many', TextType::class)
             ->add('size', NumberType::class, ['attr' => ['maxlength' => 4]])
             ->add('maxsize', NumberType::class, ['attr' => ['maxlength' => 4]])
-//        ;
-//
-//        if (isset($article) && count($article->getWords()) > 0) {
-//            foreach ($article->getWords() as $key => $el) {
-//                $formArt
-//                    ->add('word_' . $key + 1, TextType::class)
-//                    ->add('word_count_' . $key + 1, NumberType::class);
-//            }
-//        }
-//        $formArt
+        ;
+
+        if (isset($article) && count($article->getWords()) > 0) {
+            foreach ($article->getWords() as $key => $el) {
+                $builder
+                    ->add('word_' . $key + 1, TextType::class)
+                    ->add('word_count_' . $key + 1, NumberType::class);
+            }
+        }
+        $builder
             ->add('word_0', TextType::class)
             ->add('word_count_0', NumberType::class, ['attr' => ['maxlength' => 2]])
         ;

@@ -2,8 +2,11 @@
 
 namespace App\Controller;
 
+use App\Entity\Module;
+use App\Form\ModuleFormType;
 use App\Repository\ModuleRepository;
 use App\Services\LicenseLevelControl;
+use Carbon\Carbon;
 use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -11,8 +14,6 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
-use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 
 #[IsGranted('ROLE_USER')]
 class ModuleController extends AbstractController
@@ -22,7 +23,8 @@ class ModuleController extends AbstractController
         ModuleRepository $moduleRepository,
         LicenseLevelControl $licenseLevelControl,
         Request $request,
-        PaginatorInterface $paginator
+        PaginatorInterface $paginator,
+        EntityManagerInterface $em,
     ): Response
     {
         $authUser = $this->getUser();
@@ -34,15 +36,18 @@ class ModuleController extends AbstractController
             5
         );
 
-        $formModule = $this->createFormBuilder()
-            ->add('title', TextType::class)
-            ->add('code', TextareaType::class)
-            ->getForm();
+        $formModule = $this->createForm(ModuleFormType::class);
 
         $formModule->handleRequest($request);
 
         if ($formModule->isSubmitted() && $formModule->isValid()) {
-            $moduleRepository->create($this->getUser(), $formModule->getData());
+            /** @var Module $module */
+            $module = $formModule->getData();
+            $module->setUser($authUser);
+            $module->setCreatedAt(Carbon::now());
+            $module->setUpdatedAt(Carbon::now());
+            $em->persist($module);
+            $em->flush();
             $this->addFlash('flash_message', 'Модуль успешно создан');
 
             return $this->redirectToRoute('modules');
@@ -52,7 +57,7 @@ class ModuleController extends AbstractController
             'itemActive' => 6,
             'licenseInfo' => $licenseInfo,
             'modules' => $pagination,
-            'formModule' => $formModule,
+            'formModule' => $formModule->createView(),
             'itemNumberPerPage' => $pagination->getItemNumberPerPage()
         ]);
     }

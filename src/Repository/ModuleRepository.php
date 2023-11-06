@@ -3,9 +3,9 @@
 namespace App\Repository;
 
 use App\Entity\Module;
-use Carbon\Carbon;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use Symfony\Bundle\SecurityBundle\Security;
 
 /**
  * @extends ServiceEntityRepository<Module>
@@ -17,9 +17,12 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class ModuleRepository extends ServiceEntityRepository
 {
-    public function __construct(ManagerRegistry $registry)
+    private Security $security;
+
+    public function __construct(ManagerRegistry $registry, Security $security)
     {
         parent::__construct($registry, Module::class);
+        $this->security = $security;
     }
 
     public function modulesListQuery($id)
@@ -31,24 +34,11 @@ class ModuleRepository extends ServiceEntityRepository
             ;
     }
 
-    public function create($authUser, $data):void
-    {
-        $module = new Module();
-        $module
-            ->setTitle($data['title'])
-            ->setCode($data['code'])
-            ->setUser($authUser)
-            ->setCreatedAt(Carbon::now())
-            ->setUpdatedAt(Carbon::now());
-        $this->getEntityManager()->persist($module);
-        $this->getEntityManager()->flush();
-    }
-
-    public function listAuthUser($id)
+    public function listAuthUser()
     {
         return $this->createQueryBuilder('a')
             ->andWhere('a.user = :val')
-            ->setParameter('val', $id)
+            ->setParameter('val', $this->security->getUser()->getId())
             ->orderBy('a.id', 'ASC')
             ->getQuery()
             ->getResult()
