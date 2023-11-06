@@ -47,11 +47,11 @@ class ArticleController extends AbstractController
     #[Route('/dashboard-create-article/{id}', name: 'create_article', defaults: ["id" => null])]
     public function formCreateArticle(
         $id,
-        ArticleRepository $articleRepository,
         Request $request,
+        ArticleRepository $articleRepository,
+        ModuleRepository $moduleRepository,
         LicenseLevelControl $licenseLevelControl,
         ArticleCreatePeriodControl $articleCreatePeriodControl,
-        ModuleRepository $moduleRepository,
     ): Response
     {
         /** @var User $authUser */
@@ -61,10 +61,9 @@ class ArticleController extends AbstractController
 
         // Формируем форму
         $defaults = null;
-        $content = null;
+        $article = null;
         if ($id) {
             $article = $articleRepository->find($id);
-
             $defaults = [
                 'title' => $article->getTitle(),
                 'keyword' => $article->getKeyword(),
@@ -73,19 +72,10 @@ class ArticleController extends AbstractController
                 'size' => $article->getSize(),
                 'maxsize' => $article->getMaxSize(),
             ];
-
-
-            $content = $article->getContent();
         }
 
         $formArt = $this->createFormBuilder($defaults)
-            // ->add('theme', FileType::class)
             ->add('title', TextType::class)
-            ->add('keyword', TextType::class)
-            ->add('keyword_dist', TextType::class)
-            ->add('keyword_many', TextType::class)
-            ->add('size', NumberType::class)
-            ->add('maxsize', NumberType::class)
             ->add('theme', ChoiceType::class, [
                 'choices'  => [
                     'Про НЕ здоровую еду' => 'FOOD',
@@ -100,21 +90,30 @@ class ArticleController extends AbstractController
                 'placeholder' => 'Выберете модуль',
                 'choices' => $moduleRepository->listAuthUser($authUser->getId())
             ])
-            ->add('word_1', TextType::class)
-            ->add('word_count_1', NumberType::class)
-            ->add('word_2', TextType::class)
-            ->add('word_count_2', NumberType::class)
-
+            ->add('keyword', TextType::class)
+            ->add('keyword_dist', TextType::class)
+            ->add('keyword_many', TextType::class)
+            ->add('size', NumberType::class, ['attr' => ['maxlength' => 4]])
+            ->add('maxsize', NumberType::class, ['attr' => ['maxlength' => 4]])
+//        ;
+//
+//        if (isset($article) && count($article->getWords()) > 0) {
+//            foreach ($article->getWords() as $key => $el) {
+//                $formArt
+//                    ->add('word_' . $key + 1, TextType::class)
+//                    ->add('word_count_' . $key + 1, NumberType::class);
+//            }
+//        }
+//        $formArt
+            ->add('word_0', TextType::class)
+            ->add('word_count_0', NumberType::class, ['attr' => ['maxlength' => 2]])
             ->getForm();
 
         $formArt->handleRequest($request);
 
         if ($formArt->isSubmitted() && $formArt->isValid()) {
-            if ($id) {
-                $newId = $articleRepository->update($formArt->getData());
-            } else {
-                $newId = $articleRepository->create($formArt->getData());
-            }
+            $newId = 1;
+            // $newId = $articleRepository->update($formArt->getData());
             return $this->redirectToRoute('create_article', ['id' => $newId]);
         }
 
@@ -123,7 +122,7 @@ class ArticleController extends AbstractController
             'isBlocked' => $isBlocked,
             'licenseInfo' => $licenseInfo,
             'formArt' => $formArt,
-            'content' => $content,
+            'article' => $article,
         ]);
     }
 

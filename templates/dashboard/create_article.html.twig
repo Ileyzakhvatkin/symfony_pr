@@ -65,36 +65,53 @@
                     <div class="card-body">
                         <p class="card-title">Продвигаемые слова</p>
                         <div class="row">
-                            <div class="col">
-                                <div class="form-label-group">
-                                    {{ form_widget(formArt.word_1, {'attr': {'class': 'form-control', placeholder: 'Продвигаемое слово'}}) }}
-                                    {{ form_label(formArt.word_1, 'Продвигаемое слово') }}
-                                    {{ form_errors(formArt.word_1) }}
+{#                            {% if (article.words and article.words.count > 0) %}#}
+{#                                {% for word in article.words %}#}
+{#                                    <div class="col">#}
+{#                                        <div class="form-label-group">#}
+{#                                            {{ form_widget(formArt.word_0, {'attr': {'class': 'form-control', placeholder: 'Продвигаемое слово'}}) }}#}
+{#                                            {{ form_label(formArt.word_0, 'Продвигаемое слово') }}#}
+{#                                            {{ form_errors(formArt.word_0) }}#}
+{#                                        </div>#}
+{#                                    </div>#}
+{#                                    <div class="col">#}
+{#                                        <div class="form-label-group">#}
+{#                                            {{ form_widget(formArt.word_count_0, {'attr': {'class': 'form-control', placeholder: 'кол-во'}}) }}#}
+{#                                            {{ form_label(formArt.word_count_0, 'кол-во') }}#}
+{#                                            {{ form_errors(formArt.word_count_0) }}#}
+{#                                        </div>#}
+{#                                    </div>#}
+{#                                {% endfor %}#}
+{#                                <div class="col">#}
+{#                                    <div class="form-label-group">#}
+{#                                        {{ form_widget(formArt.word_0, {'attr': {'class': 'form-control', placeholder: 'Продвигаемое слово'}}) }}#}
+{#                                        {{ form_label(formArt.word_0, 'Продвигаемое слово') }}#}
+{#                                        {{ form_errors(formArt.word_0) }}#}
+{#                                    </div>#}
+{#                                </div>#}
+{#                                <div class="col">#}
+{#                                    <div class="form-label-group">#}
+{#                                        {{ form_widget(formArt.word_count_0, {'attr': {'class': 'form-control', placeholder: 'кол-во'}}) }}#}
+{#                                        {{ form_label(formArt.word_count_0, 'кол-во') }}#}
+{#                                        {{ form_errors(formArt.word_count_0) }}#}
+{#                                    </div>#}
+{#                                </div>#}
+{#                            {% else %}#}
+                                <div class="col">
+                                    <div class="form-label-group">
+                                        {{ form_widget(formArt.word_0, {'attr': {'class': 'form-control', placeholder: 'Продвигаемое слово'}}) }}
+                                        {{ form_label(formArt.word_0, 'Продвигаемое слово') }}
+                                        {{ form_errors(formArt.word_0) }}
+                                    </div>
                                 </div>
-                              </div>
-                            <div class="col">
-                                <div class="form-label-group">
-                                    {{ form_widget(formArt.word_count_1, {'attr': {'class': 'form-control', placeholder: 'кол-во'}}) }}
-                                    {{ form_label(formArt.word_count_1, 'кол-во') }}
-                                    {{ form_errors(formArt.word_count_1) }}
+                                <div class="col">
+                                    <div class="form-label-group">
+                                        {{ form_widget(formArt.word_count_0, {'attr': {'class': 'form-control', placeholder: 'кол-во'}}) }}
+                                        {{ form_label(formArt.word_count_0, 'кол-во') }}
+                                        {{ form_errors(formArt.word_count_0) }}
+                                    </div>
                                 </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col">
-                                <div class="form-label-group">
-                                    {{ form_widget(formArt.word_2, {'attr': {'class': 'form-control', placeholder: 'Продвигаемое слово'}}) }}
-                                    {{ form_label(formArt.word_2, 'Продвигаемое слово') }}
-                                    {{ form_errors(formArt.word_2) }}
-                                </div>
-                            </div>
-                            <div class="col">
-                                <div class="form-label-group">
-                                    {{ form_widget(formArt.word_count_2, {'attr': {'class': 'form-control', placeholder: 'кол-во'}}) }}
-                                    {{ form_label(formArt.word_count_2, 'кол-во') }}
-                                    {{ form_errors(formArt.word_count_2) }}
-                                </div>
-                            </div>
+{#                            {% endif %}#}
                         </div>
                     </div>
                 </div>
@@ -114,12 +131,12 @@
     </div>
 </div>
 <hr>
-{% if content %}
+{% if article %}
     <h2 class="mt-4">Ваша статья</h2>
     <hr>
     <div class="row mb-5">
         <div class="col-xl-6">
-            {{ content }}
+            {{ article.content }}
         </div>
     </div>
 {% endif %}
