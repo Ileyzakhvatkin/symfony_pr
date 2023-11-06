@@ -69,6 +69,7 @@ class UserFixtures extends BaseFixtures
                     ->setName($itemUser['name'])
                     ->setEmail($itemUser['email'])
                     ->setRoles($itemUser['roles'])
+                    ->setActive(true)
                     ->setPassword($this->passwordHasher->hashPassword($user, '123123'))
                     ->setCreatedAt($date)
                     ->setUpdatedAt($date);
@@ -111,6 +112,26 @@ class UserFixtures extends BaseFixtures
         $manager->persist($module);
     }
 
+    private function addArticle($user, $manager)
+    {
+        $keyWord = $this->faker->city;
+        $date = $this->faker->dateTimeBetween('-50 days', '0 day');
+        $article = (new Article())
+            ->setUser($user)
+            ->setTitle($this->faker->streetName)
+            ->setTheme($this->faker->randomElement(self::$themes))
+            ->setKeyword($keyWord)
+            ->setKeywordDist($keyWord . 'd')
+            ->setKeywordMany($keyWord . 's')
+            ->setSize($this->faker->numberBetween(150, 200))
+            ->setMaxSize($this->faker->numberBetween(350, 400))
+            ->setContent($this->faker->realText($this->faker->numberBetween(200, 350)))
+            ->setCreatedAt($date)
+            ->setUpdatedAt($date)
+        ;
+        $manager->persist($article);
+    }
+
     private function addWord($article, $manager)
     {
         $word = (new Word())
@@ -119,25 +140,5 @@ class UserFixtures extends BaseFixtures
             ->setCount($this->faker->numberBetween(2, 6))
         ;
         $manager->persist($word);
-    }
-
-    private function addArticle($user, $manager)
-    {
-        $keyWord = $this->faker->word;
-        $date = $this->faker->dateTimeBetween('-50 days', '0 day');
-        $article = (new Article())
-            ->setUser($user)
-            ->setTitle($this->faker->word)
-            ->setTheme($this->faker->randomElement(self::$themes))
-            ->setKeyWord($keyWord)
-            ->setKeyWordDist($keyWord . 'd')
-            ->setKeyWordMany($keyWord . 's')
-            ->setMinSize($this->faker->numberBetween(150, 200))
-            ->setMaxSize($this->faker->numberBetween(350, 400))
-            ->setContent($this->faker->realText($this->faker->numberBetween(200, 350)))
-            ->setCreatedAt($date)
-            ->setUpdatedAt($date)
-        ;
-        $manager->persist($article);
     }
 }

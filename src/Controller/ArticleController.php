@@ -64,11 +64,11 @@ class ArticleController extends AbstractController
             $article = $articleRepository->find($id);
             $defaults = [
                 'title' => $article->getTitle(),
-                'key_word' => $article->getKeyWord(),
-                'key_word_dist' => $article->getKeyWordDist(),
-                'key_word_many' => $article->getKeyWordMany(),
-                'min_size' => $article->getMinSize(),
-                'max_size' => $article->getMaxSize(),
+                'keyword' => $article->getKeyword(),
+                'keyword_dist' => $article->getKeywordDist(),
+                'keyword_many' => $article->getKeywordMany(),
+                'size' => $article->getSize(),
+                'maxsize' => $article->getMaxSize(),
             ];
             $content = $article->getContent();
         }
@@ -76,11 +76,11 @@ class ArticleController extends AbstractController
         $formArt = $this->createFormBuilder($defaults)
             // ->add('theme', FileType::class)
             ->add('title', TextType::class)
-            ->add('key_word', TextType::class)
-            ->add('key_word_dist', TextType::class)
-            ->add('key_word_many', TextType::class)
-            ->add('min_size', NumberType::class)
-            ->add('max_size', NumberType::class)
+            ->add('keyword', TextType::class)
+            ->add('keyword_dist', TextType::class)
+            ->add('keyword_many', TextType::class)
+            ->add('size', NumberType::class)
+            ->add('maxsize', NumberType::class)
             ->add('word_1', TextType::class)
             ->add('word_count_1', NumberType::class)
             ->add('word_2', TextType::class)

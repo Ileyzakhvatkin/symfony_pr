@@ -19,9 +19,6 @@ class Word
     #[ORM\Column(nullable: true)]
     private ?int $count = null;
 
-    #[ORM\Column(length: 50)]
-    private ?string $freq = null;
-
     #[ORM\ManyToOne(inversedBy: 'words')]
     #[ORM\JoinColumn(nullable: false)]
     private ?Article $article = null;
@@ -51,18 +48,6 @@ class Word
     public function setCount(?int $count): static
     {
         $this->count = $count;
-
-        return $this;
-    }
-
-    public function getFreq(): ?string
-    {
-        return $this->freq;
-    }
-
-    public function setFreq(string $freq): static
-    {
-        $this->freq = $freq;
 
         return $this;
     }

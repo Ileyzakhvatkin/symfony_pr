@@ -26,19 +26,19 @@ class Article
     private ?string $title = null;
 
     #[ORM\Column(length: 255)]
-    private ?string $key_word = null;
+    private ?string $keyword = null;
 
     #[ORM\Column(length: 255)]
-    private ?string $key_word_dist = null;
+    private ?string $keyword_dist = null;
 
     #[ORM\Column(length: 255)]
-    private ?string $key_word_many = null;
+    private ?string $keyword_many = null;
 
     #[ORM\Column]
-    private ?int $min_size = null;
+    private ?int $size = null;
 
     #[ORM\Column]
-    private ?int $max_size = null;
+    private ?int $maxsize = null;
 
     #[ORM\Column(type: Types::TEXT)]
     private ?string $content = null;
@@ -87,62 +87,62 @@ class Article
         return $this;
     }
 
-    public function getKeyWord(): ?string
+    public function getKeyword(): ?string
     {
-        return $this->key_word;
+        return $this->keyword;
     }
 
-    public function setKeyWord(string $key_word): static
+    public function setKeyword(string $keyword): static
     {
-        $this->key_word = $key_word;
+        $this->keyword = $keyword;
 
         return $this;
     }
 
-    public function getKeyWordDist(): ?string
+    public function getKeywordDist(): ?string
     {
-        return $this->key_word_dist;
+        return $this->keyword_dist;
     }
 
-    public function setKeyWordDist(string $key_word_dist): static
+    public function setKeywordDist(string $keyword_dist): static
     {
-        $this->key_word_dist = $key_word_dist;
+        $this->keyword_dist = $keyword_dist;
 
         return $this;
     }
 
-    public function getKeyWordMany(): ?string
+    public function getKeywordMany(): ?string
     {
-        return $this->key_word_many;
+        return $this->keyword_many;
     }
 
-    public function setKeyWordMany(string $key_word_many): static
+    public function setKeywordMany(string $keyword_many): static
     {
-        $this->key_word_many = $key_word_many;
+        $this->keyword_many = $keyword_many;
 
         return $this;
     }
 
-    public function getMinSize(): ?int
+    public function getSize(): ?int
     {
-        return $this->min_size;
+        return $this->size;
     }
 
-    public function setMinSize(int $min_size): static
+    public function setSize(int $size): static
     {
-        $this->min_size = $min_size;
+        $this->size = $size;
 
         return $this;
     }
 
     public function getMaxSize(): ?int
     {
-        return $this->max_size;
+        return $this->maxsize;
     }
 
-    public function setMaxSize(int $max_size): static
+    public function setMaxSize(int $maxsize): static
     {
-        $this->max_size = $max_size;
+        $this->maxsize = $maxsize;
 
         return $this;
     }
