@@ -23,7 +23,7 @@
             <tbody>
                 {% for module in modules %}
                     <tr>
-                        <th scope="row">{{ loop.index }}</th>
+                        <th scope="row">{{ loop.index + (modules.currentPageNumber - 1) * itemNumberPerPage}}</th>
                         <td>{{ module.title }}</td>
                         <td>
                             <pre class="code">{{ module.code|raw }}</pre>
@@ -47,26 +47,19 @@
         <h1 class="mt-4">Добавить модуль</h1>
         <div class="row">
             <div class="col-xl-6">
-                {{ form_start(form) }}
+                {{ form_start(formModule) }}
                     <div class="form-group">
-                        {{ form_row(form.title, {
-                            'label': 'Название модуля',
-                            attr: {
-                                placeholder: 'Введите название модуля',
-                                class: 'form-control'
-                            },
-                        }) }}
-                    </div>
+                        {{ form_label(formModule.title, 'Название модуля') }}
+                        {{ form_widget(formModule.title, {'attr': {'class': 'form-control', placeholder: 'Название модуля'}}) }}
+                        {{ form_errors(formModule.title) }}
+                       </div>
                     <div class="form-group">
-                        {{ form_row(form.code, {
-                            'label': 'Код модуля',
-                            attr: {
-                                class: 'form-control'
-                            },
-                        }) }}
+                        {{ form_label(formModule.code, 'Код модуля') }}
+                        {{ form_widget(formModule.code, {'attr': {'class': 'form-control'}}) }}
+                        {{ form_errors(formModule.code) }}
                     </div>
                     <button class="btn btn-lg btn-primary btn-block text-uppercase" type="submit">Добавить</button>
-                {{ form_end(form) }}
+                {{ form_end(formModule) }}
             </div>
         </div>
     </section>

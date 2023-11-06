@@ -15,20 +15,20 @@
                     <div class="alert alert-info" role="alert">
                         Чтобы создать статью по настоящему <a href="{{ path('app_register') }}">Зарегистрируйтесь</a>
                     </div>
-                    <form class="form-signin">
+                    {{ form_start(formFront) }}
                         <div class="form-label-group">
-                            <input type="email" id="articleTitle" class="form-control" placeholder="Заголовок статьи" required autofocus value="Тестовая статья" disabled>
-                            <label for="articleTitle">Заголовок статьи</label>
+                            {{ form_widget(formFront.title, {'attr': {'class': 'form-control', placeholder: 'Заголовок статьи'}}) }}
+                            {{ form_label(formFront.title, 'Заголовок статьи') }}
+                            {{ form_errors(formFront.title) }}
                         </div>
                         <div class="form-label-group">
-                            <input type="email" id="articleWord" class="form-control" placeholder="Продвигаемое слово" required disabled>
-                            <label for="articleWord">Продвигаемое слово</label>
+                            {{ form_widget(formFront.key_word, {'attr': {'class': 'form-control', placeholder: 'Продвигаемое слово'}}) }}
+                            {{ form_label(formFront.key_word, 'Продвигаемое слово') }}
+                            {{ form_errors(formFront.key_word) }}
                         </div>
-
-                        <button class="btn btn-lg btn-primary btn-block text-uppercase" type="submit" disabled>Попробовать</button>
-                    </form>
+                        <button class="btn btn-lg btn-primary btn-block text-uppercase" type="submit">Попробовать</button>
+                    {{ form_end(formFront) }}
                 {% endif %}
-
             </div>
         </div>
     </div>
@@ -40,34 +40,35 @@
     <div class="container my-5">
         <div class="row">
             <div class="col-lg-12 mx-auto">
+                {% if app.session.flashBag.peek('flash_message')|length > 0 %}
+                    <h2 class="card-title text-center mb-4">Тестовая статья</h2>
 
-                <h2 class="card-title text-center mb-4">Тестовая статья</h2>
-
-                <div class="row">
-                    <div class="p-3">
-                        <h2>Добавляйте свои слова</h2>
-                        <p class="lead mb-0">При генерации контента статьи, вы можете наполнить его нужными словами для вашего бизнеса. Столько сколько нужно. Хоть все ими заполоните!</p>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="showcase-text p-3">
-                        <div class="media">
-                            <div class="media-body">
-                                <h2>Вставляйте изображения</h2>
-                                <p class="lead mb-0">Надоели стандартные красивые изображения. Прикрепляйте к вашим статьям свою уникальные фотографии. Смазанные, с пальцем на пол фотографии, с кривым лицом. Все пойдет - вы здесь главный!</p>
-                                <p class="lead mb-0">Надоели стандартные красивые изображения. Прикрепляйте к вашим статьям свою уникальные фотографии. Смазанные, с пальцем на пол фотографии, с кривым лицом. Все пойдет - вы здесь главный!</p>
-                            </div>
-                            <img class="ml-3" src="{{ asset('img/bg-showcase-2.jpg') }}" width="518" height="345" alt="">
+                    <div class="row">
+                        <div class="p-3">
+                            <h2>Добавляйте свои слова</h2>
+                            <p class="lead mb-0">При генерации контента статьи, вы можете наполнить его нужными словами для вашего бизнеса. Столько сколько нужно. Хоть все ими заполоните!</p>
                         </div>
+                    </div>
+                    <div class="row">
+                        <div class="showcase-text p-3">
+                            <div class="media">
+                                <div class="media-body">
+                                    <h2>Вставляйте изображения</h2>
+                                    <p class="lead mb-0">Надоели стандартные красивые изображения. Прикрепляйте к вашим статьям свою уникальные фотографии. Смазанные, с пальцем на пол фотографии, с кривым лицом. Все пойдет - вы здесь главный!</p>
+                                    <p class="lead mb-0">Надоели стандартные красивые изображения. Прикрепляйте к вашим статьям свою уникальные фотографии. Смазанные, с пальцем на пол фотографии, с кривым лицом. Все пойдет - вы здесь главный!</p>
+                                </div>
+                                <img class="ml-3" src="{{ asset('img/bg-showcase-2.jpg') }}" width="518" height="345" alt="">
+                            </div>
 
+                        </div>
                     </div>
-                </div>
-                <div class="row">
-                    <div class="p-3">
-                        <h2>Интегрируйтесь по API</h2>
-                        <p class="lead mb-0">Придумайте и настройте свою собственную интеграцию с сервисом. Нужно ответить на комментарий в соц.сети - получите его по API. Нужно написать новую статью по программированию - получите ее по API. Хотите вкусно покушать - сходите за едой, а статью пускай за вас напишет API!</p>
+                    <div class="row">
+                        <div class="p-3">
+                            <h2>Интегрируйтесь по API</h2>
+                            <p class="lead mb-0">Придумайте и настройте свою собственную интеграцию с сервисом. Нужно ответить на комментарий в соц.сети - получите его по API. Нужно написать новую статью по программированию - получите ее по API. Хотите вкусно покушать - сходите за едой, а статью пускай за вас напишет API!</p>
+                        </div>
                     </div>
-                </div>
+                {% endif %}
             </div>
         </div>
     </div>

@@ -41,8 +41,5 @@ class LicenseLevelControl
                 'type' => 'FREE',
             ];
         }
-
-
-
     }
 }

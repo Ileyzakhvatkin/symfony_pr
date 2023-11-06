@@ -10,7 +10,7 @@
             </div>
         {% endif %}
         {% if isBlocked %}
-            {{ form_start(form) }}
+            {{ form_start(formArt) }}
                 <div class="form-group">
                     <label for="fieldTheme">Тематика</label>
                     <select class="form-control" id="fieldTheme">
@@ -20,27 +20,27 @@
                     </select>
                 </div>
                 <div class="form-label-group">
-                    {{ form_widget(form.title, {'attr': {'class': 'form-control', placeholder: 'Заголовок статьи'}}) }}
-                    {{ form_label(form.title, 'Заголовок статьи') }}
-                    {{ form_errors(form.title) }}
+                    {{ form_widget(formArt.title, {'attr': {'class': 'form-control', placeholder: 'Заголовок статьи'}}) }}
+                    {{ form_label(formArt.title, 'Заголовок статьи') }}
+                    {{ form_errors(formArt.title) }}
                 </div>
                 <div class="card mb-4">
                     <div class="card-body">
                         <p class="card-title">Ключевое слово</p>
                         <div class="form-label-group">
-                            {{ form_widget(form.key_word, {'attr': {'class': 'form-control', placeholder: 'Ключевое слово'}}) }}
-                            {{ form_label(form.key_word, 'Ключевое слово') }}
-                            {{ form_errors(form.key_word) }}
+                            {{ form_widget(formArt.key_word, {'attr': {'class': 'form-control', placeholder: 'Ключевое слово'}}) }}
+                            {{ form_label(formArt.key_word, 'Ключевое слово') }}
+                            {{ form_errors(formArt.key_word) }}
                         </div>
                         <div class="form-label-group">
-                            {{ form_widget(form.key_word_dist, {'attr': {'class': 'form-control', placeholder: 'Родительный падеж'}}) }}
-                            {{ form_label(form.key_word_dist, 'Родительный падеж') }}
-                            {{ form_errors(form.key_word_dist) }}
+                            {{ form_widget(formArt.key_word_dist, {'attr': {'class': 'form-control', placeholder: 'Родительный падеж'}}) }}
+                            {{ form_label(formArt.key_word_dist, 'Родительный падеж') }}
+                            {{ form_errors(formArt.key_word_dist) }}
                         </div>
                         <div class="form-label-group">
-                            {{ form_widget(form.key_word_many, {'attr': {'class': 'form-control', placeholder: 'Множественное число'}}) }}
-                            {{ form_label(form.key_word_many, 'Множественное число') }}
-                            {{ form_errors(form.key_word_many) }}
+                            {{ form_widget(formArt.key_word_many, {'attr': {'class': 'form-control', placeholder: 'Множественное число'}}) }}
+                            {{ form_label(formArt.key_word_many, 'Множественное число') }}
+                            {{ form_errors(formArt.key_word_many) }}
                         </div>
                     </div>
                 </div>
@@ -48,16 +48,16 @@
                 <div class="row">
                     <div class="col">
                         <div class="form-label-group">
-                            {{ form_widget(form.min_size, {'attr': {'class': 'form-control', placeholder: 'Размер статьи от'}}) }}
-                            {{ form_label(form.min_size, 'Размер статьи') }}
-                            {{ form_errors(form.min_size) }}
+                            {{ form_widget(formArt.min_size, {'attr': {'class': 'form-control', placeholder: 'Размер статьи от'}}) }}
+                            {{ form_label(formArt.min_size, 'Размер статьи') }}
+                            {{ form_errors(formArt.min_size) }}
                         </div>
                     </div>
                     <div class="col">
                         <div class="form-label-group">
-                            {{ form_widget(form.max_size, {'attr': {'class': 'form-control', placeholder: 'До'}}) }}
-                            {{ form_label(form.max_size, 'До') }}
-                            {{ form_errors(form.max_size) }}
+                            {{ form_widget(formArt.max_size, {'attr': {'class': 'form-control', placeholder: 'До'}}) }}
+                            {{ form_label(formArt.max_size, 'До') }}
+                            {{ form_errors(formArt.max_size) }}
                         </div>
                     </div>
                 </div>
@@ -67,32 +67,32 @@
                         <div class="row">
                             <div class="col">
                                 <div class="form-label-group">
-                                    {{ form_widget(form.word_1, {'attr': {'class': 'form-control', placeholder: 'Продвигаемое слово'}}) }}
-                                    {{ form_label(form.word_1, 'Продвигаемое слово') }}
-                                    {{ form_errors(form.word_1) }}
+                                    {{ form_widget(formArt.word_1, {'attr': {'class': 'form-control', placeholder: 'Продвигаемое слово'}}) }}
+                                    {{ form_label(formArt.word_1, 'Продвигаемое слово') }}
+                                    {{ form_errors(formArt.word_1) }}
                                 </div>
                               </div>
                             <div class="col">
                                 <div class="form-label-group">
-                                    {{ form_widget(form.word_count_1, {'attr': {'class': 'form-control', placeholder: 'кол-во'}}) }}
-                                    {{ form_label(form.word_count_1, 'кол-во') }}
-                                    {{ form_errors(form.word_count_1) }}
+                                    {{ form_widget(formArt.word_count_1, {'attr': {'class': 'form-control', placeholder: 'кол-во'}}) }}
+                                    {{ form_label(formArt.word_count_1, 'кол-во') }}
+                                    {{ form_errors(formArt.word_count_1) }}
                                 </div>
                             </div>
                         </div>
                         <div class="row">
                             <div class="col">
                                 <div class="form-label-group">
-                                    {{ form_widget(form.word_2, {'attr': {'class': 'form-control', placeholder: 'Продвигаемое слово'}}) }}
-                                    {{ form_label(form.word_2, 'Продвигаемое слово') }}
-                                    {{ form_errors(form.word_2) }}
+                                    {{ form_widget(formArt.word_2, {'attr': {'class': 'form-control', placeholder: 'Продвигаемое слово'}}) }}
+                                    {{ form_label(formArt.word_2, 'Продвигаемое слово') }}
+                                    {{ form_errors(formArt.word_2) }}
                                 </div>
                             </div>
                             <div class="col">
                                 <div class="form-label-group">
-                                    {{ form_widget(form.word_count_2, {'attr': {'class': 'form-control', placeholder: 'кол-во'}}) }}
-                                    {{ form_label(form.word_count_2, 'кол-во') }}
-                                    {{ form_errors(form.word_count_2) }}
+                                    {{ form_widget(formArt.word_count_2, {'attr': {'class': 'form-control', placeholder: 'кол-во'}}) }}
+                                    {{ form_label(formArt.word_count_2, 'кол-во') }}
+                                    {{ form_errors(formArt.word_count_2) }}
                                 </div>
                             </div>
                         </div>
@@ -105,7 +105,7 @@
 
                 <button class="btn btn-lg btn-primary btn-block text-uppercase" type="submit">Добавить</button>
 
-            {{ form_end(form) }}
+            {{ form_end(formArt) }}
         {% else %}
             <div class="alert alert-danger" role="alert">
                 Превышен лимит создания статей, чтобы снять лимит <a href="{{ path('subscription') }}">Улучшите подписку</a>
@@ -113,15 +113,16 @@
         {% endif %}
     </div>
 </div>
-
 <hr>
-<h2 class="mt-4">Ваша статья</h2>
-<hr>
-
-<div class="row">
-    <div class="col-xl-6">
+{% if content %}
+    <h2 class="mt-4">Ваша статья</h2>
+    <hr>
+    <div class="row mb-5">
+        <div class="col-xl-6">
+            {{ content }}
+        </div>
     </div>
-</div>
+{% endif %}
 
 {% endblock %}
 

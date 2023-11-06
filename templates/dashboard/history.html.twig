@@ -19,7 +19,7 @@
             <tbody>
                 {% for article in articles %}
                     <tr>
-                        <th scope="row">{{ loop.index }}</th>
+                        <th scope="row">{{ loop.index + (articles.currentPageNumber - 1) * itemNumberPerPage}}</th>
                         <td>{{ article.createdAt|date("Y-m-d") }}</td>
                         <td>{{ article.title }}</td>
                         <td>{{ article.content|u.truncate(70, '...') }}</td>

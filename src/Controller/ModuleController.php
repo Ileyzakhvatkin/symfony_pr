@@ -34,15 +34,15 @@ class ModuleController extends AbstractController
             5
         );
 
-        $form = $this->createFormBuilder()
+        $formModule = $this->createFormBuilder()
             ->add('title', TextType::class)
             ->add('code', TextareaType::class)
             ->getForm();
 
-        $form->handleRequest($request);
+        $formModule->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            $moduleRepository->create($this->getUser(), $form->getData());
+        if ($formModule->isSubmitted() && $formModule->isValid()) {
+            $moduleRepository->create($this->getUser(), $formModule->getData());
             $this->addFlash('flash_message', 'Модуль успешно создан');
 
             return $this->redirectToRoute('modules');
@@ -52,7 +52,8 @@ class ModuleController extends AbstractController
             'itemActive' => 6,
             'licenseInfo' => $licenseInfo,
             'modules' => $pagination,
-            'form' => $form,
+            'formModule' => $formModule,
+            'itemNumberPerPage' => $pagination->getItemNumberPerPage()
         ]);
     }
 

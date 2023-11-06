@@ -26,17 +26,17 @@ class UserController extends AbstractController
             'name' => $authUser->getName(),
             'email' => $authUser->getEmail(),
         ];
-        $form = $this->createFormBuilder($defaults)
+        $formProfile = $this->createFormBuilder($defaults)
             ->add('name', TextType::class)
             ->add('email', EmailType::class)
             ->add('password', PasswordType::class)
             ->add('password2', PasswordType::class)
             ->getForm();
 
-        $form->handleRequest($request);
+        $formProfile->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            $userRepository->update($authUser, $form->getData());
+        if ($formProfile->isSubmitted() && $formProfile->isValid()) {
+            $userRepository->update($authUser, $formProfile->getData());
             $this->addFlash('flash_message', 'Данные пользователя обновлены');
 
             return $this->redirectToRoute('profile');
@@ -45,7 +45,7 @@ class UserController extends AbstractController
         return $this->render('dashboard/profile.html.twig', [
             'itemActive' => 5,
             'user' => $this->getUser(),
-            'form' => $form,
+            'formProfile' => $formProfile,
         ]);
     }
 

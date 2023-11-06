@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Article;
 use App\Entity\User;
 use App\Repository\ArticleRepository;
+use App\Services\ArticleCreatePeriodControl;
 use App\Services\LicenseLevelControl;
 use Carbon\Carbon;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -21,17 +22,22 @@ use Knp\Component\Pager\PaginatorInterface;
 class ArticleController extends AbstractController
 {
     #[Route('/dashboard-history/', name: 'history')]
-    public function articlesList(ArticleRepository $articleRepository, PaginatorInterface $paginator, Request $request): Response
+    public function articlesList(
+        ArticleRepository $articleRepository,
+        PaginatorInterface $paginator,
+        Request $request
+    ): Response
     {
         $pagination = $paginator->paginate(
             $articleRepository->articleListQuery($this->getUser()->getId()),
             $request->query->getInt('page', 1), /*page number*/
-            8
+            10
         );
 
         return $this->render('dashboard/history.html.twig', [
             'itemActive' => 3,
             'articles' => $pagination,
+            'itemNumberPerPage' => $pagination->getItemNumberPerPage()
         ]);
     }
 
@@ -39,31 +45,21 @@ class ArticleController extends AbstractController
     public function formCreateArticle(
         $id,
         ArticleRepository $articleRepository,
+        Request $request,
         LicenseLevelControl $licenseLevelControl,
-        Request $request
+        ArticleCreatePeriodControl $articleCreatePeriodControl
     ): Response
     {
-        $licenseInfo = $licenseLevelControl->update($this->getUser());
 
-        // Проверяем ограничения на генерацию статей
-        $isBlocked = false;
+
         /** @var User $authUser */
         $authUser = $this->getUser();
-        $rolesArr = $authUser->getRoles();
-        if ($licenseInfo['type'] == 'PRO') {
-            $isBlocked = true;
-        } else {
-            $parameters = [
-                'val' => $authUser->getId(),
-                'date' => (new Carbon('-2 hours'))->toDateString(),
-            ];
-            if ($articleRepository->getArticleCountFromPeriod($parameters)[0]['1'] >= 2) {
-                $isBlocked = true;
-            }
-        }
+        $licenseInfo = $licenseLevelControl->update($authUser);
+        $isBlocked = $articleCreatePeriodControl->checkBlock($authUser, $licenseInfo);
 
         // Формируем форму
         $defaults = null;
+        $content = null;
         if ($id) {
             $article = $articleRepository->find($id);
             $defaults = [
@@ -74,9 +70,10 @@ class ArticleController extends AbstractController
                 'min_size' => $article->getMinSize(),
                 'max_size' => $article->getMaxSize(),
             ];
+            $content = $article->getContent();
         }
 
-        $form = $this->createFormBuilder($defaults)
+        $formArt = $this->createFormBuilder($defaults)
             // ->add('theme', FileType::class)
             ->add('title', TextType::class)
             ->add('key_word', TextType::class)
@@ -91,13 +88,13 @@ class ArticleController extends AbstractController
             // ->add('images', FileType::class)
             ->getForm();
 
-        $form->handleRequest($request);
+        $formArt->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
+        if ($formArt->isSubmitted() && $formArt->isValid()) {
             if ($id) {
-                $newId = $articleRepository->update($form->getData());
+                $newId = $articleRepository->update($formArt->getData());
             } else {
-                $newId = $articleRepository->create($form->getData());
+                $newId = $articleRepository->create($formArt->getData());
             }
             return $this->redirectToRoute('create_article', ['id' => $newId]);
         }
@@ -106,7 +103,8 @@ class ArticleController extends AbstractController
             'itemActive' => 2,
             'isBlocked' => $isBlocked,
             'licenseInfo' => $licenseInfo,
-            'form' => $form,
+            'formArt' => $formArt,
+            'content' => $content,
         ]);
     }
 
