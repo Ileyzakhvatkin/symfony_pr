@@ -43,4 +43,15 @@ class ModuleRepository extends ServiceEntityRepository
         $this->getEntityManager()->persist($module);
         $this->getEntityManager()->flush();
     }
+
+    public function listAuthUser($id)
+    {
+        return $this->createQueryBuilder('a')
+            ->andWhere('a.user = :val')
+            ->setParameter('val', $id)
+            ->orderBy('a.id', 'ASC')
+            ->getQuery()
+            ->getResult()
+            ;
+    }
 }

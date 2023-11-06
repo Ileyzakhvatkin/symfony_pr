@@ -3,15 +3,18 @@
 namespace App\Controller;
 
 use App\Entity\Article;
+use App\Entity\Module;
 use App\Entity\User;
 use App\Repository\ArticleRepository;
+use App\Repository\ModuleRepository;
 use App\Services\ArticleCreatePeriodControl;
 use App\Services\LicenseLevelControl;
-use Carbon\Carbon;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 //use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -47,11 +50,10 @@ class ArticleController extends AbstractController
         ArticleRepository $articleRepository,
         Request $request,
         LicenseLevelControl $licenseLevelControl,
-        ArticleCreatePeriodControl $articleCreatePeriodControl
+        ArticleCreatePeriodControl $articleCreatePeriodControl,
+        ModuleRepository $moduleRepository,
     ): Response
     {
-
-
         /** @var User $authUser */
         $authUser = $this->getUser();
         $licenseInfo = $licenseLevelControl->update($authUser);
@@ -62,6 +64,7 @@ class ArticleController extends AbstractController
         $content = null;
         if ($id) {
             $article = $articleRepository->find($id);
+
             $defaults = [
                 'title' => $article->getTitle(),
                 'keyword' => $article->getKeyword(),
@@ -70,6 +73,8 @@ class ArticleController extends AbstractController
                 'size' => $article->getSize(),
                 'maxsize' => $article->getMaxSize(),
             ];
+
+
             $content = $article->getContent();
         }
 
@@ -81,11 +86,25 @@ class ArticleController extends AbstractController
             ->add('keyword_many', TextType::class)
             ->add('size', NumberType::class)
             ->add('maxsize', NumberType::class)
+            ->add('theme', ChoiceType::class, [
+                'choices'  => [
+                    'Про НЕ здоровую еду' => 'FOOD',
+                    'Про PHP и как с этим жить' => 'PHP',
+                    'Про женщин и не только' => 'WOMEN',
+                ],
+                'placeholder' => 'Выберете тему',
+            ])
+            ->add('module', EntityType::class, [
+                'class' => Module::class,
+                'choice_label' => 'title',
+                'placeholder' => 'Выберете модуль',
+                'choices' => $moduleRepository->listAuthUser($authUser->getId())
+            ])
             ->add('word_1', TextType::class)
             ->add('word_count_1', NumberType::class)
             ->add('word_2', TextType::class)
             ->add('word_count_2', NumberType::class)
-            // ->add('images', FileType::class)
+
             ->getForm();
 
         $formArt->handleRequest($request);

@@ -12,17 +12,17 @@
         {% if isBlocked %}
             {{ form_start(formArt) }}
                 <div class="form-group">
-                    <label for="fieldTheme">Тематика</label>
-                    <select class="form-control" id="fieldTheme">
-                        <option>-</option>
-                        <option>Про еду</option>
-                        <option>Про PHP</option>
-                    </select>
+                    {{ form_label(formArt.theme, 'Тематика') }}
+                    {{ form_widget(formArt.theme, {'attr': {'class': 'form-control'}}) }}
                 </div>
                 <div class="form-label-group">
                     {{ form_widget(formArt.title, {'attr': {'class': 'form-control', placeholder: 'Заголовок статьи'}}) }}
                     {{ form_label(formArt.title, 'Заголовок статьи') }}
                     {{ form_errors(formArt.title) }}
+                </div>
+                <div class="form-group">
+                    {{ form_label(formArt.module, 'Модуль') }}
+                    {{ form_widget(formArt.module, {'attr': {'class': 'form-control'}}) }}
                 </div>
                 <div class="card mb-4">
                     <div class="card-body">
