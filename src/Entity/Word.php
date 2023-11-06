@@ -20,7 +20,6 @@ class Word
     private ?int $count = null;
 
     #[ORM\ManyToOne(inversedBy: 'words')]
-    #[ORM\JoinColumn(nullable: false)]
     private ?Article $article = null;
 
     public function getId(): ?int
@@ -63,4 +62,5 @@ class Word
 
         return $this;
     }
+
 }

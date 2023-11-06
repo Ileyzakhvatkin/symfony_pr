@@ -79,7 +79,7 @@ class UserFixtures extends BaseFixtures
                 for ($i = 0; $i < 3; $i++) {
                     $this->addModule($user, $manager, $i);
                 }
-                for ($i = 0; $i < $this->faker->numberBetween(10, 15); $i++) {
+                for ($i = 0; $i < $this->faker->numberBetween(15, 25); $i++) {
                     $this->addArticle($user, $manager);
                 }
             });
@@ -116,6 +116,8 @@ class UserFixtures extends BaseFixtures
     {
         $keyWord = $this->faker->city;
         $date = $this->faker->dateTimeBetween('-50 days', '0 day');
+        $size = $this->faker->numberBetween(40, 50) * 10;
+        $maxsize = $this->faker->numberBetween(50, 80) * 10;
         $article = (new Article())
             ->setUser($user)
             ->setTitle($this->faker->streetName)
@@ -123,12 +125,13 @@ class UserFixtures extends BaseFixtures
             ->setKeyword($keyWord)
             ->setKeywordDist($keyWord . 'd')
             ->setKeywordMany($keyWord . 's')
-            ->setSize($this->faker->numberBetween(150, 200))
-            ->setMaxSize($this->faker->numberBetween(350, 400))
-            ->setContent($this->faker->realText($this->faker->numberBetween(200, 350)))
+            ->setSize($size)
+            ->setMaxSize($maxsize)
+            ->setContent($this->faker->realText($this->faker->numberBetween($size, $maxsize)))
             ->setCreatedAt($date)
             ->setUpdatedAt($date)
         ;
+
         $manager->persist($article);
     }
 

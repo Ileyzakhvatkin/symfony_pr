@@ -43,9 +43,6 @@ class Article
     #[ORM\Column(type: Types::TEXT)]
     private ?string $content = null;
 
-    #[ORM\OneToMany(mappedBy: 'article', targetEntity: Image::class)]
-    private Collection $images;
-
     #[ORM\ManyToOne(inversedBy: 'articles')]
     #[ORM\JoinColumn(nullable: false)]
     private ?User $user = null;
@@ -53,9 +50,16 @@ class Article
     #[ORM\ManyToOne(inversedBy: 'articles')]
     private ?Module $module = null;
 
+    #[ORM\OneToMany(mappedBy: 'article', targetEntity: Image::class)]
+    private Collection $images;
+
+    #[ORM\OneToMany(mappedBy: 'article', targetEntity: Word::class)]
+    private Collection $words;
+
     public function __construct()
     {
         $this->images = new ArrayCollection();
+        $this->words = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -209,6 +213,36 @@ class Article
     public function setModule(?Module $module): static
     {
         $this->module = $module;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Word>
+     */
+    public function getWords(): Collection
+    {
+        return $this->words;
+    }
+
+    public function addWord(Word $word): static
+    {
+        if (!$this->words->contains($word)) {
+            $this->words->add($word);
+            $word->setArticle($this);
+        }
+
+        return $this;
+    }
+
+    public function removeWord(Word $word): static
+    {
+        if ($this->words->removeElement($word)) {
+            // set the owning side to null (unless already changed)
+            if ($word->getArticle() === $this) {
+                $word->setArticle(null);
+            }
+        }
 
         return $this;
     }
