@@ -22,6 +22,7 @@
                 <div class="form-label-group">
                     {{ form_widget(form.title, {'attr': {'class': 'form-control', placeholder: 'Заголовок статьи'}}) }}
                     {{ form_label(form.title, 'Заголовок статьи') }}
+                    {{ form_errors(form.title) }}
                 </div>
                 <div class="card mb-4">
                     <div class="card-body">
@@ -29,14 +30,17 @@
                         <div class="form-label-group">
                             {{ form_widget(form.key_word, {'attr': {'class': 'form-control', placeholder: 'Ключевое слово'}}) }}
                             {{ form_label(form.key_word, 'Ключевое слово') }}
+                            {{ form_errors(form.key_word) }}
                         </div>
                         <div class="form-label-group">
                             {{ form_widget(form.key_word_dist, {'attr': {'class': 'form-control', placeholder: 'Родительный падеж'}}) }}
                             {{ form_label(form.key_word_dist, 'Родительный падеж') }}
+                            {{ form_errors(form.key_word_dist) }}
                         </div>
                         <div class="form-label-group">
                             {{ form_widget(form.key_word_many, {'attr': {'class': 'form-control', placeholder: 'Множественное число'}}) }}
                             {{ form_label(form.key_word_many, 'Множественное число') }}
+                            {{ form_errors(form.key_word_many) }}
                         </div>
                     </div>
                 </div>
@@ -46,12 +50,14 @@
                         <div class="form-label-group">
                             {{ form_widget(form.min_size, {'attr': {'class': 'form-control', placeholder: 'Размер статьи от'}}) }}
                             {{ form_label(form.min_size, 'Размер статьи') }}
+                            {{ form_errors(form.min_size) }}
                         </div>
                     </div>
                     <div class="col">
                         <div class="form-label-group">
                             {{ form_widget(form.max_size, {'attr': {'class': 'form-control', placeholder: 'До'}}) }}
                             {{ form_label(form.max_size, 'До') }}
+                            {{ form_errors(form.max_size) }}
                         </div>
                     </div>
                 </div>
@@ -63,12 +69,14 @@
                                 <div class="form-label-group">
                                     {{ form_widget(form.word_1, {'attr': {'class': 'form-control', placeholder: 'Продвигаемое слово'}}) }}
                                     {{ form_label(form.word_1, 'Продвигаемое слово') }}
+                                    {{ form_errors(form.word_1) }}
                                 </div>
                               </div>
                             <div class="col">
                                 <div class="form-label-group">
                                     {{ form_widget(form.word_count_1, {'attr': {'class': 'form-control', placeholder: 'кол-во'}}) }}
                                     {{ form_label(form.word_count_1, 'кол-во') }}
+                                    {{ form_errors(form.word_count_1) }}
                                 </div>
                             </div>
                         </div>
@@ -77,12 +85,14 @@
                                 <div class="form-label-group">
                                     {{ form_widget(form.word_2, {'attr': {'class': 'form-control', placeholder: 'Продвигаемое слово'}}) }}
                                     {{ form_label(form.word_2, 'Продвигаемое слово') }}
+                                    {{ form_errors(form.word_2) }}
                                 </div>
                             </div>
                             <div class="col">
                                 <div class="form-label-group">
                                     {{ form_widget(form.word_count_2, {'attr': {'class': 'form-control', placeholder: 'кол-во'}}) }}
                                     {{ form_label(form.word_count_2, 'кол-во') }}
+                                    {{ form_errors(form.word_count_2) }}
                                 </div>
                             </div>
                         </div>
@@ -92,7 +102,9 @@
                     <label for="exampleFormControlFile1">Изображения</label>
                     <input type="file" multiple class="form-control-file" id="exampleFormControlFile1">
                 </div>
+
                 <button class="btn btn-lg btn-primary btn-block text-uppercase" type="submit">Добавить</button>
+
             {{ form_end(form) }}
         {% else %}
             <div class="alert alert-danger" role="alert">

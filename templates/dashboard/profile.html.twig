@@ -15,29 +15,29 @@
                 <button class="btn btn-outline-primary">Создать новый</button>
             </div>
         </div>
-
-        <form>
+        {{ form_start(form) }}
             <div class="form-label-group">
-                <input type="text" id="inputName" class="form-control" placeholder="Ваше имя" required value="{{ user.name }}" autofocus>
-                <label for="inputName">Ваше имя</label>
+                {{ form_widget(form.name, {'attr': {'class': 'form-control', placeholder: 'Ваше имя'}}) }}
+                {{ form_label(form.name, 'Ваше имя') }}
+                {{ form_errors(form.name) }}
             </div>
             <div class="form-label-group">
-                <input type="email" id="inputEmail" class="form-control" placeholder="Ваш Email" required value="{{ user.email }}">
-                <label for="inputEmail">Ваш Email</label>
+                {{ form_widget(form.email, {'attr': {'class': 'form-control', placeholder: 'Ваш Email'}}) }}
+                {{ form_label(form.email, 'Ваш Email') }}
+                {{ form_errors(form.email) }}
             </div>
-
             <div class="form-label-group">
-                <input type="password" id="inputPassword" class="form-control" placeholder="Пароль" required>
-                <label for="inputPassword">Пароль</label>
+                {{ form_widget(form.password, {'attr': {'class': 'form-control', placeholder: 'Пароль'}}) }}
+                {{ form_label(form.password, 'Пароль') }}
+                {{ form_errors(form.password) }}
             </div>
-
             <div class="form-label-group">
-                <input type="password" id="inputConfirmPassword" class="form-control" placeholder="Подтверждение пароля" required>
-                <label for="inputConfirmPassword">Подтверждение пароля</label>
+                {{ form_widget(form.password2, {'attr': {'class': 'form-control', placeholder: 'Подтверждение пароля'}}) }}
+                {{ form_label(form.password2, 'Подтверждение пароля') }}
+                {{ form_errors(form.password2) }}
             </div>
-
             <button class="btn btn-lg btn-primary btn-block text-uppercase" type="submit">Изменить</button>
-        </form>
+        {{ form_end(form) }}
     </div>
 </div>
 {% endblock %}

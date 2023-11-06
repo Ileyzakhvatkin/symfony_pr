@@ -24,9 +24,11 @@ class PaymentController extends AbstractController
         switch ($type) {
             case 'plus':
                 $paymentRepository->createPayment('PLUS', $authUser);
+                $this->addFlash('flash_message', 'Подписка PLUS оформлена, до ' . Carbon::now()->addWeek());
                 break;
             case 'pro':
                 $paymentRepository->createPayment('PRO', $authUser);
+                $this->addFlash('flash_message', 'Подписка PRO оформлена, до ' . Carbon::now()->addWeek());
                 break;
         }
 

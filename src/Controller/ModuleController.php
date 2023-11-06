@@ -17,7 +17,6 @@ use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 class ModuleController extends AbstractController
 {
     #[Route('/dashboard-modules/', name: 'modules')]
-
     public function modules(
         ModuleRepository $moduleRepository,
         LicenseLevelControl $licenseLevelControl,
@@ -51,13 +50,12 @@ class ModuleController extends AbstractController
         ]);
     }
 
-
     #[Route('/delete-module/{id}', name: 'delete_module')]
     public function deleteModule($id, ModuleRepository $moduleRepository, EntityManagerInterface $em)
     {
         $module = $moduleRepository->find($id);
 
-        if ($module->getUser()->getId() == $this->getUser()->getId()) {
+        if ($module->getUser() && $module->getUser()->getId() == $this->getUser()->getId()) {
             $em->remove($module);
             $em->flush();
             $this->addFlash('flash_message', 'Модуль успешно удален');

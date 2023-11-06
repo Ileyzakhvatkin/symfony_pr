@@ -39,6 +39,7 @@ class ArticleController extends AbstractController
     ): Response
     {
         $licenseInfo = $licenseLevelControl->update($this->getUser());
+
         // Проверяем ограничения на генерацию статей
         $isBlocked = false;
         /** @var User $authUser */
@@ -56,8 +57,22 @@ class ArticleController extends AbstractController
             }
         }
 
-        $form = $this->createFormBuilder()
-            ->add('title', TextType::class)
+        // Формируем форму
+        $defaults = null;
+        if ($id) {
+            $article = $articleRepository->find($id);
+            $defaults = [
+                'title' => $article->getTitle(),
+                'key_word' => $article->getKeyWord(),
+                'key_word_dist' => $article->getKeyWordDist(),
+                'key_word_many' => $article->getKeyWordMany(),
+                'min_size' => $article->getMinSize(),
+                'max_size' => $article->getMaxSize(),
+            ];
+        }
+
+        $form = $this->createFormBuilder($defaults)
+            // ->add('theme', FileType::class)
             ->add('title', TextType::class)
             ->add('key_word', TextType::class)
             ->add('key_word_dist', TextType::class)
@@ -68,18 +83,18 @@ class ArticleController extends AbstractController
             ->add('word_count_1', NumberType::class)
             ->add('word_2', TextType::class)
             ->add('word_count_2', NumberType::class)
-//            ->add('images', FileType::class)
+            // ->add('images', FileType::class)
             ->getForm();
 
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $data = $form->getData();
-            return $this->json($data);
-        }
-
-        if (isset($id)) {
-            dd('загружаем данные статьи');
+            if ($id) {
+                $newId = $articleRepository->update($form->getData());
+            } else {
+                $newId = $articleRepository->create($form->getData());
+            }
+            return $this->redirectToRoute('create_article', ['id' => $newId]);
         }
 
         return $this->render('dashboard/create_article.html.twig', [

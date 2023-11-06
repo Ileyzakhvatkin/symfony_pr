@@ -3,8 +3,14 @@
 {% block content %}
 <h1 class="mt-4">Подписка</h1>
 <div class="row">
-
     <div class="col-xl-8">
+        {% if app.session.flashBag.peek('flash_message')|length > 0 %}
+            <div class="alert alert-success" role="alert">
+                {% for massage in app.flashes('flash_message') %}
+                    <div>{{ massage }}</div>
+                {% endfor %}
+            </div>
+        {% endif %}
         <section class="pricing py-2 row">
             <div class="container">
                 <div class="row">

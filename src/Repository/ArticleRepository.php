@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Article;
+use Carbon\Carbon;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -67,6 +68,30 @@ class ArticleRepository extends ServiceEntityRepository
             ->getQuery()
             ->getResult()
             ;
+    }
+
+    public function create($data)
+    {
+        $article = new Article();
+        $article
+            ->setTitle($data['title'])
+            ->setKeyWord($data['key_word'])
+            ->setKeyWordDist($data['key_word_dist'])
+            ->setKeyWordMany($data['key_word_many'])
+            ->setMinSize($data['min_size'])
+            ->setMaxSize($data['max_size'])
+            ->setCreatedAt(Carbon::now())
+            ->setUpdatedAt(Carbon::now());
+        $this->getEntityManager()->persist($article);
+        $this->getEntityManager()->flush();
+
+        return $id; // Откуда взять ID ???
+    }
+
+    public function update($data)
+    {
+
+        return $id;
     }
 
 }

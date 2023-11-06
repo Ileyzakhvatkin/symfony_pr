@@ -3,8 +3,13 @@
 namespace App\Controller;
 
 use App\Entity\User;
+use App\Repository\UserRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Form\Extension\Core\Type\EmailType;
+use Symfony\Component\Form\Extension\Core\Type\PasswordType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
@@ -13,18 +18,35 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 class UserController extends AbstractController
 {
     #[Route('/dashboard-profile/', name: 'profile')]
-    public function profile(): Response
+    public function profile(Request $request, UserRepository $userRepository): Response
     {
+        /** @var User $authUser */
+        $authUser = $this->getUser();
+        $defaults = [
+            'name' => $authUser->getName(),
+            'email' => $authUser->getEmail(),
+        ];
+        $form = $this->createFormBuilder($defaults)
+            ->add('name', TextType::class)
+            ->add('email', EmailType::class)
+            ->add('password', PasswordType::class)
+            ->add('password2', PasswordType::class)
+            ->getForm();
+
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $userRepository->update($authUser, $form->getData());
+            $this->addFlash('flash_message', 'Данные пользователя обновлены');
+
+            return $this->redirectToRoute('profile');
+        }
+
         return $this->render('dashboard/profile.html.twig', [
             'itemActive' => 5,
             'user' => $this->getUser(),
+            'form' => $form,
         ]);
-    }
-
-    #[Route('/dashboard-payment/', name: 'payment', methods: ['POST'])]
-    public function licensePayment(): JsonResponse
-    {
-        return $this->json(json_encode(['license' => 'purchased']));
     }
 
 //    #[Route('/dashboard-token-update/', name: 'token_update', methods: ['PATCH'])]
