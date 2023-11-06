@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Repository\ModuleRepository;
 use App\Services\LicenseLevelControl;
 use Doctrine\ORM\EntityManagerInterface;
+use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -20,13 +21,18 @@ class ModuleController extends AbstractController
     public function modules(
         ModuleRepository $moduleRepository,
         LicenseLevelControl $licenseLevelControl,
-        EntityManagerInterface $em,
         Request $request,
+        PaginatorInterface $paginator
     ): Response
     {
         $authUser = $this->getUser();
         $licenseInfo = $licenseLevelControl->update($authUser);
-        $modules = $moduleRepository->modulesList($authUser->getId());
+
+        $pagination = $paginator->paginate(
+            $moduleRepository->modulesListQuery($authUser->getId()),
+            $request->query->getInt('page', 1), /*page number*/
+            5
+        );
 
         $form = $this->createFormBuilder()
             ->add('title', TextType::class)
@@ -45,7 +51,7 @@ class ModuleController extends AbstractController
         return $this->render('dashboard/modules.html.twig', [
             'itemActive' => 6,
             'licenseInfo' => $licenseInfo,
-            'modules' => $modules,
+            'modules' => $pagination,
             'form' => $form,
         ]);
     }

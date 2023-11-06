@@ -22,17 +22,12 @@ class ModuleRepository extends ServiceEntityRepository
         parent::__construct($registry, Module::class);
     }
 
-    /**
-     * @return Module[] Returns an array of Article objects
-     */
-    public function modulesList($id): array
+    public function modulesListQuery($id)
     {
         return $this->createQueryBuilder('a')
             ->andWhere('a.user = :val')
             ->setParameter('val', $id)
             ->orderBy('a.id', 'ASC')
-            ->getQuery()
-            ->getResult()
             ;
     }
 

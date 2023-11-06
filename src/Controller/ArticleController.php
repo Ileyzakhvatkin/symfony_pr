@@ -15,18 +15,23 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
+use Knp\Component\Pager\PaginatorInterface;
 
 #[IsGranted('ROLE_USER')]
 class ArticleController extends AbstractController
 {
     #[Route('/dashboard-history/', name: 'history')]
-    public function articlesList(ArticleRepository $articleRepository): Response
+    public function articlesList(ArticleRepository $articleRepository, PaginatorInterface $paginator, Request $request): Response
     {
-        $articles = $articleRepository->articleList($this->getUser()->getId());
+        $pagination = $paginator->paginate(
+            $articleRepository->articleListQuery($this->getUser()->getId()),
+            $request->query->getInt('page', 1), /*page number*/
+            8
+        );
 
         return $this->render('dashboard/history.html.twig', [
             'itemActive' => 3,
-            'articles' => $articles,
+            'articles' => $pagination,
         ]);
     }
 
