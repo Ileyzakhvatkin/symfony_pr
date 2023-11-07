@@ -11,7 +11,7 @@ use App\Repository\ArticleRepository;
 use Doctrine\Persistence\ObjectManager;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
-class WordFixtures extends BaseFixtures
+class UserWordFixtures extends BaseFixtures
 {
     private $passwordHasher;
     private ArticleRepository $articleRepository;
