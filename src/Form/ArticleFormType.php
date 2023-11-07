@@ -22,9 +22,12 @@ class ArticleFormType extends AbstractType
         $this->moduleRepository = $moduleRepository;
     }
 
-    public function buildForm(
-        FormBuilderInterface $builder, array $options): void
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
+        /** @var Article $article */
+        $article = $options['data'] ?? null;
+        dd($article);
+
         $builder
             ->add('title', TextType::class)
             ->add('theme', ChoiceType::class, [
@@ -51,13 +54,23 @@ class ArticleFormType extends AbstractType
         if (isset($article) && count($article->getWords()) > 0) {
             foreach ($article->getWords() as $key => $el) {
                 $builder
-                    ->add('word_' . $key + 1, TextType::class)
-                    ->add('word_count_' . $key + 1, NumberType::class);
+                    ->add('word_' . $key + 1, TextType::class, [
+                        'mapped' => false
+                    ])
+                    ->add('word_count_' . $key + 1, NumberType::class, [
+                        'attr' => ['maxlength' => 2],
+                        'mapped' => false,
+                    ]);
             }
         }
         $builder
-            ->add('word_0', TextType::class)
-            ->add('word_count_0', NumberType::class, ['attr' => ['maxlength' => 2]])
+            ->add('word_0', TextType::class, [
+                'mapped' => false
+            ])
+            ->add('word_count_0', NumberType::class, [
+                'attr' => ['maxlength' => 2],
+                'mapped' => false,
+            ])
         ;
     }
 

@@ -3,14 +3,13 @@
 namespace App\Controller;
 
 use App\Entity\User;
-use App\Repository\UserRepository;
+use App\Form\UserUpdateFormType;
+use Carbon\Carbon;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\Form\Extension\Core\Type\EmailType;
-use Symfony\Component\Form\Extension\Core\Type\PasswordType;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
@@ -18,25 +17,26 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 class UserController extends AbstractController
 {
     #[Route('/dashboard-profile/', name: 'profile')]
-    public function profile(Request $request, UserRepository $userRepository): Response
+    public function profile(
+        Request $request,
+        EntityManagerInterface $em,
+        UserPasswordHasherInterface $passwordHasher
+    ): Response
     {
         /** @var User $authUser */
         $authUser = $this->getUser();
-        $defaults = [
-            'name' => $authUser->getName(),
-            'email' => $authUser->getEmail(),
-        ];
-        $formProfile = $this->createFormBuilder($defaults)
-            ->add('name', TextType::class)
-            ->add('email', EmailType::class)
-            ->add('password', PasswordType::class)
-            ->add('password2', PasswordType::class)
-            ->getForm();
+        $formProfile = $this->createForm(UserUpdateFormType::class, $authUser);
 
         $formProfile->handleRequest($request);
 
         if ($formProfile->isSubmitted() && $formProfile->isValid()) {
-            $userRepository->update($authUser, $formProfile->getData());
+
+            $user = $formProfile->getData();
+            $user
+                ->setPassword($passwordHasher->hashPassword($user, $formProfile->get('password1')->getData()))
+                ->setUpdatedAt(Carbon::now());
+            $em->persist($user);
+            $em->flush();
             $this->addFlash('flash_message', 'Данные пользователя обновлены');
 
             return $this->redirectToRoute('profile');
@@ -45,7 +45,7 @@ class UserController extends AbstractController
         return $this->render('dashboard/profile.html.twig', [
             'itemActive' => 5,
             'user' => $this->getUser(),
-            'formProfile' => $formProfile,
+            'formProfile' => $formProfile->createView(),
         ]);
     }
 

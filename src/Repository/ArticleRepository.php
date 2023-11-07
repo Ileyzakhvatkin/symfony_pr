@@ -65,6 +65,18 @@ class ArticleRepository extends ServiceEntityRepository
             ;
     }
 
+    public function getWithWords($id)
+    {
+        return $this->createQueryBuilder('a')
+            ->innerJoin('a.words', 'w')
+            ->addSelect('w')
+            ->andWhere('a.id = :val')
+            ->setParameter('val', $id)
+            ->getQuery()
+            ->getFirstResult()
+            ;
+    }
+
     public function create($data)
     {
         $article = new Article();

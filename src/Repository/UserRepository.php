@@ -43,15 +43,4 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
         $this->getEntityManager()->persist($user);
         $this->getEntityManager()->flush();
     }
-
-    public function update(User $user, $data): void
-    {
-        $user
-            ->setName($data['name'])
-            ->setEmail($data['email'])
-            ->setPassword($this->passwordHasher->hashPassword($user, $data['password'])) // шифрование пароля
-            ->setUpdatedAt(Carbon::now());
-        $this->getEntityManager()->persist($user);
-        $this->getEntityManager()->flush();
-    }
 }

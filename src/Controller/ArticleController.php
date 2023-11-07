@@ -59,23 +59,10 @@ class ArticleController extends AbstractController
         $licenseInfo = $licenseLevelControl->update($authUser);
         $isBlocked = $articleCreatePeriodControl->checkBlock($authUser, $licenseInfo);
 
-        // Формируем форму
-        $defaults = null;
-        $article = null;
-        if ($id) {
-            $article = $articleRepository->find($id);
-            $defaults = [
-                'title' => $article->getTitle(),
-                'keyword' => $article->getKeyword(),
-                'keyword_dist' => $article->getKeywordDist(),
-                'keyword_many' => $article->getKeywordMany(),
-                'size' => $article->getSize(),
-                'maxsize' => $article->getMaxSize(),
-            ];
-        }
+        // Берем статью Через ID, чтобы работала пустая форма
+        $article = $id ? $articleRepository->find($id) : null;
 
-        $formArt = $this->createForm(ArticleFormType::class);
-
+        $formArt = $this->createForm(ArticleFormType::class, $article);
         $formArt->handleRequest($request);
 
         if ($formArt->isSubmitted() && $formArt->isValid()) {
