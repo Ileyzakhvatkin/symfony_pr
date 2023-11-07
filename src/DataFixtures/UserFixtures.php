@@ -104,9 +104,9 @@ class UserFixtures extends BaseFixtures
     {
         $date = $this->faker->dateTimeBetween('-50 days', '0 day');
         $module = (new Module())
-            ->setTitle(self::$modules[rand(0,2)]['title'])
+            ->setTitle(self::$modules[$i]['title'])
             ->setUser($user)
-            ->setCode(self::$modules[1]['code'])
+            ->setCode(self::$modules[$i]['code'])
             ->setCreatedAt($date)
             ->setUpdatedAt($date)
         ;

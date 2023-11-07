@@ -43,9 +43,11 @@ class ModuleController extends AbstractController
         if ($formModule->isSubmitted() && $formModule->isValid()) {
             /** @var Module $module */
             $module = $formModule->getData();
-            $module->setUser($authUser);
-            $module->setCreatedAt(Carbon::now());
-            $module->setUpdatedAt(Carbon::now());
+            $module
+                ->setUser($authUser)
+                ->setCode(htmlspecialchars($formModule->get('code')->getData()))
+                ->setCreatedAt(Carbon::now())
+                ->setUpdatedAt(Carbon::now());
             $em->persist($module);
             $em->flush();
             $this->addFlash('flash_message', 'Модуль успешно создан');

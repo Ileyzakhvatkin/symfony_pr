@@ -24,7 +24,7 @@ class WordFixtures extends BaseFixtures
 
     public function loadData(ObjectManager $manager)
     {
-        $this->createMany(Word::class, 100, function (Word $word) {
+        $this->createMany(Word::class, 200, function (Word $word) {
             $word
                 ->setArticle($this->articleRepository->find(rand(1, 75)))
                 ->setTitle($this->faker->word)
