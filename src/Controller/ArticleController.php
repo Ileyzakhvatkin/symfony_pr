@@ -3,20 +3,15 @@
 namespace App\Controller;
 
 use App\Entity\Article;
-use App\Entity\Module;
 use App\Entity\User;
 use App\Form\ArticleFormType;
 use App\Repository\ArticleRepository;
-use App\Repository\ModuleRepository;
 use App\Services\ArticleCreatePeriodControl;
 use App\Services\LicenseLevelControl;
-use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use Carbon\Carbon;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Form\Extension\Core\Type\NumberType;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
-//use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
@@ -52,6 +47,7 @@ class ArticleController extends AbstractController
         ArticleRepository $articleRepository,
         LicenseLevelControl $licenseLevelControl,
         ArticleCreatePeriodControl $articleCreatePeriodControl,
+        EntityManagerInterface $em,
     ): Response
     {
         /** @var User $authUser */
@@ -66,9 +62,16 @@ class ArticleController extends AbstractController
         $formArt->handleRequest($request);
 
         if ($formArt->isSubmitted() && $formArt->isValid()) {
-            $newId = 1;
-            // $newId = $articleRepository->update($formArt->getData());
-            return $this->redirectToRoute('create_article', ['id' => $newId]);
+            /** @var Article $newArticle */
+            $newArticle = $formArt->getData();
+            $newArticle
+                ->setUser($authUser)
+                ->setContent('Созданный текст статьи')
+                ->setUpdatedAt(Carbon::now());
+            if (!isset($id)) $newArticle->setCreatedAt(Carbon::now());
+            $em->persist($newArticle);
+            $em->flush();
+            return $this->redirectToRoute('create_article', ['id' => $id]);
         }
 
         return $this->render('dashboard/create_article.html.twig', [

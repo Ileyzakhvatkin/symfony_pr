@@ -32,9 +32,9 @@ class UserFixtures extends BaseFixtures
     ];
 
     private static $themes = [
-        'Про не здоровую еду',
-        'Про PHP и всякое',
-        'Про женщин и не только',
+        'FOOD',
+        'PHP',
+        'WOMEN',
     ];
 
     private static $users = [
@@ -69,7 +69,7 @@ class UserFixtures extends BaseFixtures
                     ->setName($itemUser['name'])
                     ->setEmail($itemUser['email'])
                     ->setRoles($itemUser['roles'])
-                    ->setActive(true)
+                    ->setRegLink(sha1(uniqid('token')))
                     ->setPassword($this->passwordHasher->hashPassword($user, '123123'))
                     ->setCreatedAt($date)
                     ->setUpdatedAt($date);

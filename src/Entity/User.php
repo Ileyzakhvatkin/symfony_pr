@@ -47,11 +47,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(mappedBy: 'user', targetEntity: Article::class)]
     private Collection $articles;
 
-    #[ORM\Column(nullable: true)]
-    private ?bool $active = null;
-
     #[ORM\OneToMany(mappedBy: 'user', targetEntity: ApiToken::class, orphanRemoval: true)]
     private Collection $apiTokens;
+
+    #[ORM\Column(length: 255)]
+    private ?string $regLink = null;
 
     public function __construct()
     {
@@ -233,18 +233,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function isActive(): ?bool
-    {
-        return $this->active;
-    }
-
-    public function setActive(?bool $active): static
-    {
-        $this->active = $active;
-
-        return $this;
-    }
-
     /**
      * @return Collection<int, ApiToken>
      */
@@ -271,6 +259,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
                 $apiToken->setUser(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getRegLink(): ?string
+    {
+        return $this->regLink;
+    }
+
+    public function setRegLink(string $regLink): static
+    {
+        $this->regLink = $regLink;
 
         return $this;
     }
