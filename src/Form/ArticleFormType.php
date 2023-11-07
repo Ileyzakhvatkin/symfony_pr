@@ -26,7 +26,7 @@ class ArticleFormType extends AbstractType
     {
         /** @var Article $article */
         $article = $options['data'] ?? null;
-        dd($article);
+        // dd($article);
 
         $builder
             ->add('title', TextType::class)

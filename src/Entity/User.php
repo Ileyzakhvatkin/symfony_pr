@@ -9,6 +9,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
@@ -24,6 +25,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?string $email = null;
 
     #[ORM\Column]
+    #[Groups('main')]
     private array $roles = [];
 
     /**
@@ -33,6 +35,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?string $password = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Groups('main')]
     private ?string $name = null;
 
     #[ORM\OneToMany(mappedBy: 'user', targetEntity: Payment::class)]
@@ -47,11 +50,15 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(nullable: true)]
     private ?bool $active = null;
 
+    #[ORM\OneToMany(mappedBy: 'user', targetEntity: ApiToken::class, orphanRemoval: true)]
+    private Collection $apiTokens;
+
     public function __construct()
     {
         $this->payments = new ArrayCollection();
         $this->modules = new ArrayCollection();
         $this->articles = new ArrayCollection();
+        $this->apiTokens = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -234,6 +241,36 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setActive(?bool $active): static
     {
         $this->active = $active;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, ApiToken>
+     */
+    public function getApiTokens(): Collection
+    {
+        return $this->apiTokens;
+    }
+
+    public function addApiToken(ApiToken $apiToken): static
+    {
+        if (!$this->apiTokens->contains($apiToken)) {
+            $this->apiTokens->add($apiToken);
+            $apiToken->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeApiToken(ApiToken $apiToken): static
+    {
+        if ($this->apiTokens->removeElement($apiToken)) {
+            // set the owning side to null (unless already changed)
+            if ($apiToken->getUser() === $this) {
+                $apiToken->setUser(null);
+            }
+        }
 
         return $this;
     }

@@ -2,11 +2,11 @@
 
 namespace App\DataFixtures;
 
+use App\Entity\ApiToken;
 use App\Entity\Article;
 use App\Entity\Module;
 use App\Entity\Payment;
 use App\Entity\User;
-use App\Entity\Word;
 use Doctrine\Persistence\ObjectManager;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
@@ -73,7 +73,8 @@ class UserFixtures extends BaseFixtures
                     ->setPassword($this->passwordHasher->hashPassword($user, '123123'))
                     ->setCreatedAt($date)
                     ->setUpdatedAt($date);
-//            $manager->persist(new ApiToken($user));
+
+                $manager->persist(new ApiToken($user));
 
                 $this->addPayment($user, $manager);
                 for ($i = 0; $i < 3; $i++) {
