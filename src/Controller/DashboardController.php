@@ -48,4 +48,5 @@ class DashboardController extends AbstractController
             'payments' => $paymentRepository->getList($this->getUser()->getId()),
         ]);
     }
+
 }

@@ -10,8 +10,10 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints\Image;
 
 class ArticleFormType extends AbstractType
 {
@@ -26,11 +28,13 @@ class ArticleFormType extends AbstractType
     {
         /** @var Article $article */
         $article = $options['data'] ?? null;
-        // dd($article);
 
         $builder
-            ->add('title', TextType::class)
+            ->add('title', TextType::class, [
+                'required' => false,
+            ])
             ->add('theme', ChoiceType::class, [
+                'required' => false,
                 'choices'  => [
                     'Про НЕ здоровую еду' => 'FOOD',
                     'Про PHP и как с этим жить' => 'PHP',
@@ -39,37 +43,57 @@ class ArticleFormType extends AbstractType
                 'placeholder' => 'Выберете тему',
             ])
             ->add('module', EntityType::class, [
+                'required' => false,
                 'class' => Module::class,
                 'choice_label' => 'title',
                 'placeholder' => 'Выберете модуль',
                 'choices' => $this->moduleRepository->listAuthUser()
             ])
-            ->add('keyword', TextType::class)
-            ->add('keyword_dist', TextType::class)
-            ->add('keyword_many', TextType::class)
-            ->add('size', NumberType::class, ['attr' => ['maxlength' => 4]])
-            ->add('maxsize', NumberType::class, ['attr' => ['maxlength' => 4]])
+//            ->add('keyword', TextType::class)
+            ->add('size', NumberType::class, [
+                'required' => false,
+                'attr' => ['maxlength' => 4],
+            ])
+            ->add('maxsize', NumberType::class, [
+                'required' => false,
+                'attr' => ['maxlength' => 4],
+            ])
+            ->add('images', FileType::class, [
+                'mapped' => false,
+                'required' => false,
+                'multiple' => true,
+//                'constraints' => new Images([
+//                    'maxSize' => '1M',
+//                    'maxSizeMessage' => 'Размер файла не должен быть больше 1M'
+//                ])
+            ])
         ;
 
         if (isset($article) && count($article->getWords()) > 0) {
             foreach ($article->getWords() as $key => $el) {
                 $builder
                     ->add('word_' . $key + 1, TextType::class, [
-                        'mapped' => false
+                        'required' => false,
+                        'mapped' => false,
+                        'data' => $el->getTitle()
                     ])
                     ->add('word_count_' . $key + 1, NumberType::class, [
+                        'required' => false,
                         'attr' => ['maxlength' => 2],
                         'mapped' => false,
+                        'data' => $el->getCount()
                     ]);
             }
         }
         $builder
             ->add('word_0', TextType::class, [
+                'required' => false,
                 'mapped' => false
             ])
             ->add('word_count_0', NumberType::class, [
+                'required' => false,
                 'attr' => ['maxlength' => 2],
-                'mapped' => false,
+                'mapped' => false
             ])
         ;
     }

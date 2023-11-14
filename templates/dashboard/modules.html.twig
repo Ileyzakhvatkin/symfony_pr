@@ -50,13 +50,11 @@
                 {{ form_start(formModule) }}
                     <div class="form-group">
                         {{ form_label(formModule.title, 'Название модуля') }}
-                        {{ form_widget(formModule.title, {'attr': {'class': 'form-control', placeholder: 'Название модуля'}}) }}
-                        {{ form_errors(formModule.title) }}
+                        {{ form_widget(formModule.title, {'attr': {placeholder: 'Название модуля'}}) }}
                        </div>
                     <div class="form-group">
                         {{ form_label(formModule.code, 'Код модуля') }}
-                        {{ form_widget(formModule.code, {'attr': {'class': 'form-control'}}) }}
-                        {{ form_errors(formModule.code) }}
+                        {{ form_widget(formModule.code) }}
                     </div>
                     <button class="btn btn-lg btn-primary btn-block text-uppercase" type="submit">Добавить</button>
                 {{ form_end(formModule) }}

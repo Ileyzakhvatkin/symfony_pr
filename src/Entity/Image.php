@@ -4,7 +4,6 @@ namespace App\Entity;
 
 use App\Repository\ImageRepository;
 use Doctrine\ORM\Mapping as ORM;
-use Gedmo\Timestampable\Traits\TimestampableEntity;
 
 #[ORM\Entity(repositoryClass: ImageRepository::class)]
 class Image
@@ -15,7 +14,7 @@ class Image
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
-    private ?string $img_url = null;
+    private ?string $imgUrl = null;
 
     #[ORM\ManyToOne(inversedBy: 'images')]
     #[ORM\JoinColumn(nullable: false)]
@@ -28,12 +27,12 @@ class Image
 
     public function getImgUrl(): ?string
     {
-        return $this->img_url;
+        return $this->imgUrl;
     }
 
-    public function setImgUrl(string $img_url): static
+    public function setImgUrl(string $imgUrl): static
     {
-        $this->img_url = $img_url;
+        $this->imgUrl = $imgUrl;
 
         return $this;
     }

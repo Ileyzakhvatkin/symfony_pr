@@ -14,8 +14,12 @@ class ModuleFormType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('title', TextType::class)
-            ->add('code', TextareaType::class)
+            ->add('title', TextType::class, [
+                'required' => false
+            ])
+            ->add('code', TextareaType::class, [
+                'required' => false
+            ])
         ;
     }
 

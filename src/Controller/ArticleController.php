@@ -3,14 +3,17 @@
 namespace App\Controller;
 
 use App\Entity\Article;
+use App\Entity\Image;
 use App\Entity\User;
 use App\Form\ArticleFormType;
 use App\Repository\ArticleRepository;
 use App\Services\ArticleCreatePeriodControl;
+use App\Services\FileUploader;
 use App\Services\LicenseLevelControl;
 use Carbon\Carbon;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -48,6 +51,7 @@ class ArticleController extends AbstractController
         LicenseLevelControl $licenseLevelControl,
         ArticleCreatePeriodControl $articleCreatePeriodControl,
         EntityManagerInterface $em,
+        FileUploader $fileUploader,
     ): Response
     {
         /** @var User $authUser */
@@ -64,13 +68,26 @@ class ArticleController extends AbstractController
         if ($formArt->isSubmitted() && $formArt->isValid()) {
             /** @var Article $newArticle */
             $newArticle = $formArt->getData();
+
+            $images = $formArt->get('images')->getData();
+            if (count($images) > 0) {
+                foreach ($images as $img) {
+                    $image = new Image();
+                    $image
+                        ->setImgUrl($this->getParameter('article_uploads_dir') . '/' . $fileUploader->uploadFile($img))
+                        ->setArticle($newArticle);
+                    $em->persist($image);
+                }
+            }
+
             $newArticle
                 ->setUser($authUser)
-                ->setContent('Созданный текст статьи')
+                ->setContent('СГЕНЕРИРОВАННЫЙ ТЕКСТ СТАТЬИ')
                 ->setUpdatedAt(Carbon::now());
             if (!isset($id)) $newArticle->setCreatedAt(Carbon::now());
             $em->persist($newArticle);
             $em->flush();
+
             return $this->redirectToRoute('create_article', ['id' => $id]);
         }
 

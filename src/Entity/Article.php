@@ -7,6 +7,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
 
 #[ORM\Entity(repositoryClass: ArticleRepository::class)]
@@ -20,24 +21,22 @@ class Article
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[Assert\NotBlank(message: "Выберете тему")]
     private ?string $theme = null;
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $title = null;
 
-    #[ORM\Column(length: 255)]
-    private ?string $keyword = null;
-
-    #[ORM\Column(length: 255)]
-    private ?string $keyword_dist = null;
-
-    #[ORM\Column(length: 255)]
-    private ?string $keyword_many = null;
+    #[ORM\Column]
+    private array $keyword = [];
 
     #[ORM\Column]
+    #[Assert\NotBlank(message: "Задайте минимальный размер")]
+//    #[Assert\Length(min: 1000, max: 5000, maxMessage: "Объем стать должен быть от 1000 до 5000 символов" )]
     private ?int $size = null;
 
-    #[ORM\Column]
+    #[ORM\Column(nullable: true)]
+//    #[Assert\Length(min: 1000, max: 5000, maxMessage: "Объем стать должен быть от 1000 до 5000 символов" )]
     private ?int $maxsize = null;
 
     #[ORM\Column(type: Types::TEXT)]
@@ -50,11 +49,11 @@ class Article
     #[ORM\ManyToOne(inversedBy: 'articles')]
     private ?Module $module = null;
 
-    #[ORM\OneToMany(mappedBy: 'article', targetEntity: Image::class)]
-    private Collection $images;
-
     #[ORM\OneToMany(mappedBy: 'article', targetEntity: Word::class)]
     private Collection $words;
+
+    #[ORM\OneToMany(mappedBy: 'article', targetEntity: Image::class)]
+    private Collection $images;
 
     public function __construct()
     {
@@ -91,38 +90,14 @@ class Article
         return $this;
     }
 
-    public function getKeyword(): ?string
+    public function getKeyword(): array
     {
         return $this->keyword;
     }
 
-    public function setKeyword(string $keyword): static
+    public function setKeyword(array $keyword): static
     {
         $this->keyword = $keyword;
-
-        return $this;
-    }
-
-    public function getKeywordDist(): ?string
-    {
-        return $this->keyword_dist;
-    }
-
-    public function setKeywordDist(string $keyword_dist): static
-    {
-        $this->keyword_dist = $keyword_dist;
-
-        return $this;
-    }
-
-    public function getKeywordMany(): ?string
-    {
-        return $this->keyword_many;
-    }
-
-    public function setKeywordMany(string $keyword_many): static
-    {
-        $this->keyword_many = $keyword_many;
 
         return $this;
     }

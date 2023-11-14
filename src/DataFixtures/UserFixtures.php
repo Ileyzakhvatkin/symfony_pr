@@ -115,7 +115,7 @@ class UserFixtures extends BaseFixtures
 
     private function addArticle($user, $manager)
     {
-        $keyWord = $this->faker->city;
+        $keyword = $this->faker->city;
         $date = $this->faker->dateTimeBetween('-50 days', '0 day');
         $size = $this->faker->numberBetween(40, 50) * 10;
         $maxsize = $this->faker->numberBetween(50, 80) * 10;
@@ -123,9 +123,7 @@ class UserFixtures extends BaseFixtures
             ->setUser($user)
             ->setTitle($this->faker->streetName)
             ->setTheme($this->faker->randomElement(self::$themes))
-            ->setKeyword($keyWord)
-            ->setKeywordDist($keyWord . 'd')
-            ->setKeywordMany($keyWord . 's')
+            ->setKeyword(['0' => $keyword, '1' => $keyword, '6' => $keyword . 's'])
             ->setSize($size)
             ->setMaxSize($maxsize)
             ->setContent($this->faker->realText($this->faker->numberBetween($size, $maxsize)))
