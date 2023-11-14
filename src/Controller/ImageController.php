@@ -14,7 +14,7 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 #[IsGranted('ROLE_USER')]
 class ImageController extends AbstractController
 {
-    #[Route('/delete-image/{id}/{articleId}', name: 'delete-image')]
+    #[Route('/delete-image/{id}/{articleId}', name: 'delete-image', methods: ['POST'])]
     public function deleteImage(
         $id, $articleId,
         ImageRepository $imageRepository,

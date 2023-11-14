@@ -91,10 +91,10 @@
                 <div class="row mb-4">
                     {% if article %}
                         {% for image in article.images %}
-                            <div class="col-3">
+                            <div class="col-3" data-id="imageBlock">
                                 <p>{{ image.imgUrl }}</p>
 {#                                <img src="{{ image.img_url }}" alt="">#}
-                                <a href="{{ path('delete-image', {id: image.id, articleId: article.id}) }}" class="text-danger"><i class="fas fa-trash"></i></a>
+                                <a data-id="imageDelete" href="{{ path('delete-image', {id: image.id, articleId: article.id}) }}" class="text-danger"><i class="fas fa-trash"></i></a>
                             </div>
                         {% endfor %}
                     {% endif %}

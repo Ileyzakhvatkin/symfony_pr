@@ -2,11 +2,13 @@
 
 namespace App\Controller;
 
+use App\Entity\ApiToken;
 use App\Entity\User;
 use App\Form\UserUpdateFormType;
 use Carbon\Carbon;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
@@ -49,11 +51,24 @@ class UserController extends AbstractController
         ]);
     }
 
-//    #[Route('/dashboard-token-update/', name: 'token_update', methods: ['PATCH'])]
-//    public function tokenUpdate(): JsonResponse
-//    {
-//        return $this->json(json_encode(['token' => 'updated']));
-//    }
+    #[Route('/dashboard-token-update/', name: 'token_update', methods: ['POST'])]
+    public function tokenUpdate(EntityManagerInterface $em): JsonResponse
+    {
+        /** @var User $authUser */
+        $authUser = $this->getUser();
+        if ($authUser) {
+            $newToken = new ApiToken($authUser);
+            $em->persist($newToken);
+            $em->flush();
+
+            return $this->json([
+                'status' => 'updated',
+                'token' => $newToken->getToken(),
+            ]);
+        }
+
+        return $this->json(['status' => 'not-updated']);
+    }
 
 
 }

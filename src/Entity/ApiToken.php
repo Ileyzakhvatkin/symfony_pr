@@ -45,7 +45,7 @@ class ApiToken
     }
 
 
-    public function getExpiresAt(): ?\DateTimeImmutable
+    public function getExpiresAt(): \DateTime|\DateTimeInterface|null
     {
         return $this->expiresAt;
     }
