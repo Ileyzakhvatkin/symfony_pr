@@ -92,38 +92,22 @@
                 <div class="card mb-4">
                     <div class="card-body">
                         <p class="card-title">Продвигаемые слова</p>
-                            {% if (article and article.words.count > 0) %}
-                                {% for word in article.words %}
-                                    <div class="row">
-                                        <div class="col">
-                                            <div class="form-label-group">
-                                                {{ form_widget(formArt.word_1, {'attr': {placeholder: 'Продвигаемое слово'}}) }}
-                                                {{ form_label(formArt.word_1, 'Продвигаемое слово') }}
-                                            </div>
-                                        </div>
-                                        <div class="col">
-                                            <div class="form-label-group">
-                                                {{ form_widget(formArt.word_count_ . loop.index, {'attr': {placeholder: 'кол-во'}}) }}
-                                                {{ form_label(formArt.word_count_ . loop.index, 'кол-во') }}
-                                            </div>
+                            {% for wordsFields in formArt.words %}
+                                <div class="row">
+                                    <div class="col">
+                                        <div class="form-label-group">
+                                            {{ form_widget(wordsFields.word, {'attr': {placeholder: 'Продвигаемое слово'}}) }}
+                                            {{ form_label(wordsFields.word, 'Продвигаемое слово') }}
                                         </div>
                                     </div>
-                                {% endfor %}
-                            {% endif %}
-                            <div class="row">
-                                <div class="col">
-                                    <div class="form-label-group">
-                                        {{ form_widget(formArt.word_0, {'attr': {placeholder: 'Продвигаемое слово'}}) }}
-                                        {{ form_label(formArt.word_0, 'Продвигаемое слово') }}
+                                    <div class="col">
+                                        <div class="form-label-group">
+                                            {{ form_widget(wordsFields.count, {'attr': {placeholder: 'кол-во'}}) }}
+                                            {{ form_label(wordsFields.count, 'кол-во') }}
+                                        </div>
                                     </div>
                                 </div>
-                                <div class="col">
-                                    <div class="form-label-group">
-                                        {{ form_widget(formArt.word_count_0, {'attr': {placeholder: 'кол-во'}}) }}
-                                        {{ form_label(formArt.word_count_0, 'кол-во') }}
-                                    </div>
-                                </div>
-                            </div>
+                            {% endfor %}
                     </div>
                 </div>
                 <div class="form-group">

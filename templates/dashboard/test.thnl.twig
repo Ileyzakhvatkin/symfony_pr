@@ -1,0 +1,34 @@
+<div class="card mb-4">
+    <div class="card-body words-fields-list"  id="words-fields-list" data-prototype='<div class="row" id="article_form_words___name__"><div class="col"><div class="form-label-group"><input type="text" class="form-control" id="article_form_words___name___word" name="article_form[words][name][word]" placeholder="Продвигаемое слово" /><label for="article_form_words___name___word" class="required">Продвигаемое слово</label></div></div><div class="col"><div class="form-label-group"><input type="text" class="form-control" id="article_form_words___name___count" name="article_form[words][name][count]" placeholder="кол-во" /><label for="article_form_words___name___count" class="required">кол-во</label></div></div></div>' data-index="{{ articleForm.words|length }}">
+        <p class="card-title">Продвигаемые слова</p>
+        {% for wordsFields in articleForm.words %}
+            <div class="row" id="article_form_words_0">
+                <div class="col">
+                    <div class="form-label-group" >
+                        {{ form_widget(wordsFields.word, {
+                            attr: { placeholder: 'Продвигаемое слово', class: 'form-control'}
+                        }) }}
+                        {{ form_label(wordsFields.word, 'Продвигаемое слово', {
+                            label_attr: { for: 'word_fields_word'}
+                        }) }}
+                    </div>
+                </div>
+
+                <div class="col">
+                    <div class="form-label-group">
+                        {{ form_widget(wordsFields.count, {
+                            attr: { placeholder: 'кол-во', class: 'form-control'}
+                        }) }}
+                        {{ form_label(wordsFields.count, 'кол-во', {
+                            label_attr: { for: 'word_fields_count'}
+                        }) }}
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+
+        {% if avalibleWords %}
+            <a href="#" class="add-another-word" id="add-another-word">Добавить слово</a>
+        {% endif %}
+    </div>
+</div>

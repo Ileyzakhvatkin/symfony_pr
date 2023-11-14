@@ -123,7 +123,7 @@ class UserFixtures extends BaseFixtures
             ->setUser($user)
             ->setTitle($this->faker->streetName)
             ->setTheme($this->faker->randomElement(self::$themes))
-            ->setKeyword(['0' => $keyword, '1' => $keyword, '6' => $keyword . 's'])
+            ->setKeyword(['0' => $keyword, '1' => $keyword, '2' => $keyword, '3' => $keyword, '4' => $keyword,  '5' => $keyword, '6' => $keyword . 's'])
             ->setSize($size)
             ->setMaxSize($maxsize)
             ->setContent($this->faker->realText($this->faker->numberBetween($size, $maxsize)))
