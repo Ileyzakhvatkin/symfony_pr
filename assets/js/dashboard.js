@@ -12,11 +12,13 @@ $(function() {
   $('.custom-file').each(function () {
     const $container = $(this);
 
-    $container.on('change', '.custom-file-input', function (event) {
-      let filesNames = '';
-      event.currentTarget.files.forEach((el) => {
-        if(el) filesNames = filesNames + el.name + ', ';
-      })
+    $container.on('change', '.custom-file-input', (event) => {
+      let files = event.currentTarget.files;
+      // console.log(files)
+      let filesNames = `Выбрано файлов - ${files.length}`;
+      if(files.length > 5) {
+        filesNames = `Выбрано файлов - ${files.length}. Будет загружено 5`
+      }
       $container.find('.custom-file-label').html(filesNames);
     });
   });

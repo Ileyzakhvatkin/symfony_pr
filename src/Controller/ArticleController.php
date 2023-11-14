@@ -82,7 +82,16 @@ class ArticleController extends AbstractController
 
             $newArticle
                 ->setUser($authUser)
-                ->setContent('СГЕНЕРИРОВАННЫЙ ТЕКСТ СТАТЬИ')
+                ->setKeyword([
+                    '0' => $formArt->get('keyword0')->getData(),
+                    '1' => $formArt->get('keyword1')->getData(),
+                    '2' => $formArt->get('keyword2')->getData(),
+                    '3' => $formArt->get('keyword3')->getData(),
+                    '4' => $formArt->get('keyword4')->getData(),
+                    '5' => $formArt->get('keyword5')->getData(),
+                    '6' => $formArt->get('keyword6')->getData(),
+                ])
+                ->setContent('СГЕНЕРИРОВАННЫЙ ТЕКСТ СТАТЬИ СГЕНЕРИРОВАННЫЙ ТЕКСТ СТАТЬИ СГЕНЕРИРОВАННЫЙ ТЕКСТ СТАТЬИ СГЕНЕРИРОВАННЫЙ ТЕКСТ СТАТЬИ')
                 ->setUpdatedAt(Carbon::now());
             if (!isset($id)) $newArticle->setCreatedAt(Carbon::now());
             $em->persist($newArticle);

@@ -27,8 +27,50 @@
                     <div class="card-body">
                         <p class="card-title">Ключевое слово</p>
                         <div class="form-label-group">
-{#                            {{ form_widget(formArt.keyword, {'attr': {placeholder: 'Ключевое слово'}}) }}#}
-{#                            {{ form_label(formArt.keyword, 'Ключевое слово') }}#}
+                            {{ form_widget(formArt.keyword0, {'attr': {placeholder: 'Ключевое слово'}}) }}
+                            {{ form_label(formArt.keyword0, 'Ключевое слово') }}
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                                <div class="form-label-group">
+                                    {{ form_widget(formArt.keyword1, {'attr': {placeholder: 'Родительный падеж'}}) }}
+                                    {{ form_label(formArt.keyword1, 'Родительный падеж') }}
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="form-label-group">
+                                    {{ form_widget(formArt.keyword2, {'attr': {placeholder: 'Дательный падеж'}}) }}
+                                    {{ form_label(formArt.keyword2, 'Дательный падеж') }}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                                <div class="form-label-group">
+                                    {{ form_widget(formArt.keyword3, {'attr': {placeholder: 'Венительный падеж'}}) }}
+                                    {{ form_label(formArt.keyword3, 'Венительный падеж') }}
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="form-label-group">
+                                    {{ form_widget(formArt.keyword4, {'attr': {placeholder: 'Творительный падеж'}}) }}
+                                    {{ form_label(formArt.keyword4, 'Творительный падеж') }}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                                <div class="form-label-group">
+                                    {{ form_widget(formArt.keyword5, {'attr': {placeholder: 'Предложный падеж'}}) }}
+                                    {{ form_label(formArt.keyword5, 'Предложный падеж') }}
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="form-label-group">
+                                    {{ form_widget(formArt.keyword6, {'attr': {placeholder: 'Множественное число'}}) }}
+                                    {{ form_label(formArt.keyword6, 'Множественное число') }}
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -55,14 +97,14 @@
                                     <div class="row">
                                         <div class="col">
                                             <div class="form-label-group">
-    {#                                            {{ form_widget(formArt.vars.(loop.index), {'attr': {placeholder: 'Продвигаемое слово'}}) }}#}
-    {#                                            {{ form_label(formArt.vars.(loop.index), 'Продвигаемое слово') }}#}
+                                                {{ form_widget(formArt.word_1, {'attr': {placeholder: 'Продвигаемое слово'}}) }}
+                                                {{ form_label(formArt.word_1, 'Продвигаемое слово') }}
                                             </div>
                                         </div>
                                         <div class="col">
                                             <div class="form-label-group">
-    {#                                            {{ form_widget(formArt.word_count_loop.index, {'attr': {placeholder: 'кол-во'}}) }}#}
-    {#                                            {{ form_label(formArt.word_count_ loop.index, 'кол-во') }}#}
+                                                {{ form_widget(formArt.word_count_ . loop.index, {'attr': {placeholder: 'кол-во'}}) }}
+                                                {{ form_label(formArt.word_count_ . loop.index, 'кол-во') }}
                                             </div>
                                         </div>
                                     </div>
@@ -99,7 +141,7 @@
                         {% endfor %}
                     {% endif %}
                 </div>
-                <button class="btn btn-lg btn-primary btn-block text-uppercase" type="submit">Добавить</button>
+                <button class="btn btn-lg btn-primary btn-block text-uppercase" type="submit">{{ article ? 'Обновить' : 'Добавить' }}</button>
 
             {{ form_end(formArt) }}
         {% else %}

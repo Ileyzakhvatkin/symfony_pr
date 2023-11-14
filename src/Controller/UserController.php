@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\ApiToken;
 use App\Entity\User;
 use App\Form\UserUpdateFormType;
+use App\Repository\ApiTokenRepository;
 use Carbon\Carbon;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -22,7 +23,8 @@ class UserController extends AbstractController
     public function profile(
         Request $request,
         EntityManagerInterface $em,
-        UserPasswordHasherInterface $passwordHasher
+        UserPasswordHasherInterface $passwordHasher,
+        ApiTokenRepository $apiTokenRepository,
     ): Response
     {
         /** @var User $authUser */
@@ -46,7 +48,8 @@ class UserController extends AbstractController
 
         return $this->render('dashboard/profile.html.twig', [
             'itemActive' => 5,
-            'user' => $this->getUser(),
+            'user' => $authUser,
+            'token' => $apiTokenRepository->getActualToken($authUser)[0]->getToken(),
             'formProfile' => $formProfile->createView(),
         ]);
     }

@@ -49,7 +49,6 @@ class ArticleFormType extends AbstractType
                 'placeholder' => 'Выберете модуль',
                 'choices' => $this->moduleRepository->listAuthUser()
             ])
-//            ->add('keyword', TextType::class)
             ->add('size', NumberType::class, [
                 'required' => false,
                 'attr' => ['maxlength' => 4],
@@ -68,6 +67,15 @@ class ArticleFormType extends AbstractType
 //                ])
             ])
         ;
+
+        $keywords = ['keyword0', 'keyword1', 'keyword2', 'keyword3', 'keyword4', 'keyword5', 'keyword6'];
+        foreach ($keywords as $key=>$word) {
+            $builder->add($word, TextType::class, [
+                'mapped' => false,
+                'required' => false,
+                'data' => $article->getKeyword()[$key],
+            ]);
+        }
 
         if (isset($article) && count($article->getWords()) > 0) {
             foreach ($article->getWords() as $key => $el) {
