@@ -4,7 +4,7 @@ $(document).ready(function() {
 
     let $wrapper = $('.words-fields-list');
 
-    $(document).on('click', '.words-fields-list', function(e) {
+    $(document).on('click', '.add-another-word', function(e) {
         e.preventDefault();
 
         // Get the data-prototype explained earlier

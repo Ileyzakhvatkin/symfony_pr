@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Article;
 use App\Entity\Image;
 use App\Entity\User;
+use App\Entity\Word;
 use App\Form\ArticleFormType;
 use App\Repository\ArticleRepository;
 use App\Services\ArticleCreatePeriodControl;
@@ -13,7 +14,6 @@ use App\Services\LicenseLevelControl;
 use Carbon\Carbon;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -74,7 +74,7 @@ class ArticleController extends AbstractController
                 foreach ($images as $img) {
                     $image = new Image();
                     $image
-                        ->setImgUrl($this->getParameter('article_uploads_dir') . '/' . $fileUploader->uploadFile($img))
+                        ->setImgUrl($fileUploader->uploadFile($img))
                         ->setArticle($newArticle);
                     $em->persist($image);
                 }
@@ -93,11 +93,32 @@ class ArticleController extends AbstractController
                 ])
                 ->setContent('СГЕНЕРИРОВАННЫЙ ТЕКСТ СТАТЬИ СГЕНЕРИРОВАННЫЙ ТЕКСТ СТАТЬИ СГЕНЕРИРОВАННЫЙ ТЕКСТ СТАТЬИ СГЕНЕРИРОВАННЫЙ ТЕКСТ СТАТЬИ')
                 ->setUpdatedAt(Carbon::now());
+
+            if ($formArt->get('title')->getData() === null)
+                $newArticle->setTitle($formArt->get('theme')->getData() . ' - ' . $formArt->get('keyword0')->getData());
+
+            $newId = $id;
             if (!isset($id)) $newArticle->setCreatedAt(Carbon::now());
+
             $em->persist($newArticle);
             $em->flush();
 
-            return $this->redirectToRoute('create_article', ['id' => $id]);
+            if (!isset($id)) {
+                $newId = $articleRepository->lastAarticle($authUser->getId())[0]->getId();
+            }
+
+//            foreach ($formArt->get('words')->getData() as $el) {
+//                $word = new Word();
+//                $word
+//                    ->setTitle($el->getTitle())
+//                    ->setCount($el->getCount())
+//                    ->setArticle($articleRepository->find($newId));
+//                ;
+//                $em->persist($word);
+//            }
+//            $em->flush();
+
+            return $this->redirectToRoute('create_article', ['id' => $newId]);
         }
 
 //        dd($formArt->createView());
@@ -107,6 +128,7 @@ class ArticleController extends AbstractController
             'licenseInfo' => $licenseInfo,
             'formArt' => $formArt->createView(),
             'article' => $article,
+            'availableWords' => true,
         ]);
     }
 

@@ -92,32 +92,35 @@
                 <div class="card mb-4">
                     <div class="card-body words-fields-list"
                          id="words-fields-list"
-                         data-prototype='<div class="row" id="article_form_words___name__"><div class="col"><div class="form-label-group"><input type="text" class="form-control" id="article_form_words___name___word" name="article_form[words][name][word]" placeholder="Продвигаемое слово" /><label for="article_form_words___name___word" class="required">Продвигаемое слово</label></div></div><div class="col"><div class="form-label-group"><input type="text" class="form-control" id="article_form_words___name___count" name="article_form[words][name][count]" placeholder="кол-во" /><label for="article_form_words___name___count" class="required">кол-во</label></div></div></div>'
-                         data-index="{{ formArt.words|length }}"
+                         data-prototype='<div class="row" id="article_form_words_name_row"><div class="col"><div class="form-label-group"><input type="text" class="form-control" id="article_form_words_name" name="article_form[words][name][word]" placeholder="Продвигаемое слово" /><label for="article_form_words_name" class="required">Продвигаемое слово</label></div></div><div class="col"><div class="form-label-group"><input type="text" class="form-control" id="article_form_words_name_count" name="article_form[words][name][count]" placeholder="кол-во" /><label for="article_form_words_name_count" class="required">кол-во</label></div></div></div>'
+                         data-index="{{ formArt.words is defined ? formArt.words|length : 1 }}"
                     >
                         <p class="card-title">Продвигаемые слова</p>
-                        {% for wordsFields in formArt.words %}
-                        <div class="row" id="article_form_words_0">
-                            <div class="col">
-                                <div class="form-label-group" >
-                                    {{ form_widget(wordsFields.word, {'attr': {placeholder: 'Размер статьи от'}}) }}
-                                    {{ form_label(wordsFields.word, 'Продвигаемое слово') }}
+                        {% if (formArt.words is defined) %}
+                            {% for wordsFields in formArt.words %}
+                            <div class="row" id="article_form_words_0">
+                                <div class="col">
+                                    <div class="form-label-group" >
+                                        {{ form_widget(wordsFields.word, {'attr': {placeholder: 'Размер статьи от'}}) }}
+                                        {{ form_label(wordsFields.word, 'Продвигаемое слово') }}
+                                    </div>
+                                </div>
+
+                                <div class="col">
+                                    <div class="form-label-group">
+                                        {{ form_widget(wordsFields.count, {'attr': { placeholder: 'кол-во'}}) }}
+                                        {{ form_label(wordsFields.count, 'кол-во') }}
+                                    </div>
                                 </div>
                             </div>
+                            {% endfor %}
+                        {% endif %}
 
-                            <div class="col">
-                                <div class="form-label-group">
-                                    {{ form_widget(wordsFields.count, {'attr': { placeholder: 'кол-во'}}) }}
-                                    {{ form_label(wordsFields.count, 'кол-во') }}
-                                </div>
-                            </div>
-                        </div>
-                        {% endfor %}
-
-                        <a href="#" class="add-another-word" id="add-another-word">Добавить слово</a>
-{#                        {% if avalibleWords %}#}
-{#                            <a href="#" class="add-another-word" id="add-another-word">Добавить слово</a>#}
-{#                        {% endif %}#}
+                        {% if availableWords %}
+                            <a href="#" class="add-another-word" id="add-another-word">Добавить слово</a>
+                        {% else %}
+                            <p>Добавлять слова можно на тарифах <strong>PLUS</strong> и <strong>PRO</strong></p>
+                        {% endif %}
                     </div>
                 </div>
                 <div class="form-group">
@@ -127,10 +130,16 @@
                 <div class="row mb-4">
                     {% if article %}
                         {% for image in article.images %}
-                            <div class="col-3" data-id="imageBlock">
-                                <p>{{ image.imgUrl }}</p>
-{#                                <img src="{{ image.img_url }}" alt="">#}
-                                <a data-id="imageDelete" href="{{ path('delete-image', {id: image.id, articleId: article.id}) }}" class="text-danger"><i class="fas fa-trash"></i></a>
+                            <div class="col-2" data-id="imageBlock">
+                                <div style="
+                                        background: url({{ uploaded_asset('article_uploads', image.imgUrl) }}) no-repeat center center;
+                                        background-size: cover;
+                                        height: 120px;
+                                        ">
+                                </div>
+                                <a data-id="imageDelete" class="my-2 d-flex justify-content-center" href="{{ path('delete-image', {id: image.id, articleId: article.id}) }}" class="text-danger">
+                                    <i class="fas fa-trash text-danger"></i>
+                                </a>
                             </div>
                         {% endfor %}
                     {% endif %}

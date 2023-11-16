@@ -4,14 +4,18 @@ namespace App\Form;
 
 use App\Entity\Article;
 use App\Entity\Module;
+use App\Entity\Word;
 use App\Repository\ModuleRepository;
+use App\Services\WordType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\FormType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
+use Symfony\Component\Form\Extension\Core\Type\ArrayType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\Image;
@@ -77,8 +81,43 @@ class ArticleFormType extends AbstractType
             ]);
         }
 
-        if (isset($article) && count($article->getWords()) > 0) {
+//        $builder->add('words', CollectionType::class, [
+//            'entry_type' => WordType::class,
+//            'allow_add' => true,
+//            'allow_delete' => true,
+//            'by_reference' => false,
+//            'prototype' => true,
+//            'prototype_name' => '__relatedentities__',
+//            'attr' => ['class' => 'related-entities'],
+//        ]);
 
+//        if (isset($article) && count($article->getWords()) > 0) {
+//            $entryOptions = [];
+//            foreach ($article->getWords() as $key=>&$el) {
+//                $entryOptions[] = $builder->create('wordsFields_' . $key, FormType::class)
+//                    ->add('word', TextType::class, [
+//                        'required' => false,
+//                        'mapped' => false,
+//                        'data' => $el->getTitle()
+//                    ])
+//                    ->add('count', NumberType::class, [
+//                        'required' => false,
+//                        'mapped' => false,
+//                        'attr' => ['maxlength' => 2],
+//                        'data' => $el->getCount()
+//                    ]);
+//            }
+//
+//            $builder->add('words', CollectionType::class, [
+//                    'required' => false,
+//                    'mapped' => false,
+//                    'data' => $entryOptions,
+//                    'allow_add' => true,
+//                ]
+//            );
+//        }
+
+        if (isset($article) && count($article->getWords()) > 0) {
             foreach ($article->getWords() as $key=>$el) {
                 $builder->add(
                     $builder->create('words', FormType::class)->add(
@@ -99,19 +138,6 @@ class ArticleFormType extends AbstractType
             }
         }
     }
-
-//        $builder
-//            ->add('word_0', TextType::class, [
-//                'required' => false,
-//                'mapped' => false
-//            ])
-//            ->add('word_count_0', NumberType::class, [
-//                'required' => false,
-//                'attr' => ['maxlength' => 2],
-//                'mapped' => false
-//            ])
-//        ;
-
 
     public function configureOptions(OptionsResolver $resolver): void
     {
