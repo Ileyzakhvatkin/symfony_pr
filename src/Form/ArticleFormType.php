@@ -66,10 +66,10 @@ class ArticleFormType extends AbstractType
                 'mapped' => false,
                 'required' => false,
                 'multiple' => true,
-//                'constraints' => new Images([
-//                    'maxSize' => '1M',
-//                    'maxSizeMessage' => 'Размер файла не должен быть больше 1M'
-//                ])
+//                'constraints' => new Image([
+//                        'maxSize' => '1M',
+//                        'maxSizeMessage' => 'Размер файла не должен быть больше 1M'
+//                    ])
             ]);
 
         $keywords = ['keyword0', 'keyword1', 'keyword2', 'keyword3', 'keyword4', 'keyword5', 'keyword6'];

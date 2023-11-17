@@ -131,12 +131,13 @@
                     {% if article %}
                         {% for image in article.images %}
                             <div class="col-2" data-id="imageBlock">
-                                <div style="
-                                        background: url({{ uploaded_asset('article_uploads', image.imgUrl) }}) no-repeat center center;
-                                        background-size: cover;
-                                        height: 120px;
-                                        ">
-                                </div>
+{#                                <div style="#}
+{#                                        background: url({{ uploaded_asset('article_uploads', image.imgUrl) }}) no-repeat center center;#}
+{#                                        background-size: cover;#}
+{#                                        height: 120px;#}
+{#                                        ">#}
+{#                                </div>#}
+                                <img src="{{ uploaded_asset('article_uploads', image.imgUrl) | imagine_filter('articles_preview') }}" height="100">
                                 <a data-id="imageDelete" class="my-2 d-flex justify-content-center" href="{{ path('delete-image', {id: image.id, articleId: article.id}) }}" class="text-danger">
                                     <i class="fas fa-trash text-danger"></i>
                                 </a>
