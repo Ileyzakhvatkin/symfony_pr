@@ -34,6 +34,7 @@ $(function() {
         method: 'POST',
       }).then((data) => {
         const { image } = data;
+        // console.log(data);
         if ( image == 'deleted' ) el.remove();
       });
     });

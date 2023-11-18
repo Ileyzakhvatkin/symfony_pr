@@ -117,26 +117,26 @@ class ArticleFormType extends AbstractType
 //            );
 //        }
 
-        if (isset($article) && count($article->getWords()) > 0) {
-            foreach ($article->getWords() as $key=>$el) {
-                $builder->add(
-                    $builder->create('words', FormType::class)->add(
-                        $builder->create('wordsFields_' . $key, FormType::class)
-                            ->add('word', TextType::class, [
-                                'required' => false,
-                                'mapped' => false,
-                                'data' => $el->getTitle()
-                            ])
-                            ->add('count', NumberType::class, [
-                                'required' => false,
-                                'attr' => ['maxlength' => 2],
-                                'mapped' => false,
-                                'data' => $el->getCount()
-                            ])
-                    )
-                );
-            }
-        }
+//        if (isset($article) && count($article->getWords()) > 0) {
+//            foreach ($article->getWords() as $key=>$el) {
+//                $builder->add(
+//                    $builder->create('words', FormType::class)->add(
+//                        $builder->create('wordsFields_' . $key, FormType::class)
+//                            ->add('word', TextType::class, [
+//                                'required' => false,
+//                                'mapped' => false,
+//                                'data' => $el->getTitle()
+//                            ])
+//                            ->add('count', NumberType::class, [
+//                                'required' => false,
+//                                'attr' => ['maxlength' => 2],
+//                                'mapped' => false,
+//                                'data' => $el->getCount()
+//                            ])
+//                    )
+//                );
+//            }
+//        }
     }
 
     public function configureOptions(OptionsResolver $resolver): void

@@ -75,6 +75,7 @@ class ArticleController extends AbstractController
                     $image = new Image();
                     $image
                         ->setImgUrl($fileUploader->uploadFile($img))
+                        ->setImage($img)
                         ->setArticle($newArticle);
                     $em->persist($image);
                 }

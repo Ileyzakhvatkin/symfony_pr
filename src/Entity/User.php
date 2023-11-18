@@ -10,6 +10,8 @@ use Gedmo\Timestampable\Traits\TimestampableEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
@@ -23,9 +25,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\Column(length: 255, nullable: true)]
     #[Groups('main')]
+    #[Assert\NotBlank(message: "Заполните имя")]
     private ?string $name = null;
 
     #[ORM\Column(length: 180, unique: true)]
+    #[Assert\NotBlank(message: "Заполните email")]
+    #[Assert\Email(message: "Неверный формат email")]
     private ?string $email = null;
 
     #[ORM\Column]
@@ -36,6 +41,15 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     #[ORM\Column]
     private ?string $password = null;
+
+    #[Assert\NotBlank(message: "Задайте пароль")]
+    #[Assert\Length(min: 6, minMessage: "Пароль должен быть не меньше 6 символов")]
+    #[CheckPassword]
+    private ?string $password1 = null;
+
+    #[Assert\NotBlank(message: "Повторите пароль")]
+    #[Assert\Length(min: 6, minMessage: "Пароль должен быть не меньше 6 символов")]
+    private ?string $password2 = null;
 
     #[ORM\OneToMany(mappedBy: 'user', targetEntity: Payment::class)]
     private Collection $payments;
@@ -274,4 +288,38 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
+    public function getPassword1(): string|null
+    {
+        return $this->password1;
+    }
+
+    public function setPassword1(string $password1): static
+    {
+        $this->password1 = $password1;
+
+        return $this;
+    }
+
+    public function getPassword2(): string|null
+    {
+        return $this->password2;
+    }
+
+    public function setPassword2(string $password2): static
+    {
+        $this->password2 = $password2;
+
+        return $this;
+    }
+
+    #[Assert\Callback]
+    public function validate(ExecutionContextInterface $context, $payload)
+    {
+        if ( $this->getPassword1() && $this->getPassword2() && $this->getPassword1() !== $this->getPassword2()) {
+            $context->buildViolation('Пароли не совпадают')
+                ->atPath('password')
+                ->addViolation()
+            ;
+        }
+    }
 }

@@ -29,13 +29,13 @@ class UserController extends AbstractController
     {
         /** @var User $authUser */
         $authUser = $this->getUser();
-        $formProfile = $this->createForm(UserUpdateFormType::class, $authUser);
 
+        $formProfile = $this->createForm(UserUpdateFormType::class, $authUser);
         $formProfile->handleRequest($request);
 
         if ($formProfile->isSubmitted() && $formProfile->isValid()) {
-
             $user = $formProfile->getData();
+
             $user
                 ->setPassword($passwordHasher->hashPassword($user, $formProfile->get('password1')->getData()))
                 ->setUpdatedAt(Carbon::now());

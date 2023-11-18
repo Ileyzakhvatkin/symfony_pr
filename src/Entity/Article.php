@@ -3,12 +3,14 @@
 namespace App\Entity;
 
 use App\Repository\ArticleRepository;
+use App\Services\RussianNouns;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
+use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
 #[ORM\Entity(repositoryClass: ArticleRepository::class)]
 class Article
@@ -32,11 +34,13 @@ class Article
 
     #[ORM\Column]
     #[Assert\NotBlank(message: "Задайте минимальный размер")]
-//    #[Assert\Length(min: 1000, max: 5000, maxMessage: "Объем стать должен быть от 1000 до 5000 символов" )]
+    #[Assert\GreaterThan(value: 999, message: "Объем стать должен быть не менее 1000 символов" )]
+    #[Assert\LessThan(value: 5001, message: "Объем стать должен быть не более 5000 символов")]
     private ?int $size = null;
 
     #[ORM\Column(nullable: true)]
-//    #[Assert\Length(min: 1000, max: 5000, maxMessage: "Объем стать должен быть от 1000 до 5000 символов" )]
+    #[Assert\GreaterThan(value: 999, message: "Объем стать должен быть не менее 1000 символов" )]
+    #[Assert\LessThan(value: 5009, message: "Объем стать должен быть не более 5000 символов")]
     private ?int $maxsize = null;
 
     #[ORM\Column(type: Types::TEXT)]

@@ -3,11 +3,14 @@
 {% block content %}
 <h1 class="mt-4">Профиль</h1>
 <div class="row">
-
     <div class="col-xl-6">
-        <div class="alert alert-success" role="alert">
-            Профиль успешно изменен
-        </div>
+        {% if app.session.flashBag.peek('flash_message')|length > 0 %}
+            <div class="alert alert-success" role="alert">
+                {% for massage in app.flashes('flash_message') %}
+                    <div>{{ massage }}</div>
+                {% endfor %}
+            </div>
+        {% endif %}
 
         <div class="card my-4">
             <div class="card-body">
@@ -19,23 +22,21 @@
             <div class="form-label-group">
                 {{ form_widget(formProfile.name, {'attr': {'class': 'form-control', placeholder: 'Ваше имя'}}) }}
                 {{ form_label(formProfile.name, 'Ваше имя') }}
-                {{ form_errors(formProfile.name) }}
             </div>
             <div class="form-label-group">
                 {{ form_widget(formProfile.email, {'attr': {'class': 'form-control', placeholder: 'Ваш Email'}}) }}
                 {{ form_label(formProfile.email, 'Ваш Email') }}
-                {{ form_errors(formProfile.email) }}
             </div>
             <div class="form-label-group">
                 {{ form_widget(formProfile.password1, {'attr': {'class': 'form-control', placeholder: 'Пароль'}}) }}
                 {{ form_label(formProfile.password1, 'Пароль') }}
-                {{ form_errors(formProfile.password1) }}
+
             </div>
             <div class="form-label-group">
                 {{ form_widget(formProfile.password2, {'attr': {'class': 'form-control', placeholder: 'Подтверждение пароля'}}) }}
                 {{ form_label(formProfile.password2, 'Подтверждение пароля') }}
-                {{ form_errors(formProfile.password2) }}
             </div>
+            {{ form_errors(formProfile) }}
             <button class="btn btn-lg btn-primary btn-block text-uppercase" type="submit">Изменить</button>
         {{ form_end(formProfile) }}
     </div>
