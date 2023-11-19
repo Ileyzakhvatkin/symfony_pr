@@ -16,16 +16,16 @@ class ArticleCreatePeriodControl
 
     public function checkBlock($authUser, $licenseInfo): bool
     {
-        $isBlocked = false;
+        $isBlocked = true;
         if ($licenseInfo['type'] == 'PRO') {
-            $isBlocked = true;
+            $isBlocked = false;
         } else {
             $parameters = [
                 'val' => $authUser->getId(),
-                'date' => (new Carbon('-2 hours'))->toDateString(),
+                'date' => Carbon::now()->subHour()->subHour()->toDateTimeString(),
             ];
-            if ($this->articleRepository->getArticleCountFromPeriod($parameters)[0]['1'] >= 2) {
-                $isBlocked = true;
+            if ($this->articleRepository->getArticleCountFromPeriod($parameters)[0]['1'] < 2) {
+                $isBlocked = false;
             }
         }
 

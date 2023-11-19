@@ -4,12 +4,11 @@
 <h1 class="mt-4">Создание статьи</h1>
 <div class="row my-form">
     <div class="col-xl-6">
-        {% if licenseInfo['status'] %}
-            <div class="alert alert-warning" role="alert">
-                {{ licenseInfo['status'] }}
-            </div>
-        {% endif %}
         {% if isBlocked %}
+            <div class="alert alert-danger" role="alert">
+                Превышен лимит создания статей, чтобы снять лимит <a href="{{ path('subscription') }}">Улучшите подписку</a>
+            </div>
+        {% else %}
             {{ form_start(formArt) }}
                 <div class="form-group">
                     {{ form_label(formArt.theme, 'Тематика') }}
@@ -148,10 +147,6 @@
                 <button class="btn btn-lg btn-primary btn-block text-uppercase" type="submit">{{ article ? 'Обновить' : 'Добавить' }}</button>
 
             {{ form_end(formArt) }}
-        {% else %}
-            <div class="alert alert-danger" role="alert">
-                Превышен лимит создания статей, чтобы снять лимит <a href="{{ path('subscription') }}">Улучшите подписку</a>
-            </div>
         {% endif %}
     </div>
 </div>

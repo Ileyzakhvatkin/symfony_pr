@@ -131,7 +131,6 @@ class ArticleController extends AbstractController
         return $this->render('dashboard/create_article.html.twig', [
             'itemActive' => 2,
             'isBlocked' => $isBlocked,
-            'licenseInfo' => $licenseInfo,
             'formArt' => $formArt->createView(),
             'article' => $article,
             'availableWords' => true,
