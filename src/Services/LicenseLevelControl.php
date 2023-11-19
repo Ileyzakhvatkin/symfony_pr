@@ -20,7 +20,9 @@ class LicenseLevelControl
 
     public function update($authUser)
     {
-        if (isset($this->paymentRepository->getLastPayment($authUser)[0])) {
+        if (isset($this->paymentRepository->getLastPayment($authUser)[0]) &&
+            Carbon::parse($this->paymentRepository->getLastPayment($authUser)[0]->getFinishedAt())->diffInSeconds(Carbon::now()) < 60*60*24*3)
+        {
             /** @var Payment $license */
             $license = $this->paymentRepository->getLastPayment($authUser)[0];
             $licenseType = $license->getLicenseType();

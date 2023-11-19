@@ -3,8 +3,10 @@
 namespace App\Controller;
 
 use App\Entity\ApiToken;
+use App\Entity\Module;
 use App\Entity\User;
 use App\Security\LoginFormAuthenticator;
+use App\Services\Constants\DemoModules;
 use Carbon\Carbon;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -54,8 +56,21 @@ class SecurityController extends AbstractController
                 ->setUpdatedAt(Carbon::now())
             ;
             $em->persist($user);
+
             $token = new ApiToken($user);
             $em->persist($token);
+
+            foreach (DemoModules::getModules() as $key=>$el) {
+                $module = (new Module())
+                    ->setTitle(DemoModules::getModules()[$key]['title'])
+                    ->setUser($user)
+                    ->setCode(DemoModules::getModules()[$key]['code'])
+                    ->setCreatedAt(Carbon::now())
+                    ->setUpdatedAt(Carbon::now())
+                ;
+                $em->persist($module);
+            }
+
             $em->flush();
 
             // авторизация после регистрации

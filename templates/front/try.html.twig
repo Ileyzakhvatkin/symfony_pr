@@ -19,11 +19,33 @@
                 {% else %}
                     {{ form_start(formFront) }}
                         <div class="form-label-group my-form">
-                            {{ form_widget(formFront.title, {'attr': {'class': 'form-control', placeholder: 'Заголовок статьи'}}) }}
+                            {% if status %}
+                                {{ form_widget(formFront.title, {'attr': {
+                                    'class': 'form-control',
+                                    placeholder: 'Заголовок статьи',
+                                    disabled: 'disabled'
+                                }}) }}
+                            {% else %}
+                                {{ form_widget(formFront.title, {'attr': {
+                                    'class': 'form-control',
+                                    placeholder: 'Заголовок статьи',
+                                }}) }}
+                            {% endif %}
                             {{ form_label(formFront.title, 'Заголовок статьи') }}
                         </div>
                         <div class="form-label-group my-form">
-                            {{ form_widget(formFront.keyword, {'attr': {'class': 'form-control', placeholder: 'Продвигаемое слово'}}) }}
+                            {% if status %}
+                                {{ form_widget(formFront.keyword, {'attr': {
+                                    'class': 'form-control',
+                                    placeholder: 'Продвигаемое слово',
+                                    disabled: 'disabled'
+                                }}) }}
+                            {% else %}
+                                {{ form_widget(formFront.keyword, {'attr': {
+                                    'class': 'form-control',
+                                    placeholder: 'Продвигаемое слово',
+                                }}) }}
+                            {% endif %}
                             {{ form_label(formFront.keyword, 'Продвигаемое слово') }}
                         </div>
                         <button class="btn btn-lg btn-primary btn-block text-uppercase"

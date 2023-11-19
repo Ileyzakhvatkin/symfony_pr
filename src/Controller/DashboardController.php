@@ -21,7 +21,6 @@ class DashboardController extends AbstractController
         /** @var User $authUser */
         $authUser = $this->getUser();
         $authUserId = $authUser->getId();
-        $licenseInfo = $licenseLevelControl->update($authUser);
 
         $lastMonth = [
             'val' => $authUserId,
@@ -30,7 +29,7 @@ class DashboardController extends AbstractController
 
         return $this->render('dashboard/dashboard.html.twig', [
             'itemActive' => 1,
-            'licenseInfo' => $licenseInfo,
+            'licenseInfo' => $licenseLevelControl->update($authUser),
             'allArticles' => $articleRepository->getAllArticleCount($authUserId)[0]['1'],
             'articlesLastMonth' => $articleRepository->getArticleCountFromPeriod($lastMonth)[0]['1'],
             'latestArticle' => $articleRepository->lastAarticle($authUserId) ? $articleRepository->lastAarticle($authUserId)[0] : null,
