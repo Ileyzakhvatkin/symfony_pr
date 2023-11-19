@@ -81,16 +81,21 @@ class ArticleController extends AbstractController
                 }
             }
 
+            function getKeyword(string $word, $formArt)
+            {
+                return  $formArt->get($word)->getData() ? $formArt->get($word)->getData() : $formArt->get('keyword0')->getData();
+            }
+
             $newArticle
                 ->setUser($authUser)
                 ->setKeyword([
                     '0' => $formArt->get('keyword0')->getData(),
-                    '1' => $formArt->get('keyword1')->getData() ? $formArt->get('keyword1')->getData() : $formArt->get('keyword0')->getData(),
-                    '2' => $formArt->get('keyword2')->getData() ? $formArt->get('keyword2')->getData() : $formArt->get('keyword0')->getData(),
-                    '3' => $formArt->get('keyword3')->getData() ? $formArt->get('keyword3')->getData() : $formArt->get('keyword0')->getData(),
-                    '4' => $formArt->get('keyword4')->getData() ? $formArt->get('keyword4')->getData() : $formArt->get('keyword0')->getData(),
-                    '5' => $formArt->get('keyword5')->getData() ? $formArt->get('keyword5')->getData() : $formArt->get('keyword0')->getData(),
-                    '6' => $formArt->get('keyword6')->getData() ? $formArt->get('keyword6')->getData() : $formArt->get('keyword0')->getData(),
+                    '1' => getKeyword('keyword1', $formArt),
+                    '2' => getKeyword('keyword2', $formArt),
+                    '3' => getKeyword('keyword3', $formArt),
+                    '4' => getKeyword('keyword4', $formArt),
+                    '5' => getKeyword('keyword5', $formArt),
+                    '6' => getKeyword('keyword6', $formArt),
                 ])
                 ->setContent('СГЕНЕРИРОВАННЫЙ ТЕКСТ СТАТЬИ СГЕНЕРИРОВАННЫЙ ТЕКСТ СТАТЬИ СГЕНЕРИРОВАННЫЙ ТЕКСТ СТАТЬИ СГЕНЕРИРОВАННЫЙ ТЕКСТ СТАТЬИ')
                 ->setUpdatedAt(Carbon::now());
