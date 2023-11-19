@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Services\Constants\DemoFrontText;
 use App\Validator\CheckRusNoun;
 use Carbon\Carbon;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -60,28 +61,28 @@ class FrontController extends AbstractController
         if ($formFront->isSubmitted() && $formFront->isValid()) {
 
             $text = [];
-            $lorem = 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Ex impedit odit harum adipisci? Praesentium vitae quam perspiciatis modi possimus. Repudiandae modi nesciunt officia aliquam odit beatae quam illo adipisci cum.';
 
-            for ($i = 1; $i <= rand(6,10); $i++) {
-                $loremArr = explode(' ', $lorem);
-                $randPoz = array_rand($loremArr);
+            for ($i = 0; $i <= 2; $i++) {
+                $testArr = explode(' ', DemoFrontText::getText()[$i]);
+                $randPoz = array_rand($testArr);
                 // array_merge(array_slice($a, 0, 2), [5], array_slice($a, 2, 2)
-                $text[] = implode(' ', array_merge(array_slice($loremArr, 0, $randPoz), [mb_strtolower($formFront->get('keyword')->getData())], array_slice($loremArr, $randPoz, $randPoz)));
+                $text[] = implode(' ', array_merge(array_slice($testArr, 0, $randPoz),
+                    [$formFront->get('keyword')->getData()],
+                    array_slice($testArr, $randPoz, $randPoz))
+                );
             }
 
             $this->addFlash('flash_message', '');
             return $this->render('front/try.html.twig', [
                 'formFront' => $formFront,
-                'createArticle' => true,
-                'testArticle' => [
-                    'title' => $formFront->get('title')->getData(),
-                    'text' => implode(' ', $text),
-                ]
+                'status' => true,
+                'title' => $formFront->get('title')->getData(),
+                'text' => $text,
             ]);
         }
         return $this->render('front/try.html.twig', [
             'formFront' => $formFront,
-            'createArticle' => false,
+            'status' => false,
         ]);
     }
 

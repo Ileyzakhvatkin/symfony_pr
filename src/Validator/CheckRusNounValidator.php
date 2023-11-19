@@ -2,7 +2,7 @@
 
 namespace App\Validator;
 
-use App\Services\RussianNouns;
+use App\Services\Constants\RussianNouns;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
 

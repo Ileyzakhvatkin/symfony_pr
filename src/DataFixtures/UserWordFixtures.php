@@ -2,23 +2,16 @@
 
 namespace App\DataFixtures;
 
-use App\Entity\Article;
-use App\Entity\Module;
-use App\Entity\Payment;
-use App\Entity\User;
 use App\Entity\Word;
 use App\Repository\ArticleRepository;
 use Doctrine\Persistence\ObjectManager;
-use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 class UserWordFixtures extends BaseFixtures
 {
-    private $passwordHasher;
     private ArticleRepository $articleRepository;
 
-    public function __construct(UserPasswordHasherInterface $passwordHasher, ArticleRepository $articleRepository)
+    public function __construct( ArticleRepository $articleRepository)
     {
-        $this->passwordHasher = $passwordHasher;
         $this->articleRepository = $articleRepository;
     }
 
