@@ -59,10 +59,17 @@ class Article
     #[ORM\OneToMany(mappedBy: 'article', targetEntity: Image::class)]
     private Collection $images;
 
+//    private RussianNouns $russianNouns;
+//
+//    /**
+//     * @param RussianNouns $russianNouns
+//     */
+//    public function __construct(RussianNouns $russianNouns)
     public function __construct()
     {
         $this->images = new ArrayCollection();
         $this->words = new ArrayCollection();
+//        $this->russianNouns = $russianNouns;
     }
 
     public function getId(): ?int
@@ -225,4 +232,15 @@ class Article
 
         return $this;
     }
+
+//    #[Assert\Callback]
+//    public function validate(ExecutionContextInterface $context, $payload)
+//    {
+//        if ( in_array($this->getKeyword()[0], $this->russianNouns->getNouns()) ) {
+//            $context->buildViolation('Слово не является существительным на русском языке')
+//                ->atPath('keywords')
+//                ->addViolation()
+//            ;
+//        }
+//    }
 }

@@ -8,23 +8,23 @@
 
                 <h2 class="card-title text-center mb-4">Создание статьи</h2>
 
+                {% if createArticle %}
+                    <div class="alert alert-info" role="alert">
+                        Чтобы создать статью по настоящему <a href="{{ path('app_register') }}">Зарегистрируйтесь</a>
+                    </div>
+                {% endif %}
 
                 {% if is_granted('ROLE_USER') %}
                     <a href="{{ path('dashboard') }}" class="btn btn-block btn-lg btn-primary">Кабинет</a>
                 {% else %}
-                    <div class="alert alert-info" role="alert">
-                        Чтобы создать статью по настоящему <a href="{{ path('app_register') }}">Зарегистрируйтесь</a>
-                    </div>
                     {{ form_start(formFront) }}
-                        <div class="form-label-group">
+                        <div class="form-label-group my-form">
                             {{ form_widget(formFront.title, {'attr': {'class': 'form-control', placeholder: 'Заголовок статьи'}}) }}
                             {{ form_label(formFront.title, 'Заголовок статьи') }}
-                            {{ form_errors(formFront.title) }}
                         </div>
-                        <div class="form-label-group">
-                            {{ form_widget(formFront.key_word, {'attr': {'class': 'form-control', placeholder: 'Продвигаемое слово'}}) }}
-                            {{ form_label(formFront.key_word, 'Продвигаемое слово') }}
-                            {{ form_errors(formFront.key_word) }}
+                        <div class="form-label-group my-form">
+                            {{ form_widget(formFront.keyword, {'attr': {'class': 'form-control', placeholder: 'Продвигаемое слово'}}) }}
+                            {{ form_label(formFront.keyword, 'Продвигаемое слово') }}
                         </div>
                         <button class="btn btn-lg btn-primary btn-block text-uppercase" type="submit">Попробовать</button>
                     {{ form_end(formFront) }}
@@ -40,9 +40,11 @@
     <div class="container my-5">
         <div class="row">
             <div class="col-lg-12 mx-auto">
-                {% if app.session.flashBag.peek('flash_message')|length > 0 %}
-                    <h2 class="card-title text-center mb-4">Тестовая статья</h2>
-
+                {% if createArticle %}
+                    <h2 class="card-title text-center mb-4">{{ testArticle['title'] }}</h2>
+                    <div>{{ testArticle['text'] }}</div>
+                {% else %}
+                    <h2 class="card-title text-center mb-4">Возможности сервиса</h2>
                     <div class="row">
                         <div class="p-3">
                             <h2>Добавляйте свои слова</h2>

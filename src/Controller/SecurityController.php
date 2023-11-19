@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\ApiToken;
 use App\Entity\User;
 use App\Security\LoginFormAuthenticator;
 use Carbon\Carbon;
@@ -48,11 +49,13 @@ class SecurityController extends AbstractController
                 ->setName($request->request->get('name'))
                 ->setRoles(['ROLE_USER'])
                 ->setPassword($passwordHasher->hashPassword($user, $request->request->get('password')))
+                ->setRegLink(sha1(uniqid('reg-link')))
                 ->setCreatedAt(Carbon::now())
                 ->setUpdatedAt(Carbon::now())
             ;
-
             $em->persist($user);
+            $token = new ApiToken($user);
+            $em->persist($token);
             $em->flush();
 
             // авторизация после регистрации
