@@ -20,7 +20,9 @@ use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\All;
+use Symfony\Component\Validator\Constraints\Count;
 use Symfony\Component\Validator\Constraints\Image;
+use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
 
 class ArticleFormType extends AbstractType
@@ -70,11 +72,15 @@ class ArticleFormType extends AbstractType
                 'required' => false,
                 'multiple' => true,
                 'constraints' => [
+                    new Count([
+                        'max' => 5,
+                        'maxMessage' => 'Не более пяти изображений',
+                    ]),
                     new All([
                         new Image([
                             'maxSize' => '1M',
-                            'maxSizeMessage' => 'Слишком большое изображение'
-                        ])
+                            'maxSizeMessage' => 'Слишком большое изображение',
+                        ]),
                     ])
                 ]
             ]);

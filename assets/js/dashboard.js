@@ -17,7 +17,7 @@ $(function() {
       // console.log(files)
       let filesNames = `Выбрано файлов - ${files.length}`;
       if(files.length > 5) {
-        filesNames = `Выбрано файлов - ${files.length}. Будет загружено 5`
+        filesNames = `Выбрано файлов - ${files.length}. Можно не более 5`
       }
       $container.find('.custom-file-label').html(filesNames);
     });
