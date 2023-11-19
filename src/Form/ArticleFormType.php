@@ -7,6 +7,7 @@ use App\Entity\Module;
 use App\Entity\Word;
 use App\Repository\ModuleRepository;
 use App\Services\WordType;
+use App\Validator\ArticleImage;
 use App\Validator\CheckRusNoun;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
@@ -16,9 +17,9 @@ use Symfony\Component\Form\Extension\Core\Type\FormType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
-use Symfony\Component\Form\Extension\Core\Type\ArrayType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints\All;
 use Symfony\Component\Validator\Constraints\Image;
 use Symfony\Component\Validator\Constraints\NotBlank;
 
@@ -68,10 +69,14 @@ class ArticleFormType extends AbstractType
                 'mapped' => false,
                 'required' => false,
                 'multiple' => true,
-//                'constraints' => new Image([
-//                        'maxSize' => '1M',
-//                        'maxSizeMessage' => 'Размер файла не должен быть больше 1M'
-//                    ])
+                'constraints' => [
+                    new All([
+                        new Image([
+                            'maxSize' => '1M',
+                            'maxSizeMessage' => 'Слишком большое изображение'
+                        ])
+                    ])
+                ]
             ]);
 
         $keywords = ['keyword0', 'keyword1', 'keyword2', 'keyword3', 'keyword4', 'keyword5', 'keyword6'];
