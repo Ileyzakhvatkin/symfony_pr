@@ -8,13 +8,14 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[IsGranted('ROLE_USER')]
+//#[IsGranted("IS_AUTHENTICATED_FULLY")]
 class ArticleController extends AbstractController
 {
     #[Route('/api/article', name: 'app_api_article')]
     public function index(): JsonResponse
     {
         return $this->json([
-            'message' => 'Welcome to your new controller!',
+            'message' => 'Welcome to your new Article controller!',
         ]);
     }
 }

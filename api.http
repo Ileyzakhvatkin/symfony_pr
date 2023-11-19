@@ -1,0 +1,3 @@
+GET http://zis-symfony.tw1.ru/api/article
+Accept: application/json
+Authorization: Bearer 8d8511b5558c27a1173e3d4dca7245cb961219ee
