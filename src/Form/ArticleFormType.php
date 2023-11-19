@@ -7,6 +7,7 @@ use App\Entity\Module;
 use App\Entity\Word;
 use App\Repository\ModuleRepository;
 use App\Services\WordType;
+use App\Validator\CheckRusNoun;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -19,6 +20,7 @@ use Symfony\Component\Form\Extension\Core\Type\ArrayType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\Image;
+use Symfony\Component\Validator\Constraints\NotBlank;
 
 class ArticleFormType extends AbstractType
 {
@@ -74,11 +76,25 @@ class ArticleFormType extends AbstractType
 
         $keywords = ['keyword0', 'keyword1', 'keyword2', 'keyword3', 'keyword4', 'keyword5', 'keyword6'];
         foreach ($keywords as $key => $word) {
-            $builder->add($word, TextType::class, [
-                'mapped' => false,
-                'required' => false,
-                'data' => isset($article) ? $article->getKeyword()[$key] : '',
-            ]);
+            if ($key === 0) {
+                $builder->add($word, TextType::class, [
+                    'mapped' => false,
+                    'required' => false,
+                    'data' => isset($article) ? $article->getKeyword()[$key] : '',
+                    'constraints' => [
+                        new NotBlank([
+                            'message' => 'Введите ключевое слово для статьи'
+                        ]),
+                        new CheckRusNoun(),
+                    ]
+                ]);
+            } else {
+                $builder->add($word, TextType::class, [
+                    'mapped' => false,
+                    'required' => false,
+                    'data' => isset($article) ? $article->getKeyword()[$key] : '',
+                ]);
+            }
         }
 
 //        $builder->add('words', CollectionType::class, [

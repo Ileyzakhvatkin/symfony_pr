@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Validator\CheckRusNoun;
 use Carbon\Carbon;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -48,7 +49,8 @@ class FrontController extends AbstractController
                         'minMessage' => 'Не менее 4 символов',
                         'max' => 15,
                         'maxMessage' => 'Не более 15 символов',
-                    ])
+                    ]),
+                    new CheckRusNoun()
                 ]
             ])
             ->getForm();
@@ -64,7 +66,7 @@ class FrontController extends AbstractController
                 $loremArr = explode(' ', $lorem);
                 $randPoz = array_rand($loremArr);
                 // array_merge(array_slice($a, 0, 2), [5], array_slice($a, 2, 2)
-                $text[] = implode(' ', array_merge(array_slice($loremArr, 0, $randPoz), [$formFront->get('keyword')->getData()], array_slice($loremArr, $randPoz, $randPoz)));
+                $text[] = implode(' ', array_merge(array_slice($loremArr, 0, $randPoz), [mb_strtolower($formFront->get('keyword')->getData())], array_slice($loremArr, $randPoz, $randPoz)));
             }
 
             $this->addFlash('flash_message', '');

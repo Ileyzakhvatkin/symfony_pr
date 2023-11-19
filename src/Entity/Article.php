@@ -3,14 +3,13 @@
 namespace App\Entity;
 
 use App\Repository\ArticleRepository;
-use App\Services\RussianNouns;
+use App\Validator\CheckRusNounArr;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
-use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
 #[ORM\Entity(repositoryClass: ArticleRepository::class)]
 class Article
@@ -59,17 +58,10 @@ class Article
     #[ORM\OneToMany(mappedBy: 'article', targetEntity: Image::class)]
     private Collection $images;
 
-//    private RussianNouns $russianNouns;
-//
-//    /**
-//     * @param RussianNouns $russianNouns
-//     */
-//    public function __construct(RussianNouns $russianNouns)
     public function __construct()
     {
         $this->images = new ArrayCollection();
         $this->words = new ArrayCollection();
-//        $this->russianNouns = $russianNouns;
     }
 
     public function getId(): ?int
@@ -232,15 +224,4 @@ class Article
 
         return $this;
     }
-
-//    #[Assert\Callback]
-//    public function validate(ExecutionContextInterface $context, $payload)
-//    {
-//        if ( in_array($this->getKeyword()[0], $this->russianNouns->getNouns()) ) {
-//            $context->buildViolation('Слово не является существительным на русском языке')
-//                ->atPath('keywords')
-//                ->addViolation()
-//            ;
-//        }
-//    }
 }
