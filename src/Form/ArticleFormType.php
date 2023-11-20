@@ -5,12 +5,12 @@ namespace App\Form;
 use App\Entity\Article;
 use App\Entity\Module;
 use App\Repository\ModuleRepository;
+use App\Validator\CheckRusLetter;
 use App\Validator\CheckRusNoun;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
-use Symfony\Component\Form\Extension\Core\Type\FormType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
@@ -19,7 +19,6 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\All;
 use Symfony\Component\Validator\Constraints\Count;
 use Symfony\Component\Validator\Constraints\Image;
-use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
 
 class ArticleFormType extends AbstractType
@@ -101,6 +100,9 @@ class ArticleFormType extends AbstractType
                     'mapped' => false,
                     'required' => false,
                     'data' => isset($article) ? $article->getKeyword()[$key] : '',
+                    'constraints' => [
+                        new CheckRusLetter(),
+                    ]
                 ]);
             }
         }

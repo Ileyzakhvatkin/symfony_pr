@@ -3,17 +3,12 @@
 namespace App\Controller;
 
 use App\Entity\Article;
-use App\Entity\Image;
 use App\Entity\User;
 use App\Form\ArticleFormType;
 use App\Repository\ArticleRepository;
-use App\Repository\WordRepository;
 use App\Services\ArticleCreatePeriodControl;
-use App\Services\ContentGenerator;
-use App\Services\FileUploader;
+use App\Services\ArticleSaver;
 use App\Services\LicenseLevelControl;
-use Carbon\Carbon;
-use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -50,11 +45,8 @@ class ArticleController extends AbstractController
         Request $request,
         ArticleRepository $articleRepository,
         LicenseLevelControl $licenseLevelControl,
-        WordRepository $wordRepository,
         ArticleCreatePeriodControl $articleCreatePeriodControl,
-        EntityManagerInterface $em,
-        FileUploader $fileUploader,
-        ContentGenerator $contentGenerator,
+        ArticleSaver $articleSaver,
     ): Response
     {
         /** @var User $authUser */
@@ -69,60 +61,7 @@ class ArticleController extends AbstractController
         $formArt->handleRequest($request);
 
         if ($formArt->isSubmitted() && $formArt->isValid()) {
-            /** @var Article $newArticle */
-            $newArticle = $formArt->getData();
-
-            $images = $formArt->get('images')->getData();
-            if (count($images) > 0) {
-                foreach ($images as $img) {
-                    $image = new Image();
-                    $image
-                        ->setImgUrl($fileUploader->uploadFile($img))
-                        ->setImage($img)
-                        ->setArticle($newArticle);
-                    $em->persist($image);
-                }
-            }
-
-            function getKeyword(string $word, $formArt)
-            {
-                return  $formArt->get($word)->getData() ? $formArt->get($word)->getData() : $formArt->get('keyword0')->getData();
-            }
-
-            $newArticle
-                ->setUser($authUser)
-                ->setKeyword([
-                    '0' => $formArt->get('keyword0')->getData(),
-                    '1' => getKeyword('keyword1', $formArt),
-                    '2' => getKeyword('keyword2', $formArt),
-                    '3' => getKeyword('keyword3', $formArt),
-                    '4' => getKeyword('keyword4', $formArt),
-                    '5' => getKeyword('keyword5', $formArt),
-                    '6' => getKeyword('keyword6', $formArt),
-                ])
-                ->setUpdatedAt(Carbon::now());
-
-            if ($formArt->get('title')->getData() === null) {
-                $newArticle->setTitle($formArt->get('theme')->getData() . ' - ' . $formArt->get('keyword0')->getData());
-            }
-
-            $newId = $id;
-            if (!isset($id)) $newArticle->setCreatedAt(Carbon::now());
-
-            $newArticle->setContent($contentGenerator->createText($newArticle));
-
-            if ($formArt->has('words')) {
-                foreach ($formArt->get('words')->getData() as $word) {
-                    $newArticle->addWord($word);
-                }
-            }
-
-            $em->persist($newArticle);
-            $em->flush();
-
-            if (!isset($id)) {
-                $newId = $articleRepository->lastAarticle($authUser->getId())[0]->getId();
-            }
+            $newId = $articleSaver->save($formArt, $authUser, $id);
 
             return $this->redirectToRoute('create_article', ['id' => $newId]);
         }

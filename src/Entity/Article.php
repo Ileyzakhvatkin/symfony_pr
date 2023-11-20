@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Repository\ArticleRepository;
+use App\Validator\CheckRusLetter;
 use App\Validator\CheckRusNounArr;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -26,6 +27,7 @@ class Article
     private ?string $theme = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[CheckRusLetter]
     private ?string $title = null;
 
     #[ORM\Column]
