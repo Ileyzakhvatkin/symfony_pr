@@ -5,7 +5,6 @@ namespace App\Controller;
 use App\Entity\Article;
 use App\Entity\Image;
 use App\Entity\User;
-use App\Entity\Word;
 use App\Form\ArticleFormType;
 use App\Repository\ArticleRepository;
 use App\Repository\WordRepository;
@@ -103,13 +102,20 @@ class ArticleController extends AbstractController
                 ])
                 ->setUpdatedAt(Carbon::now());
 
-            if ($formArt->get('title')->getData() === null)
+            if ($formArt->get('title')->getData() === null) {
                 $newArticle->setTitle($formArt->get('theme')->getData() . ' - ' . $formArt->get('keyword0')->getData());
+            }
 
             $newId = $id;
             if (!isset($id)) $newArticle->setCreatedAt(Carbon::now());
 
             $newArticle->setContent($contentGenerator->createText($newArticle));
+
+            if ($formArt->has('words')) {
+                foreach ($formArt->get('words')->getData() as $word) {
+                    $newArticle->addWord($word);
+                }
+            }
 
             $em->persist($newArticle);
             $em->flush();
@@ -118,27 +124,9 @@ class ArticleController extends AbstractController
                 $newId = $articleRepository->lastAarticle($authUser->getId())[0]->getId();
             }
 
-//            if ($formArt->get('words')->getData()) {
-//                foreach ($formArt->get('words')->getData() as $el) {
-//                    $word = null;
-//                    if ($el->getId()) {
-//                        $word = $wordRepository->find($el->getId());
-//                    } else {
-//                        $word = new Word();
-//                        $word->setArticle($articleRepository->find($newId));
-//                    }
-//                    $word
-//                        ->setTitle($el->getTitle())
-//                        ->setCount($el->getCount())
-//                    ;
-//                    $em->persist($word);
-//                }
-//            }
-
             return $this->redirectToRoute('create_article', ['id' => $newId]);
         }
 
-//        dd($formArt->createView());
         return $this->render('dashboard/create_article.html.twig', [
             'itemActive' => 2,
             'isBlocked' => $isBlocked,

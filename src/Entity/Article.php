@@ -52,7 +52,7 @@ class Article
     #[ORM\ManyToOne(inversedBy: 'articles')]
     private ?Module $module = null;
 
-    #[ORM\OneToMany(mappedBy: 'article', targetEntity: Word::class)]
+    #[ORM\OneToMany(mappedBy: 'article', targetEntity: Word::class, cascade: ['persist', 'remove'] )]
     private Collection $words;
 
     #[ORM\OneToMany(mappedBy: 'article', targetEntity: Image::class)]

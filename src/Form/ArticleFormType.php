@@ -105,21 +105,17 @@ class ArticleFormType extends AbstractType
             }
         }
 
-        if (isset($article) && count($article->getWords()) > 0) {
-            foreach ($article->getWords() as $key=>$el) {
-                $builder->add(
-                    $builder->create('words', CollectionType::class, [
-                        'entry_type' => RelatedWordType::class,
-                        'allow_add' => true,
-                        'allow_delete' => true,
-                        'by_reference' => false,
-                        'prototype' => true,
-                        'prototype_name' => '__relatedwords__',
-                        'attr' => [ 'class' => 'related-words' ],
-                    ])
-                );
-            }
-        }
+        $builder->add(
+            $builder->create('words', CollectionType::class, [
+                'entry_type' => RelatedWordType::class,
+                'allow_add' => true,
+                'allow_delete' => true,
+                'by_reference' => false,
+                'prototype' => true,
+                'prototype_name' => 'RelatedWords',
+                'attr' => [ 'class' => 'related-words' ],
+            ])
+        );
     }
 
     public function configureOptions(OptionsResolver $resolver): void
