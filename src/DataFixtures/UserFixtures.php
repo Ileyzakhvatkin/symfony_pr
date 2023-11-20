@@ -71,6 +71,8 @@ class UserFixtures extends BaseFixtures
             ->setTitle(DemoModules::getModules()[$i]['title'])
             ->setUser($user)
             ->setCode(DemoModules::getModules()[$i]['code'])
+            ->setCommon(true)
+            ->setTwig(DemoModules::getModules()[$i]['file'])
             ->setCreatedAt($date)
             ->setUpdatedAt($date)
         ;

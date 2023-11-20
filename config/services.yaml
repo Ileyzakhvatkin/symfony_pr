@@ -7,6 +7,7 @@ parameters:
     article_uploads: 'uploads/articles'
     article_uploads_url: '%env(SITE_URL)%/%article_uploads%'
     article_uploads_dir: '%kernel.project_dir%/public/%article_uploads%'
+    twig_uploads_dir: '%kernel.project_dir%/templates'
     router.request_context.scheme: '%env(SITE_BASE_SCHEME)%'
     router.request_context.host: '%env(SITE_BASE_HOST)%'
 

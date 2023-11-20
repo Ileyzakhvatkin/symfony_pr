@@ -36,6 +36,12 @@ class Module
     #[ORM\OneToMany(mappedBy: 'module', targetEntity: Article::class)]
     private Collection $articles;
 
+    #[ORM\Column(length: 255)]
+    private ?string $twig = null;
+
+    #[ORM\Column]
+    private ?bool $common = null;
+
     public function __construct()
     {
         $this->articles = new ArrayCollection();
@@ -108,6 +114,30 @@ class Module
                 $article->setModule(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getTwig(): ?string
+    {
+        return $this->twig;
+    }
+
+    public function setTwig(string $twig): static
+    {
+        $this->twig = $twig;
+
+        return $this;
+    }
+
+    public function isCommon(): ?bool
+    {
+        return $this->common;
+    }
+
+    public function setCommon(bool $common): static
+    {
+        $this->common = $common;
 
         return $this;
     }

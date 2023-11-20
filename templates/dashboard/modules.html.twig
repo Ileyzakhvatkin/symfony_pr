@@ -28,7 +28,15 @@
                         <td>
                             <pre class="code">{{ module.code|raw }}</pre>
                         </td>
-                        <td><a href="{{ path('delete_module', {id: module.id}) }}" class="text-danger"><i class="fas fa-trash"></i></a> </td>
+                        <td>
+                            {% if module.common %}
+                                <div>DEMO</div>
+                            {% else %}
+                                <a href="{{ path('delete_module', {id: module.id}) }}" class="text-danger">
+                                    <i class="fas fa-trash"></i>
+                                </a>
+                            {% endif %}
+                        </td>
                     </tr>
                 {% endfor %}
             </tbody>

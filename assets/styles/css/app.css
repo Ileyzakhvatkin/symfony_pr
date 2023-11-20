@@ -18,6 +18,16 @@ h6 {
   font-weight: 700;
 }
 
+/*My CSS*/
+.my-form .invalid-feedback {
+  padding-top: 8px;
+}
+
+fieldset.form-group legend{
+  display: none;
+}
+/*My CSS*/
+
 header.masthead {
   position: relative;
   background-color: #343a40;
@@ -58,10 +68,6 @@ header.masthead h1 {
 .showcase .showcase-img {
   min-height: 30rem;
   background-size: cover;
-}
-
-.my-form .invalid-feedback {
-  padding-top: 8px;
 }
 
 @media (min-width: 768px) {

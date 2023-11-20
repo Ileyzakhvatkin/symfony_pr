@@ -65,6 +65,8 @@ class SecurityController extends AbstractController
                     ->setTitle(DemoModules::getModules()[$key]['title'])
                     ->setUser($user)
                     ->setCode(DemoModules::getModules()[$key]['code'])
+                    ->setCommon(true)
+                    ->setTwig(DemoModules::getModules()[$key]['file'])
                     ->setCreatedAt(Carbon::now())
                     ->setUpdatedAt(Carbon::now())
                 ;

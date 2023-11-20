@@ -10,6 +10,7 @@ use Carbon\Carbon;
 use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -25,6 +26,7 @@ class ModuleController extends AbstractController
         Request $request,
         PaginatorInterface $paginator,
         EntityManagerInterface $em,
+        Filesystem $filesystem,
     ): Response
     {
         $authUser = $this->getUser();
@@ -42,10 +44,16 @@ class ModuleController extends AbstractController
 
         if ($formModule->isSubmitted() && $formModule->isValid()) {
             /** @var Module $module */
+            $twigName = '/user-tmpl/' . 'user-tmpl-' . $authUser->getId() . '-' . rand(1,1000) . '.html.twig';
+            $twigHTML = $formModule->get('code')->getData();
+            $filesystem->dumpFile($this->getParameter('twig_uploads_dir') . $twigName, $twigHTML);
+
             $module = $formModule->getData();
             $module
                 ->setUser($authUser)
-                ->setCode(htmlspecialchars($formModule->get('code')->getData()))
+                ->setCode(htmlspecialchars($twigHTML))
+                ->setCommon(false)
+                ->setTwig($twigName)
                 ->setCreatedAt(Carbon::now())
                 ->setUpdatedAt(Carbon::now());
             $em->persist($module);
