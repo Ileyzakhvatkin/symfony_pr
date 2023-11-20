@@ -8,7 +8,9 @@ use App\Entity\User;
 use App\Entity\Word;
 use App\Form\ArticleFormType;
 use App\Repository\ArticleRepository;
+use App\Repository\WordRepository;
 use App\Services\ArticleCreatePeriodControl;
+use App\Services\ContentGenerator;
 use App\Services\FileUploader;
 use App\Services\LicenseLevelControl;
 use Carbon\Carbon;
@@ -49,9 +51,11 @@ class ArticleController extends AbstractController
         Request $request,
         ArticleRepository $articleRepository,
         LicenseLevelControl $licenseLevelControl,
+        WordRepository $wordRepository,
         ArticleCreatePeriodControl $articleCreatePeriodControl,
         EntityManagerInterface $em,
         FileUploader $fileUploader,
+        ContentGenerator $contentGenerator,
     ): Response
     {
         /** @var User $authUser */
@@ -97,7 +101,6 @@ class ArticleController extends AbstractController
                     '5' => getKeyword('keyword5', $formArt),
                     '6' => getKeyword('keyword6', $formArt),
                 ])
-                ->setContent('СГЕНЕРИРОВАННЫЙ ТЕКСТ СТАТЬИ СГЕНЕРИРОВАННЫЙ ТЕКСТ СТАТЬИ СГЕНЕРИРОВАННЫЙ ТЕКСТ СТАТЬИ СГЕНЕРИРОВАННЫЙ ТЕКСТ СТАТЬИ')
                 ->setUpdatedAt(Carbon::now());
 
             if ($formArt->get('title')->getData() === null)
@@ -106,6 +109,8 @@ class ArticleController extends AbstractController
             $newId = $id;
             if (!isset($id)) $newArticle->setCreatedAt(Carbon::now());
 
+            $newArticle->setContent($contentGenerator->createText($newArticle));
+
             $em->persist($newArticle);
             $em->flush();
 
@@ -113,16 +118,22 @@ class ArticleController extends AbstractController
                 $newId = $articleRepository->lastAarticle($authUser->getId())[0]->getId();
             }
 
-//            foreach ($formArt->get('words')->getData() as $el) {
-//                $word = new Word();
-//                $word
-//                    ->setTitle($el->getTitle())
-//                    ->setCount($el->getCount())
-//                    ->setArticle($articleRepository->find($newId));
-//                ;
-//                $em->persist($word);
+//            if ($formArt->get('words')->getData()) {
+//                foreach ($formArt->get('words')->getData() as $el) {
+//                    $word = null;
+//                    if ($el->getId()) {
+//                        $word = $wordRepository->find($el->getId());
+//                    } else {
+//                        $word = new Word();
+//                        $word->setArticle($articleRepository->find($newId));
+//                    }
+//                    $word
+//                        ->setTitle($el->getTitle())
+//                        ->setCount($el->getCount())
+//                    ;
+//                    $em->persist($word);
+//                }
 //            }
-//            $em->flush();
 
             return $this->redirectToRoute('create_article', ['id' => $newId]);
         }

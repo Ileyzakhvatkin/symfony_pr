@@ -91,17 +91,17 @@
                 <div class="card mb-4">
                     <div class="card-body words-fields-list"
                          id="words-fields-list"
-                         data-prototype='<div class="row" id="article_form_words_name_row"><div class="col"><div class="form-label-group"><input type="text" class="form-control" id="article_form_words_name" name="article_form[words][name][word]" placeholder="Продвигаемое слово" /><label for="article_form_words_name" class="required">Продвигаемое слово</label></div></div><div class="col"><div class="form-label-group"><input type="text" class="form-control" id="article_form_words_name_count" name="article_form[words][name][count]" placeholder="кол-во" /><label for="article_form_words_name_count" class="required">кол-во</label></div></div></div>'
+                         data-prototype='<div class="row" id="article_form_words_key"><div class="col"><div class="form-label-group"><input type="text" class="form-control" id="article_form_words_key_title" name="article_form[words][key][title]" placeholder="Продвигаемое слово" /><label for="article_form_words_key_title" class="required">Продвигаемое слово</label></div></div><div class="col"><div class="form-label-group"><input type="number" class="form-control" id="article_form_words_key_count" name="article_form[words][key][count]" placeholder="кол-во" /><label for="article_form_words_key_count" class="required">кол-во</label></div></div></div>'
                          data-index="{{ formArt.words is defined ? formArt.words|length : 1 }}"
                     >
                         <p class="card-title">Продвигаемые слова</p>
                         {% if (formArt.words is defined) %}
                             {% for wordsFields in formArt.words %}
-                            <div class="row" id="article_form_words_0">
+                            <div class="row" id="article_form_words_{{ loop.index - 1 }}">
                                 <div class="col">
                                     <div class="form-label-group" >
-                                        {{ form_widget(wordsFields.word, {'attr': {placeholder: 'Размер статьи от'}}) }}
-                                        {{ form_label(wordsFields.word, 'Продвигаемое слово') }}
+                                        {{ form_widget(wordsFields.title, {'attr': {placeholder: 'Продвигаемое слово'}}) }}
+                                        {{ form_label(wordsFields.title, 'Продвигаемое слово') }}
                                     </div>
                                 </div>
 
