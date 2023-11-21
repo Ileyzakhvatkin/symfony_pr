@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\ApiToken;
 use App\Entity\Module;
 use App\Entity\User;
+use App\Form\UserRegistrationFormType;
 use App\Repository\UserRepository;
 use App\Security\LoginFormAuthenticator;
 use App\Services\Constants\DemoModules;
@@ -46,15 +47,17 @@ class SecurityController extends AbstractController
         Mailer $mailer,
     )
     {
-        if ($request->isMethod('POST')) {
-            $user = new User();
+        $formReg = $this->createForm(UserRegistrationFormType::class);
+        $formReg->handleRequest($request);
+
+        if ($formReg->isSubmitted() && $formReg->isValid()) {
+            /** @var User $user */
+            $user = $formReg->getData();
             $regLink = sha1(uniqid('reg-link'));
 
             $user
-                ->setEmail($request->request->get('email'))
-                ->setName($request->request->get('name'))
                 ->setRoles([])
-                ->setPassword($passwordHasher->hashPassword($user, $request->request->get('password')))
+                ->setPassword($passwordHasher->hashPassword($user, $user->getPassword1()))
                 ->setRegLink($regLink)
                 ->setCreatedAt(Carbon::now())
                 ->setUpdatedAt(Carbon::now())
@@ -79,13 +82,18 @@ class SecurityController extends AbstractController
 
             $em->flush();
 
-            // авторизация после регистрации
-            // $userAuthenticator->authenticateUser($user, $authenticator, $request);
-            $mailer->sendCheckRegistration($user, $regLink);
+            // авторизация после регистрации (если сервер не отправляет email) или авторизация с проверкой email
+             $userAuthenticator->authenticateUser($user, $authenticator, $request);
+            // $mailer->sendCheckRegistration($user, $regLink);
 
-            return $this->redirectToRoute('app_check_reg');
+            // Переходим или в личный кабинет или на страницу подтверждения mail
+            return $this->redirectToRoute('dashboard');
+            // return $this->redirectToRoute('app_check_reg');
         }
-        return $this->render('security/register.html.twig');
+
+        return $this->render('security/register.html.twig', [
+            'formReg' => $formReg->createView(),
+        ]);
     }
 
     #[Route('/check/{link}', name: 'app_check_reg', defaults: ["link" => null])]
