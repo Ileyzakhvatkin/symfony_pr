@@ -8,7 +8,7 @@
         <div class="col-sm-9 col-md-7 col-lg-5 mx-auto">
             <div class="card card-signin my-5">
                 <div class="card-body">
-                    {% if link %}
+                    {% if regLink %}
                         {% if is_granted('ROLE_USER') %}
                             <h5 class="card-title">Регистрация подтверждена, перейти в <a href="{{ path('dashboard') }}">личный кабинет</a></h5>
                         {% else %}

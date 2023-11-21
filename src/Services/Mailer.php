@@ -17,15 +17,15 @@ class Mailer
         $this->mailer = $mailer;
     }
 
-    public function sendCheckRegistration(User $user, $link): void
+    public function sendCheckRegistration(User $user, $regLink): void
     {
         $this->send(
             'email/check-registration.html.twig',
             'Подтверждение регистрации на сайте BlaBlaArticle',
             $user,
-            function (TemplatedEmail $email) use ($link) {
+            function (TemplatedEmail $email) use ($regLink) {
                 $email->context([
-                    'link' => $link
+                    'regLink' => $regLink
                 ]);
             }
         );

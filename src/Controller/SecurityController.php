@@ -9,6 +9,7 @@ use App\Form\UserRegistrationFormType;
 use App\Repository\UserRepository;
 use App\Security\LoginFormAuthenticator;
 use App\Services\Constants\DemoModules;
+use App\Services\DemoModuleSaver;
 use App\Services\Mailer;
 use Carbon\Carbon;
 use Doctrine\ORM\EntityManagerInterface;
@@ -45,6 +46,7 @@ class SecurityController extends AbstractController
         LoginFormAuthenticator $authenticator,
         UserAuthenticatorInterface $userAuthenticator,
         Mailer $mailer,
+        DemoModuleSaver $demoModuleSaver,
     )
     {
         $formReg = $this->createForm(UserRegistrationFormType::class);
@@ -67,28 +69,16 @@ class SecurityController extends AbstractController
             $token = new ApiToken($user);
             $em->persist($token);
 
-            foreach (DemoModules::getModules() as $key=>$el) {
-                $module = (new Module())
-                    ->setTitle(DemoModules::getModules()[$key]['title'])
-                    ->setUser($user)
-                    ->setCode(DemoModules::getModules()[$key]['code'])
-                    ->setCommon(true)
-                    ->setTwig(DemoModules::getModules()[$key]['file'])
-                    ->setCreatedAt(Carbon::now())
-                    ->setUpdatedAt(Carbon::now())
-                ;
-                $em->persist($module);
-            }
-
             $em->flush();
 
-            // авторизация после регистрации (если сервер не отправляет email) или авторизация с проверкой email
-             $userAuthenticator->authenticateUser($user, $authenticator, $request);
-            // $mailer->sendCheckRegistration($user, $regLink);
-
-            // Переходим или в личный кабинет или на страницу подтверждения mail
+            // Отключить, если запускаем авторизацию с подтверждением через email
+            $demoModuleSaver->create($user);
+            $userAuthenticator->authenticateUser($user, $authenticator, $request);
             return $this->redirectToRoute('dashboard');
-            // return $this->redirectToRoute('app_check_reg');
+
+            // Подключить, чтобы запустить авторизацию ч подтверждением через email
+//             $mailer->sendCheckRegistration($user, $regLink);
+//             return $this->redirectToRoute('app_check_reg');
         }
 
         return $this->render('security/register.html.twig', [
@@ -104,6 +94,7 @@ class SecurityController extends AbstractController
         EntityManagerInterface $em,
         LoginFormAuthenticator $authenticator,
         UserAuthenticatorInterface $userAuthenticator,
+        DemoModuleSaver $demoModuleSaver,
     ) {
         if ($link) {
             /** @var User $user */
@@ -112,12 +103,13 @@ class SecurityController extends AbstractController
                 $user->setRoles(['ROLE_USER']);
                 $em->persist($user);
                 $em->flush();
+                $demoModuleSaver->create($user);
                 $userAuthenticator->authenticateUser($user, $authenticator, $request);
             }
         }
 
         return $this->render('security/check.html.twig', [
-            'link' => $link,
+            'regLink' => $link,
         ]);
     }
 }
