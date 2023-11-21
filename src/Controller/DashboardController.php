@@ -31,7 +31,12 @@ class DashboardController extends AbstractController
             'date' => (new Carbon('first day of this month'))->toDateString(),
         ];
 
-        $licenseStatus = Carbon::parse($paymentRepository->getLastPayment($authUser)[0]->getFinishedAt())->diffInSeconds(Carbon::now()) < 60*60*24*3;
+        $licenseStatus = null;
+
+        if ( count($paymentRepository->getLastPayment($authUser)) > 0 ) {
+            $licenseStatus = Carbon::parse($paymentRepository->getLastPayment($authUser)[0]->getFinishedAt())
+                    ->diffInSeconds(Carbon::now()) < 60*60*24*3;
+        }
 
         return $this->render('dashboard/dashboard.html.twig', [
             'itemActive' => 1,

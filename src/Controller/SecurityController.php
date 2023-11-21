@@ -5,8 +5,10 @@ namespace App\Controller;
 use App\Entity\ApiToken;
 use App\Entity\Module;
 use App\Entity\User;
+use App\Repository\UserRepository;
 use App\Security\LoginFormAuthenticator;
 use App\Services\Constants\DemoModules;
+use App\Services\Mailer;
 use Carbon\Carbon;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -41,17 +43,19 @@ class SecurityController extends AbstractController
         EntityManagerInterface $em,
         LoginFormAuthenticator $authenticator,
         UserAuthenticatorInterface $userAuthenticator,
+        Mailer $mailer,
     )
     {
         if ($request->isMethod('POST')) {
             $user = new User();
+            $regLink = sha1(uniqid('reg-link'));
 
             $user
                 ->setEmail($request->request->get('email'))
                 ->setName($request->request->get('name'))
-                ->setRoles(['ROLE_USER'])
+                ->setRoles([])
                 ->setPassword($passwordHasher->hashPassword($user, $request->request->get('password')))
-                ->setRegLink(sha1(uniqid('reg-link')))
+                ->setRegLink($regLink)
                 ->setCreatedAt(Carbon::now())
                 ->setUpdatedAt(Carbon::now())
             ;
@@ -76,14 +80,36 @@ class SecurityController extends AbstractController
             $em->flush();
 
             // авторизация после регистрации
-            $userAuthenticator->authenticateUser($user, $authenticator, $request);
+            // $userAuthenticator->authenticateUser($user, $authenticator, $request);
+            $mailer->sendCheckRegistration($user, $regLink);
 
-            return $this->redirectToRoute('dashboard');
+            return $this->redirectToRoute('app_check_reg');
         }
-        return $this->render('security/register.html.twig', [
-            'error' => '',
-        ]);
+        return $this->render('security/register.html.twig');
     }
 
+    #[Route('/check/{link}', name: 'app_check_reg', defaults: ["link" => null])]
+    public function check(
+        $link,
+        Request $request,
+        UserRepository $userRepository,
+        EntityManagerInterface $em,
+        LoginFormAuthenticator $authenticator,
+        UserAuthenticatorInterface $userAuthenticator,
+    ) {
+        if ($link) {
+            /** @var User $user */
+            $user = $userRepository->getUserByLink($link)[0];
+            if ($user instanceof User) {
+                $user->setRoles(['ROLE_USER']);
+                $em->persist($user);
+                $em->flush();
+                $userAuthenticator->authenticateUser($user, $authenticator, $request);
+            }
+        }
 
+        return $this->render('security/check.html.twig', [
+            'link' => $link,
+        ]);
+    }
 }

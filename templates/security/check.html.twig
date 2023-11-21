@@ -1,0 +1,28 @@
+{% extends 'base_auth.html.twig' %}
+
+{% block title %}Подтверждение на BlaBlaArticle{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-sm-9 col-md-7 col-lg-5 mx-auto">
+            <div class="card card-signin my-5">
+                <div class="card-body">
+                    {% if link %}
+                        {% if is_granted('ROLE_USER') %}
+                            <h5 class="card-title">Регистрация подтверждена, перейти в <a href="{{ path('dashboard') }}">личный кабинет</a></h5>
+                        {% else %}
+                            <h5 class="card-title">Регистрация НЕ подтверждена</h5>
+                        {% endif %}
+                    {% else %}
+                        <p class="card-title">Вам на почту было отправлено письмо с подтверждением регистрации</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+
+

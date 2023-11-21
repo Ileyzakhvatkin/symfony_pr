@@ -6,6 +6,7 @@ use App\Entity\ApiToken;
 use App\Entity\User;
 use App\Form\UserUpdateFormType;
 use App\Repository\ApiTokenRepository;
+use App\Services\Mailer;
 use Carbon\Carbon;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -25,6 +26,7 @@ class UserController extends AbstractController
         EntityManagerInterface $em,
         UserPasswordHasherInterface $passwordHasher,
         ApiTokenRepository $apiTokenRepository,
+        Mailer $mailer,
     ): Response
     {
         /** @var User $authUser */
@@ -42,6 +44,7 @@ class UserController extends AbstractController
             $em->persist($user);
             $em->flush();
             $this->addFlash('flash_message', 'Данные пользователя обновлены');
+            $mailer->sendUpdateProfile($authUser, $formProfile->get('password1')->getData());
 
             return $this->redirectToRoute('profile');
         }

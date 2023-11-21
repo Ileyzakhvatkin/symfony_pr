@@ -43,4 +43,15 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
         $this->getEntityManager()->persist($user);
         $this->getEntityManager()->flush();
     }
+
+    public function getUserByLink($link)
+    {
+        return $this->createQueryBuilder('a')
+            ->andWhere('a.regLink = :val')
+            ->setParameter('val', $link)
+            ->setMaxResults(1)
+            ->getQuery()
+            ->getResult()
+            ;
+    }
 }
