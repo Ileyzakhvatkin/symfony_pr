@@ -7,6 +7,7 @@ use App\Entity\User;
 use App\Form\ArticleFormType;
 use App\Repository\ArticleRepository;
 use App\Services\ArticleCreatePeriodControl;
+use App\Services\ArticlePlaceholders;
 use App\Services\ArticleSaver;
 use App\Services\LicenseLevelControl;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -39,6 +40,16 @@ class ArticleController extends AbstractController
         ]);
     }
 
+    #[Route('/dashboard-article-detail/{id}', name: 'article_detail')]
+    #[IsGranted('MANAGE', subject: 'article')]
+    public function showArticle(Article $article): Response
+    {
+        return $this->render('dashboard/article_detail.html.twig', [
+            'itemActive' => 3,
+            'article' => $article,
+        ]);
+    }
+
     #[Route('/dashboard-create-article/{id}', name: 'create_article', defaults: ["id" => null])]
     public function formCreateArticle(
         $id,
@@ -47,6 +58,7 @@ class ArticleController extends AbstractController
         LicenseLevelControl $licenseLevelControl,
         ArticleCreatePeriodControl $articleCreatePeriodControl,
         ArticleSaver $articleSaver,
+        ArticlePlaceholders $articlePlaceholders,
     ): Response
     {
         /** @var User $authUser */
@@ -66,22 +78,16 @@ class ArticleController extends AbstractController
             return $this->redirectToRoute('create_article', ['id' => $newId]);
         }
 
-        return $this->render('dashboard/create_article.html.twig', [
+        $params = [
             'itemActive' => 2,
             'isBlocked' => $isBlocked,
             'formArt' => $formArt->createView(),
             'article' => $article,
             'availableWords' => true,
-        ]);
+        ];
+
+        return $this->render('dashboard/create_article.html.twig', array_merge($params, $articlePlaceholders->create($article)));
     }
 
-    #[Route('/dashboard-article-detail/{id}', name: 'article_detail')]
-    #[IsGranted('MANAGE', subject: 'article')]
-    public function showArticle(Article $article): Response
-    {
-        return $this->render('dashboard/article_detail.html.twig', [
-            'itemActive' => 3,
-            'article' => $article,
-        ]);
-    }
+
 }

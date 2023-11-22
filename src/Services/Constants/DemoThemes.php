@@ -9,7 +9,7 @@ class DemoThemes
         return [
             'FOOD',
             'PHP',
-            'WOMEN',
+            'JS',
         ];
     }
 }

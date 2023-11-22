@@ -44,7 +44,7 @@ class ArticleFormType extends AbstractType
                 'choices' => [
                     'Про НЕ здоровую еду' => 'FOOD',
                     'Про PHP и как с этим жить' => 'PHP',
-                    'Про женщин и не только' => 'WOMEN',
+                    'Возможности JS' => 'JS',
                 ],
                 'placeholder' => 'Выберете тему',
             ])

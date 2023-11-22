@@ -19,16 +19,6 @@ class Image
     private ?string $imgUrl = null;
 
     #[ORM\Column(length: 255)]
-//    #[Assert\Image(
-//        minWidth: 600,
-//        maxWidth: 1200,
-//        maxHeight: 600,
-//        minHeight: 1200,
-//        maxWidthMessage: "Изображение должно быть менее 1200px по ширине",
-//        minWidthMessage: "Изображение должно быть более 600px по ширине",
-//        maxHeightMessage: "Изображение должно быть менее 1200px по высоте",
-//        minHeightMessage: "Изображение должно быть более 600px по высоте",
-//    )]
     #[Assert\File(
         maxSize: '2M',
         maxSizeMessage: 'Пожалуйста, загрузите картинку размером до 2M',

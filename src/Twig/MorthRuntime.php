@@ -1,17 +1,17 @@
 <?php
 
-namespace App\Twig\Runtime;
+namespace App\Twig;
 
 use Twig\Extension\RuntimeExtensionInterface;
 
-class KeywordRuntime implements RuntimeExtensionInterface
+class MorthRuntime implements RuntimeExtensionInterface
 {
     public function __construct()
     {
         // Inject dependencies if needed
     }
 
-    public function doSomething($value)
+    public function showMorth($value)
     {
         // ...
     }

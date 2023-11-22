@@ -13,20 +13,20 @@ class ArticleSaver
 {
     private EntityManagerInterface $em;
     private FileUploader $fileUploader;
-    private ContentGenerator $contentGenerator;
     private ArticleRepository $articleRepository;
+    private ArticleTextGenerator $articleTextGenerator;
 
     public function __construct(
         EntityManagerInterface $em,
-        FileUploader $fileUploader,
-        ContentGenerator $contentGenerator,
-        ArticleRepository $articleRepository,
+        FileUploader           $fileUploader,
+        ArticleTextGenerator   $articleTextGenerator,
+        ArticleRepository      $articleRepository,
     )
     {
         $this->em = $em;
         $this->fileUploader = $fileUploader;
-        $this->contentGenerator = $contentGenerator;
         $this->articleRepository = $articleRepository;
+        $this->articleTextGenerator = $articleTextGenerator;
     }
 
     public function save($formArt, $authUser, $id = null)
@@ -71,7 +71,7 @@ class ArticleSaver
                 $newArticle->addWord($word);
             }
         }
-        $newArticle->setContent($this->contentGenerator->createText($newArticle));
+        $newArticle->setContent($this->articleTextGenerator->createText($newArticle));
 
         $this->em->persist($newArticle);
         $this->em->flush();
