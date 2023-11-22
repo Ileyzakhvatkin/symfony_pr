@@ -35,7 +35,7 @@ class ModuleController extends AbstractController
         $pagination = $paginator->paginate(
             $moduleRepository->modulesListQuery($authUser->getId()),
             $request->query->getInt('page', 1), /*page number*/
-            5
+            10
         );
 
         $formModule = $this->createForm(ModuleFormType::class);
@@ -46,7 +46,11 @@ class ModuleController extends AbstractController
             /** @var Module $module */
             $twigName = '/user-tmpl/' . 'user-tmpl-' . $authUser->getId() . '-' . rand(1,1000) . '.html.twig';
             $twigHTML = $formModule->get('code')->getData();
-            $filesystem->dumpFile($this->getParameter('twig_uploads_dir') . $twigName, $twigHTML);
+            $placeholders = ['paragraphs', 'imageSrc', 'imageSrcLeft', 'imageSrcRight'];
+            foreach ($placeholders as $el) {
+                $twigHTMLRaw = str_replace($el, $el . '|raw', $twigHTML);
+            }
+            $filesystem->dumpFile($this->getParameter('twig_uploads_dir') . $twigName, $twigHTMLRaw);
 
             $module = $formModule->getData();
             $module
@@ -73,13 +77,18 @@ class ModuleController extends AbstractController
     }
 
     #[Route('/delete-module/{id}', name: 'delete_module')]
-    public function deleteModule($id, ModuleRepository $moduleRepository, EntityManagerInterface $em)
-    {
+    public function deleteModule(
+        $id,
+        ModuleRepository $moduleRepository,
+        EntityManagerInterface $em,
+        Filesystem $filesystem,
+    ) {
         $module = $moduleRepository->find($id);
 
         if ($module->getUser() && $module->getUser()->getId() == $this->getUser()->getId()) {
             $em->remove($module);
             $em->flush();
+            $filesystem->remove($this->getParameter('twig_uploads_dir') . '/' . $module->getTwig());
             $this->addFlash('flash_message', 'Модуль успешно удален');
         } else {
             $this->addFlash('flash_message', 'Не трогайте чужие модули');

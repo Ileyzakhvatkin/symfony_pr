@@ -28,7 +28,8 @@ class ArticleTextGenerator
             if (rand(1,3) > 2) {
                 $parApp = explode(' ', $paragraph);
                 $randPoz = array_rand($parApp);
-                $randPoz = 0 ? 1 : $randPoz;
+                if ($randPoz === 0) $randPoz = 1;
+                if ($randPoz === count($parApp)) $randPoz = count($parApp) - 1;
                 $paragraph = implode(' ', array_merge(array_slice($parApp, 0, $randPoz),
                         ['<strong>' . $article->getKeyword()[0] . '</strong>'],
                         array_slice($parApp, $randPoz, count($parApp) - 1))
@@ -48,8 +49,8 @@ class ArticleTextGenerator
             for ($i = 1; $i <= $word->getCount(); $i++) {
                 $contentArr = explode(' ', $content);
                 $randPoz = array_rand($contentArr);
-                $randPoz = 0 ? 1 : $randPoz;
-
+                if ($randPoz === 0) $randPoz = 1;
+                if ($randPoz === count($contentArr)) $randPoz = count($contentArr) - 1;
                 $content = implode(' ', array_merge(array_slice($contentArr, 0, $randPoz),
                         ['<em>' . $word->getTitle() . '</em>'],
                         array_slice($contentArr, $randPoz, count($contentArr) - 1))

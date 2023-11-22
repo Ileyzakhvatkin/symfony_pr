@@ -8,19 +8,19 @@ class DemoModules
     {
         return [
             [
-                'title' => 'Текст по столбцам',
-                'file' => '/demo/paragraphs.html.twig',
-                'code' => '&lt;div class="row"&gt; &lt;div class="col-sm-6"&gt; {{ paragraphs }} &lt;/div&gt; &lt;div class="col-sm-6"&gt; {{ paragraphs }} &lt;/div&gt; &lt;/div&gt;',
+                'title' => 'Заголовок/Текст/Картинка слева',
+                'file' => 'demo/title_paragraph_img_left.html.twig',
+                'code' => '&lt;h1&gt;{{ title }}&lt;/h1&gt; {{ imageSrcLeft }}  &lt;p&gt;{{ paragraphs }}&lt;/p&gt;',
             ],
             [
-                'title' => 'Заголовок - параграф',
-                'file' => '/demo/title_paragraph.html.twig',
-                'code' => '&lt;p class="text-right"&gt;{{ paragraph }}&lt;/p&gt;',
+                'title' => 'Заголовок/Текст/Картинка справа',
+                'file' => 'demo/title_paragraph_img_right.html.twig',
+                'code' => '&lt;h1&gt;{{ title }}&lt;/h1&gt; {{ imageSrcRight }}  &lt;p&gt;{{ paragraphs }}&lt;/p&gt;',
             ],
             [
-                'title' => 'Параграф',
-                'file' => '/demo/paragraph.html.twig',
-                'code' => '&lt;h1&gt;{{ title }}&lt;/h1&gt; &lt;p&gt;{{ paragraph }}&lt;/p&gt;',
+                'title' => 'Заголовок/параграфы',
+                'file' => 'demo/title_paragraph.html.twig',
+                'code' => '&lt;h1&gt;{{ title }}&lt;/h1&gt; &lt;p&gt;{{ paragraphs }}&lt;/p&gt;',
             ],
 
         ];

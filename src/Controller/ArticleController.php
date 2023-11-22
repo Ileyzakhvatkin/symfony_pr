@@ -16,6 +16,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Knp\Component\Pager\PaginatorInterface;
+use Twig\Environment;
 
 #[IsGranted('ROLE_USER')]
 class ArticleController extends AbstractController
@@ -59,6 +60,7 @@ class ArticleController extends AbstractController
         ArticleCreatePeriodControl $articleCreatePeriodControl,
         ArticleSaver $articleSaver,
         ArticlePlaceholders $articlePlaceholders,
+        Environment $twig,
     ): Response
     {
         /** @var User $authUser */
@@ -67,6 +69,7 @@ class ArticleController extends AbstractController
         $isBlocked = $articleCreatePeriodControl->checkBlock($authUser, $licenseInfo);
 
         // Берем статью Через ID, чтобы работала пустая форма
+        /** @var Article $article */
         $article = $id ? $articleRepository->find($id) : null;
 
         $formArt = $this->createForm(ArticleFormType::class, $article);
@@ -75,18 +78,23 @@ class ArticleController extends AbstractController
         if ($formArt->isSubmitted() && $formArt->isValid()) {
             $newId = $articleSaver->save($formArt, $authUser, $id);
 
+
             return $this->redirectToRoute('create_article', ['id' => $newId]);
         }
 
-        $params = [
+        $tmpl = null;
+        if ($article) {
+            $tmpl = $twig->render($article->getModule()->getTwig(), $articlePlaceholders->create($article));
+        }
+
+        return $this->render('dashboard/create_article.html.twig', [
             'itemActive' => 2,
             'isBlocked' => $isBlocked,
             'formArt' => $formArt->createView(),
             'article' => $article,
             'availableWords' => true,
-        ];
-
-        return $this->render('dashboard/create_article.html.twig', array_merge($params, $articlePlaceholders->create($article)));
+            'tmpl' => $tmpl,
+        ]);
     }
 
 
