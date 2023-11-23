@@ -34,16 +34,6 @@ class ArticlePlaceholders
                     'sameImage' => $article->getImages()[rand(0, count($article->getImages()) - 1)]->getImgUrl(),
                 ]) : $this->twig->render('placeholders/imageSrcNull.html.twig');
 
-            $imageLeft = count($article->getImages()) > 0
-                ? $this->twig->render('placeholders/imageSrcLeft.html.twig', [
-                    'sameImage' => $article->getImages()[rand(0, count($article->getImages()) - 1)]->getImgUrl(),
-                ]) : $this->twig->render('placeholders/imageSrcNull.html.twig');
-
-            $imageRight = count($article->getImages()) > 0
-                ? $this->twig->render('placeholders/imageSrcRight.html.twig', [
-                    'sameImage' => $article->getImages()[rand(0, count($article->getImages()) - 1)]->getImgUrl(),
-                ]) : $this->twig->render('placeholders/imageSrcNull.html.twig');
-
             return [
                 'title' => $article->getTitle(),
                 'theme' => $article->getTheme(),
@@ -51,8 +41,6 @@ class ArticlePlaceholders
                 'paragraph' => $article->getContent(),
                 'paragraphs' => $this->twig->render('placeholders/paragraphs.html.twig', [ 'texts' => $texts ]),
                 'imageSrc' => $sameImage,
-                'imageSrcLeft' => $imageLeft,
-                'imageSrcRight' => $imageRight,
             ];
         }
 

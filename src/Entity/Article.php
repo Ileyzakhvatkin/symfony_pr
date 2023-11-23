@@ -52,6 +52,7 @@ class Article
     private ?User $user = null;
 
     #[ORM\ManyToOne(inversedBy: 'articles')]
+    #[ORM\JoinColumn(nullable: true, onDelete: 'SET NULL')]
     private ?Module $module = null;
 
     #[ORM\OneToMany(mappedBy: 'article', targetEntity: Word::class, cascade: ['persist', 'remove'] )]

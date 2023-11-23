@@ -26,6 +26,18 @@ h6 {
 fieldset.form-group legend{
   display: none;
 }
+
+.imgLeft img {
+  float: left;
+  margin-right: 2em;
+  margin-bottom: 2em;
+}
+
+.imgRight img {
+  float: right;
+  margin-left: 2em;
+  margin-bottom: 2em;
+}
 /*My CSS*/
 
 header.masthead {

@@ -36,28 +36,32 @@ class ArticleTextGenerator
                 );
             }
         }
-        $content = implode('. ', $contentParArr);
 
-
-        if ($article->getMaxSize()) {
-            $content = mb_strimwidth($content, 0, rand($article->getSize(), $article->getMaxSize()), '...');
-        } else {
-            $content = mb_strimwidth($content, 0, $article->getSize(), '...');
+        $size = $article->getSize();
+        $size = $article->getMaxSize() ? rand($article->getSize(), $article->getMaxSize())  : $size;
+        $newContent = '';
+        foreach ($contentParArr as $el) {
+            if (strlen($newContent) === 0 ) {
+                $newContent = $el;
+            } elseif (strlen($newContent) <= $size) {
+                $newContent = $newContent . '. ' . $el;
+            }
         }
+        $newContent = $newContent . '.';
 
         foreach ($article->getWords() as $word) {
             for ($i = 1; $i <= $word->getCount(); $i++) {
-                $contentArr = explode(' ', $content);
+                $contentArr = explode(' ', $newContent);
                 $randPoz = array_rand($contentArr);
                 if ($randPoz === 0) $randPoz = 1;
                 if ($randPoz === count($contentArr)) $randPoz = count($contentArr) - 1;
-                $content = implode(' ', array_merge(array_slice($contentArr, 0, $randPoz),
+                $newContent = implode(' ', array_merge(array_slice($contentArr, 0, $randPoz),
                         ['<em>' . $word->getTitle() . '</em>'],
                         array_slice($contentArr, $randPoz, count($contentArr) - 1))
                 );
             }
         }
 
-        return $content;
+        return $newContent;
     }
 }

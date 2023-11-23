@@ -46,16 +46,18 @@ class ModuleController extends AbstractController
             /** @var Module $module */
             $twigName = '/user-tmpl/' . 'user-tmpl-' . $authUser->getId() . '-' . rand(1,1000) . '.html.twig';
             $twigHTML = $formModule->get('code')->getData();
-            $placeholders = ['paragraphs', 'imageSrc', 'imageSrcLeft', 'imageSrcRight'];
+            $twigHTMLNull = $twigHTML;
+            $placeholders = ['paragraphs', 'paragraph ', 'imageSrc'];
             foreach ($placeholders as $el) {
-                $twigHTMLRaw = str_replace($el, $el . '|raw', $twigHTML);
+                $twigHTML = str_replace($el, trim($el) . '|raw', $twigHTML);
             }
-            $filesystem->dumpFile($this->getParameter('twig_uploads_dir') . $twigName, $twigHTMLRaw);
+
+            $filesystem->dumpFile($this->getParameter('twig_uploads_dir') . $twigName, $twigHTML);
 
             $module = $formModule->getData();
             $module
                 ->setUser($authUser)
-                ->setCode(htmlspecialchars($twigHTML))
+                ->setCode(htmlspecialchars($twigHTMLNull))
                 ->setCommon(false)
                 ->setTwig($twigName)
                 ->setCreatedAt(Carbon::now())

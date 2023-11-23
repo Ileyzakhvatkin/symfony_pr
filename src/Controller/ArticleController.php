@@ -6,6 +6,7 @@ use App\Entity\Article;
 use App\Entity\User;
 use App\Form\ArticleFormType;
 use App\Repository\ArticleRepository;
+use App\Repository\ModuleRepository;
 use App\Services\ArticleCreatePeriodControl;
 use App\Services\ArticlePlaceholders;
 use App\Services\ArticleSaver;
@@ -43,11 +44,22 @@ class ArticleController extends AbstractController
 
     #[Route('/dashboard-article-detail/{id}', name: 'article_detail')]
     #[IsGranted('MANAGE', subject: 'article')]
-    public function showArticle(Article $article): Response
+    public function showArticle(
+        Article $article,
+        Environment $twig,
+        ArticlePlaceholders $articlePlaceholders,
+        ModuleRepository $moduleRepository,
+    ): Response
     {
+        $twigNull = $moduleRepository->find(1)->getTwig();
+        if ($article->getModule()) {
+            $twigNull = $article->getModule()->getTwig();
+        }
+
         return $this->render('dashboard/article_detail.html.twig', [
             'itemActive' => 3,
-            'article' => $article,
+            'id' => $article->getId(),
+            'tmpl' => $twig->render($twigNull, $articlePlaceholders->create($article)),
         ]);
     }
 
@@ -56,6 +68,7 @@ class ArticleController extends AbstractController
         $id,
         Request $request,
         ArticleRepository $articleRepository,
+        ModuleRepository $moduleRepository,
         LicenseLevelControl $licenseLevelControl,
         ArticleCreatePeriodControl $articleCreatePeriodControl,
         ArticleSaver $articleSaver,
@@ -82,9 +95,13 @@ class ArticleController extends AbstractController
             return $this->redirectToRoute('create_article', ['id' => $newId]);
         }
 
-        $tmpl = null;
+        $twigNull = null;
         if ($article) {
-            $tmpl = $twig->render($article->getModule()->getTwig(), $articlePlaceholders->create($article));
+            if ($article->getModule()) {
+                $twigNull = $twig->render($article->getModule()->getTwig(), $articlePlaceholders->create($article));
+            } else {
+                $twigNull = $twig->render($moduleRepository->find(1)->getTwig(), $articlePlaceholders->create($article));
+            }
         }
 
         return $this->render('dashboard/create_article.html.twig', [
@@ -93,7 +110,7 @@ class ArticleController extends AbstractController
             'formArt' => $formArt->createView(),
             'article' => $article,
             'availableWords' => true,
-            'tmpl' => $tmpl,
+            'tmpl' => $twigNull,
         ]);
     }
 
