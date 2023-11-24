@@ -10,6 +10,7 @@ parameters:
     twig_uploads_dir: '%kernel.project_dir%/templates'
     router.request_context.scheme: '%env(SITE_BASE_SCHEME)%'
     router.request_context.host: '%env(SITE_BASE_HOST)%'
+    user_reg_check_email: '%env(USER_REG_CHECK_EMAIL)%'
 
 services:
     # default configuration for services in *this* file

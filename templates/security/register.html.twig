@@ -9,35 +9,67 @@
             <div class="card card-signin my-5">
                 <div class="card-body">
                     <h5 class="card-title text-center">Регистрация</h5>
-                    <div class="alert alert-success" role="alert">
-                        Для завершения регистрации подтвердите ваш email
-                    </div>
+                    {% if errors %}
+                        <div class="alert alert-danger" role="alert">
+                            {% for error in errors %}
+                                <div>{{ error }}</div>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
 
-                    {{ form_start(formReg, {
-                        attr: {class: 'form-signin my-form'}
-                    }) }}
-                        {{ form_errors(formReg) }}
-                        <div class="form-label-group mb-4">
-                            {{ form_widget(formReg.name, {'attr': {placeholder: 'Ваше имя'}}) }}
-                            {{ form_label(formReg.name, 'Ваше имя') }}
+                    <form class="form-signin" method="post">
+                        <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+
+                        <div class="form-label-group">
+                            <input
+                                    type="text"
+                                    name="name"
+                                    value="{{ userName ? userName : '' }}"
+                                    id="inputName"
+                                    class="form-control"
+                                    placeholder="Ваше имя"
+                                    autofocus
+                            >
+                            <label for="inputName">Ваше имя</label>
                         </div>
-                        <div class="form-label-group mb-4">
-                            {{ form_widget(formReg.email, {'attr': {placeholder: 'Ваш Email'}}) }}
-                            {{ form_label(formReg.email, 'Ваш Email') }}
+                        <div class="form-label-group">
+                            <input
+                                    type="text"
+                                    name="email"
+                                    value="{{ userEmail ? userEmail : '' }}"
+                                    id="inputEmail"
+                                    class="form-control"
+                                    placeholder="Ваш Email"
+                            >
+                            <label for="inputEmail">Ваш Email</label>
                         </div>
-                        <div class="form-label-group mb-4">
-                            {{ form_widget(formReg.password1, {'attr': {placeholder: 'Пароль'}}) }}
-                            {{ form_label(formReg.password1, 'Пароль') }}
+
+                        <div class="form-label-group">
+                            <input
+                                    type="password"
+                                    name="password1"
+                                    id="inputPassword"
+                                    class="form-control"
+                                    placeholder="Пароль"
+                            >
+                            <label for="inputPassword">Пароль</label>
                         </div>
-                        <div class="form-label-group mb-4">
-                            {{ form_widget(formReg.password2, {'attr': {placeholder: 'Подтверждение пароля'}}) }}
-                            {{ form_label(formReg.password2, 'Подтверждение пароля') }}
+
+                        <div class="form-label-group">
+                            <input
+                                    type="password"
+                                    name="password2"
+                                    id="inputConfirmPassword"
+                                    class="form-control"
+                                    placeholder="Подтверждение пароля"
+                            >
+                            <label for="inputConfirmPassword">Подтверждение пароля</label>
                         </div>
+
                         <button class="btn btn-lg btn-primary btn-block text-uppercase" type="submit">Регистрация</button>
                         <hr class="my-4">
                         <div class="text-center"><a href="{{ path('app_login') }}">Я уже зарегистрирован</a></div>
-                    {{ form_end(formReg) }}
-
+                    </form>
                 </div>
             </div>
         </div>

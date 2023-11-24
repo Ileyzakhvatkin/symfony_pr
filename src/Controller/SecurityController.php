@@ -3,14 +3,12 @@
 namespace App\Controller;
 
 use App\Entity\ApiToken;
-use App\Entity\Module;
 use App\Entity\User;
-use App\Form\UserRegistrationFormType;
 use App\Repository\UserRepository;
 use App\Security\LoginFormAuthenticator;
-use App\Services\Constants\DemoModules;
 use App\Services\DemoModuleSaver;
 use App\Services\Mailer;
+use App\Services\UserRegValidator;
 use Carbon\Carbon;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -32,12 +30,6 @@ class SecurityController extends AbstractController
         return $this->render('security/login.html.twig', ['last_username' => $lastUsername, 'error' => $error]);
     }
 
-    #[Route('/logout', name: 'app_logout')]
-    public function logout(): void
-    {
-//        throw new \LogicException('This method can be blank - it will be intercepted by the logout key on your firewall.');
-    }
-
     #[Route('/register', name: 'app_register')]
     public function register(
         Request $request,
@@ -47,19 +39,26 @@ class SecurityController extends AbstractController
         UserAuthenticatorInterface $userAuthenticator,
         Mailer $mailer,
         DemoModuleSaver $demoModuleSaver,
+        UserRegValidator $userRegValidator,
     )
     {
-        $formReg = $this->createForm(UserRegistrationFormType::class);
-        $formReg->handleRequest($request);
+        if ($request->isMethod('POST')) {
+            $errors = $userRegValidator->validate($request);
+            if (count($errors) > 0) {
+                return $this->render('security/register.html.twig', [
+                    'errors' => $errors,
+                    'userName' => $request->request->get('name'),
+                    'userEmail' => $request->request->get('email'),
+                ]);
+            }
 
-        if ($formReg->isSubmitted() && $formReg->isValid()) {
-            /** @var User $user */
-            $user = $formReg->getData();
+            $user = new User();
             $regLink = sha1(uniqid('reg-link'));
-
             $user
+                ->setName($request->request->get('name'))
+                ->setEmail($request->request->get('email'))
                 ->setRoles([])
-                ->setPassword($passwordHasher->hashPassword($user, $user->getPassword1()))
+                ->setPassword($passwordHasher->hashPassword($user, $request->request->get('password1')))
                 ->setRegLink($regLink)
                 ->setCreatedAt(Carbon::now())
                 ->setUpdatedAt(Carbon::now())
@@ -71,18 +70,23 @@ class SecurityController extends AbstractController
 
             $em->flush();
 
-            // Отключить, если запускаем авторизацию с подтверждением через email
-            $demoModuleSaver->create($user);
-            $userAuthenticator->authenticateUser($user, $authenticator, $request);
-            return $this->redirectToRoute('dashboard');
+            // В зависимости от ENV включаем/выключаем авторизацию с подтверждением через email
+            if ($this->getParameter('user_reg_check_email') == 0) {
+                $demoModuleSaver->create($user);
+                $userAuthenticator->authenticateUser($user, $authenticator, $request);
 
-            // Подключить, чтобы запустить авторизацию ч подтверждением через email
-//             $mailer->sendCheckRegistration($user, $regLink);
-//             return $this->redirectToRoute('app_check_reg');
+                return $this->redirectToRoute('dashboard');
+            } else {
+                $mailer->sendCheckRegistration($user, $regLink);
+
+                return $this->redirectToRoute('app_check_reg');
+            }
         }
 
         return $this->render('security/register.html.twig', [
-            'formReg' => $formReg->createView(),
+            'errors' => false,
+            'userName' => false,
+            'userEmail' => false,
         ]);
     }
 
@@ -111,5 +115,11 @@ class SecurityController extends AbstractController
         return $this->render('security/check.html.twig', [
             'regLink' => $link,
         ]);
+    }
+
+    #[Route('/logout', name: 'app_logout')]
+    public function logout(): void
+    {
+
     }
 }
