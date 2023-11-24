@@ -8,7 +8,6 @@ use App\Repository\UserRepository;
 use App\Security\LoginFormAuthenticator;
 use App\Services\DemoModuleSaver;
 use App\Services\Mailer;
-use App\Services\UserRegValidator;
 use Carbon\Carbon;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -18,6 +17,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 use Symfony\Component\Security\Http\Authentication\UserAuthenticatorInterface;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class SecurityController extends AbstractController
 {
@@ -39,19 +39,10 @@ class SecurityController extends AbstractController
         UserAuthenticatorInterface $userAuthenticator,
         Mailer $mailer,
         DemoModuleSaver $demoModuleSaver,
-        UserRegValidator $userRegValidator,
+        ValidatorInterface $validator
     )
     {
         if ($request->isMethod('POST')) {
-            $errors = $userRegValidator->validate($request);
-            if (count($errors) > 0) {
-                return $this->render('security/register.html.twig', [
-                    'errors' => $errors,
-                    'userName' => $request->request->get('name'),
-                    'userEmail' => $request->request->get('email'),
-                ]);
-            }
-
             $user = new User();
             $regLink = sha1(uniqid('reg-link'));
             $user
@@ -63,8 +54,17 @@ class SecurityController extends AbstractController
                 ->setCreatedAt(Carbon::now())
                 ->setUpdatedAt(Carbon::now())
             ;
-            $em->persist($user);
 
+            $errors = $validator->validate($user);
+            if (count($errors) > 0) {
+                return $this->render('security/register.html.twig', [
+                    'errors' => $errors,
+                    'userName' => $request->request->get('name'),
+                    'userEmail' => $request->request->get('email'),
+                ]);
+            }
+
+            $em->persist($user);
             $token = new ApiToken($user);
             $em->persist($token);
 
