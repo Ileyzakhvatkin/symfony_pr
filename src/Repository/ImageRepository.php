@@ -21,4 +21,14 @@ class ImageRepository extends ServiceEntityRepository
         parent::__construct($registry, Image::class);
     }
 
+    public function countImages($articleId)
+    {
+        return $this->createQueryBuilder('i')
+            ->andWhere('i.article = :val')
+            ->setParameter('val', $articleId)
+            ->select('count(i.id)')
+            ->getQuery()
+            ->getResult()
+            ;
+    }
 }

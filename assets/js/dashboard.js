@@ -14,11 +14,7 @@ $(function() {
 
     $container.on('change', '.custom-file-input', (event) => {
       let files = event.currentTarget.files;
-      // console.log(files)
-      let filesNames = `Выбрано файлов - ${files.length}`;
-      if(files.length > 5) {
-        filesNames = `Выбрано файлов - ${files.length}. Можно не более 5`
-      }
+      let filesNames = `Выбрано файлов - ${files.length} (не более 5)`;
       $container.find('.custom-file-label').html(filesNames);
     });
   });

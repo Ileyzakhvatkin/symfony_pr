@@ -91,7 +91,6 @@ class ArticleController extends AbstractController
         if ($formArt->isSubmitted() && $formArt->isValid()) {
             $newId = $articleSaver->save($formArt, $authUser, $id);
 
-
             return $this->redirectToRoute('create_article', ['id' => $newId]);
         }
 
@@ -113,6 +112,4 @@ class ArticleController extends AbstractController
             'tmpl' => $twigNull,
         ]);
     }
-
-
 }

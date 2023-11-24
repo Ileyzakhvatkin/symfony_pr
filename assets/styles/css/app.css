@@ -20,7 +20,11 @@ h6 {
 
 /*My CSS*/
 .my-form .invalid-feedback {
-  padding-top: 8px;
+  padding-top: 10px;
+}
+
+.my-form .form-label-group {
+  margin-bottom: 1.4rem;
 }
 
 fieldset.form-group legend{

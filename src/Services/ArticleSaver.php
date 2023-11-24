@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Entity\Article;
 use App\Entity\Image;
 use App\Repository\ArticleRepository;
+use App\Repository\ImageRepository;
 use Carbon\Carbon;
 use Doctrine\ORM\EntityManagerInterface;
 use function App\Controller\getKeyword;
@@ -15,18 +16,21 @@ class ArticleSaver
     private FileUploader $fileUploader;
     private ArticleRepository $articleRepository;
     private ArticleTextGenerator $articleTextGenerator;
+    private ImageRepository $imageRepository;
 
     public function __construct(
         EntityManagerInterface $em,
         FileUploader           $fileUploader,
         ArticleTextGenerator   $articleTextGenerator,
         ArticleRepository      $articleRepository,
+        ImageRepository        $imageRepository,
     )
     {
         $this->em = $em;
         $this->fileUploader = $fileUploader;
         $this->articleRepository = $articleRepository;
         $this->articleTextGenerator = $articleTextGenerator;
+        $this->imageRepository = $imageRepository;
     }
 
     public function save($formArt, $authUser, $id = null)
@@ -35,14 +39,18 @@ class ArticleSaver
         $newArticle = $formArt->getData();
         $images = $formArt->get('images')->getData();
 
+        $maxImage = count($images);
+        if ($id) $maxImage = count($images) + $this->imageRepository->countImages($id)[0]['1'];
         if (count($images) > 0) {
             foreach ($images as $img) {
-                $image = new Image();
-                $image
-                    ->setImgUrl($this->fileUploader->uploadFile($img))
-                    ->setImage($img)
-                    ->setArticle($newArticle);
-                $this->em->persist($image);
+                if ($maxImage < 6) {
+                    $image = new Image();
+                    $image
+                        ->setImgUrl($this->fileUploader->uploadFile($img))
+                        ->setImage($img)
+                        ->setArticle($newArticle);
+                    $this->em->persist($image);
+                }
             }
         }
 
