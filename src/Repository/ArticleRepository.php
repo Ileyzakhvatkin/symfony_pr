@@ -65,40 +65,16 @@ class ArticleRepository extends ServiceEntityRepository
             ;
     }
 
-    public function getWithWords($id)
+    public function getArticleByKeyword($keyword)
     {
         return $this->createQueryBuilder('a')
-            ->innerJoin('a.words', 'w')
-            ->addSelect('w')
-            ->andWhere('a.id = :val')
-            ->setParameter('val', $id)
+            ->andWhere('a.user = :val')
+            ->setParameter('val', $keyword)
+            ->orderBy('a.id', 'DESC')
+            ->setMaxResults(1)
             ->getQuery()
-            ->getFirstResult()
-            ;
-    }
-
-    public function create($data)
-    {
-        $article = new Article();
-        $article
-            ->setTitle($data['title'])
-            ->setKeyWord($data['key_word'])
-            ->setKeyWordDist($data['key_word_dist'])
-            ->setKeyWordMany($data['key_word_many'])
-            ->setMinSize($data['min_size'])
-            ->setMaxSize($data['max_size'])
-            ->setCreatedAt(Carbon::now())
-            ->setUpdatedAt(Carbon::now());
-        $this->getEntityManager()->persist($article);
-        $this->getEntityManager()->flush();
-
-        return $id; // Откуда взять ID ???
-    }
-
-    public function update($data)
-    {
-
-        return $id;
+            ->getResult()
+            ;;
     }
 
 }
