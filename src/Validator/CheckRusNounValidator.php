@@ -20,7 +20,7 @@ class CheckRusNounValidator extends ConstraintValidator
     {
         /* @var App\Validator\CheckRusNoun $constraint */
 
-        if (in_array(mb_strtolower($value), $this->russianNouns->getNouns())) {
+        if (!$value || in_array(mb_strtolower($value), $this->russianNouns->getNouns())) {
             return;
         }
 

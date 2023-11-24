@@ -9,17 +9,14 @@ class CheckRusLetterValidator extends ConstraintValidator
 {
     public function validate($value, Constraint $constraint)
     {
-        if ($value)  {
-            /* @var App\Validator\CheckRusLetter $constraint */
-
-            if (preg_match('/[а-я]/', mb_strtolower($value)) === 1) {
-                return;
-            }
-
-            // TODO: implement the validation here
-            $this->context->buildViolation($constraint->message)
-                ->setParameter('{{ value }}', $value)
-                ->addViolation();
+        /* @var App\Validator\CheckRusLetter $constraint */
+        if (!$value ||preg_match('/[а-я]/', mb_strtolower($value)) === 1) {
+            return;
         }
+
+        // TODO: implement the validation here
+        $this->context->buildViolation($constraint->message)
+            ->setParameter('{{ value }}', $value)
+            ->addViolation();
     }
 }

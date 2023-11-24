@@ -10,6 +10,7 @@ use App\Entity\User;
 use App\Services\Constants\DemoModules;
 use App\Services\Constants\DemoThemes;
 use App\Services\Constants\DemoUsers;
+use Carbon\Carbon;
 use Doctrine\Persistence\ObjectManager;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
@@ -41,12 +42,12 @@ class UserFixtures extends BaseFixtures
                 $manager->persist(new ApiToken($user));
 
                 $this->addPayment($user, $manager);
-                for ($i = 0; $i < 3; $i++) {
+                for ($i = 0; $i < 5; $i++) {
                     $this->addModule($user, $manager, $i);
                 }
-                for ($i = 0; $i < 25; $i++) {
-                    $this->addArticle($user, $manager);
-                }
+//                for ($i = 0; $i < 25; $i++) {
+//                    $this->addArticle($user, $manager);
+//                }
             });
         }
     }
@@ -66,15 +67,14 @@ class UserFixtures extends BaseFixtures
 
     private function addModule($user, $manager, $i)
     {
-        $date = $this->faker->dateTimeBetween('-50 days', '0 day');
         $module = (new Module())
             ->setTitle(DemoModules::getModules()[$i]['title'])
             ->setUser($user)
             ->setCode(DemoModules::getModules()[$i]['code'])
             ->setCommon(true)
             ->setTwig(DemoModules::getModules()[$i]['file'])
-            ->setCreatedAt($date)
-            ->setUpdatedAt($date)
+            ->setCreatedAt(Carbon::now())
+            ->setUpdatedAt(Carbon::now())
         ;
         $manager->persist($module);
     }

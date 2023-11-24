@@ -13,46 +13,51 @@
                         Чтобы создать статью по настоящему <a href="{{ path('app_register') }}">Зарегистрируйтесь</a>
                     </div>
                 {% endif %}
+                {% if tryErrors %}
+                    <div class="alert alert-danger" role="alert">
+                        {% for error in tryErrors %}
+                            <div>{{ error }}</div>
+                        {% endfor %}
+                    </div>
+                {% endif %}
 
                 {% if is_granted('ROLE_USER') %}
                     <a href="{{ path('dashboard') }}" class="btn btn-block btn-lg btn-primary">Кабинет</a>
                 {% else %}
-                    {{ form_start(formFront) }}
-                        <div class="form-label-group my-form">
-                            {% if status %}
-                                {{ form_widget(formFront.title, {'attr': {
-                                    'class': 'form-control',
-                                    placeholder: 'Заголовок статьи',
-                                    disabled: 'disabled'
-                                }}) }}
-                            {% else %}
-                                {{ form_widget(formFront.title, {'attr': {
-                                    'class': 'form-control',
-                                    placeholder: 'Заголовок статьи',
-                                }}) }}
-                            {% endif %}
-                            {{ form_label(formFront.title, 'Заголовок статьи') }}
+                    <form class="form-signin" method="post">
+                        <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+                        <div class="form-label-group">
+                            <input
+                                    type="text"
+                                    name="title"
+                                    value="{{ title ? title : '' }}"
+                                    id="articleTitle"
+                                    class="form-control"
+                                    placeholder="Заголовок статьи"
+                                    {{ status ? 'disabled' : '' }}
+                                    autofocus
+                            >
+                            <label for="articleTitle">Заголовок статьи</label>
                         </div>
-                        <div class="form-label-group my-form">
-                            {% if status %}
-                                {{ form_widget(formFront.keyword, {'attr': {
-                                    'class': 'form-control',
-                                    placeholder: 'Продвигаемое слово',
-                                    disabled: 'disabled'
-                                }}) }}
-                            {% else %}
-                                {{ form_widget(formFront.keyword, {'attr': {
-                                    'class': 'form-control',
-                                    placeholder: 'Продвигаемое слово',
-                                }}) }}
-                            {% endif %}
-                            {{ form_label(formFront.keyword, 'Продвигаемое слово') }}
+                        <div class="form-label-group">
+                            <input
+                                    type="text"
+                                    name="keyword"
+                                    value="{{ keyword ? keyword : '' }}"
+                                    id="articleWord"
+                                    class="form-control"
+                                    placeholder="Продвигаемое слово"
+                                    {{ status ? 'disabled' : '' }}
+                            >
+                            <label for="articleWord">Продвигаемое слово</label>
                         </div>
-                        <button class="btn btn-lg btn-primary btn-block text-uppercase"
+
+                        <button
+                                class="btn btn-lg btn-primary btn-block text-uppercase"
                                 type="submit"
-                                {% if status %} disabled {% endif %}
+                                {{ status ? 'disabled' : '' }}
                         >Попробовать</button>
-                    {{ form_end(formFront) }}
+                    </form>
                 {% endif %}
             </div>
         </div>

@@ -49,6 +49,8 @@ class SecurityController extends AbstractController
                 ->setName($request->request->get('name'))
                 ->setEmail($request->request->get('email'))
                 ->setRoles([])
+                ->setPassword1($request->request->get('password1'))
+                ->setPassword2($request->request->get('password2'))
                 ->setPassword($passwordHasher->hashPassword($user, $request->request->get('password1')))
                 ->setRegLink($regLink)
                 ->setCreatedAt(Carbon::now())
@@ -67,12 +69,11 @@ class SecurityController extends AbstractController
             $em->persist($user);
             $token = new ApiToken($user);
             $em->persist($token);
-
             $em->flush();
+            $demoModuleSaver->create($user);
 
             // В зависимости от ENV включаем/выключаем авторизацию с подтверждением через email
             if ($this->getParameter('user_reg_check_email') == 0) {
-                $demoModuleSaver->create($user);
                 $userAuthenticator->authenticateUser($user, $authenticator, $request);
 
                 return $this->redirectToRoute('dashboard');
@@ -98,7 +99,6 @@ class SecurityController extends AbstractController
         EntityManagerInterface $em,
         LoginFormAuthenticator $authenticator,
         UserAuthenticatorInterface $userAuthenticator,
-        DemoModuleSaver $demoModuleSaver,
     ) {
         if ($link) {
             /** @var User $user */
@@ -107,7 +107,6 @@ class SecurityController extends AbstractController
                 $user->setRoles(['ROLE_USER']);
                 $em->persist($user);
                 $em->flush();
-                $demoModuleSaver->create($user);
                 $userAuthenticator->authenticateUser($user, $authenticator, $request);
             }
         }
