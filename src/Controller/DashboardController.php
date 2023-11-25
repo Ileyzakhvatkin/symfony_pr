@@ -5,7 +5,7 @@ namespace App\Controller;
 use App\Entity\User;
 use App\Repository\ArticleRepository;
 use App\Repository\PaymentRepository;
-use App\Services\LicenseLevelControl;
+use App\Services\LicenseLevelController;
 use Carbon\Carbon;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -17,9 +17,9 @@ class DashboardController extends AbstractController
 {
     #[Route('/dashboard/', name: 'dashboard')]
     public function index(
-        ArticleRepository $articleRepository,
-        LicenseLevelControl $licenseLevelControl,
-        PaymentRepository $paymentRepository,
+        ArticleRepository      $articleRepository,
+        LicenseLevelController $licenseLevelController,
+        PaymentRepository      $paymentRepository,
     ): Response
     {
         /** @var User $authUser */
@@ -41,7 +41,7 @@ class DashboardController extends AbstractController
         return $this->render('dashboard/dashboard.html.twig', [
             'itemActive' => 1,
             'licenseStatus' =>  $licenseStatus,
-            'licenseInfo' => $licenseLevelControl->update($authUser),
+            'licenseInfo' => $licenseLevelController->update($authUser),
             'allArticles' => $articleRepository->getAllArticleCount($authUserId)[0]['1'],
             'articlesLastMonth' => $articleRepository->getArticleCountFromPeriod($lastMonth)[0]['1'],
             'latestArticle' => $articleRepository->getLastArticle($authUserId) ? $articleRepository->getLastArticle($authUserId)[0] : null,
@@ -49,7 +49,7 @@ class DashboardController extends AbstractController
     }
 
     #[Route('/dashboard-subscription/', name: 'subscription')]
-    public function subscription(PaymentRepository $paymentRepository, LicenseLevelControl $licenseLevelControl): Response
+    public function subscription(PaymentRepository $paymentRepository, LicenseLevelController $licenseLevelControl): Response
     {
 
         return $this->render('dashboard/subscription.html.twig', [

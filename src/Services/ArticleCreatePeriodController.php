@@ -5,7 +5,7 @@ namespace App\Services;
 use App\Repository\ArticleRepository;
 use Carbon\Carbon;
 
-class ArticleCreatePeriodControl
+class ArticleCreatePeriodController
 {
     private ArticleRepository $articleRepository;
 

@@ -7,10 +7,10 @@ use App\Entity\User;
 use App\Form\ArticleFormType;
 use App\Repository\ArticleRepository;
 use App\Repository\ModuleRepository;
-use App\Services\ArticleCreatePeriodControl;
-use App\Services\ArticlePlaceholders;
+use App\Services\ArticleCreatePeriodController;
+use App\Services\PlaceholdersCreator;
 use App\Services\ArticleSaver;
-use App\Services\LicenseLevelControl;
+use App\Services\LicenseLevelController;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -45,10 +45,10 @@ class ArticleController extends AbstractController
     #[Route('/dashboard-article-detail/{id}', name: 'article_detail')]
     #[IsGranted('MANAGE', subject: 'article')]
     public function showArticle(
-        Article $article,
-        Environment $twig,
-        ArticlePlaceholders $articlePlaceholders,
-        ModuleRepository $moduleRepository,
+        Article             $article,
+        Environment         $twig,
+        PlaceholdersCreator $placeholdersCreator,
+        ModuleRepository    $moduleRepository,
     ): Response
     {
         $twigNull = $moduleRepository->find(1)->getTwig();
@@ -59,7 +59,7 @@ class ArticleController extends AbstractController
         return $this->render('dashboard/article_detail.html.twig', [
             'itemActive' => 3,
             'id' => $article->getId(),
-            'tmpl' => $twig->render($twigNull, $articlePlaceholders->create($article)),
+            'tmpl' => $twig->render($twigNull, $placeholdersCreator->create($article)),
         ]);
     }
 
@@ -69,17 +69,17 @@ class ArticleController extends AbstractController
         Request $request,
         ArticleRepository $articleRepository,
         ModuleRepository $moduleRepository,
-        LicenseLevelControl $licenseLevelControl,
-        ArticleCreatePeriodControl $articleCreatePeriodControl,
+        LicenseLevelController $licenseLevelControl,
+        ArticleCreatePeriodController $articleCreatePeriodController,
         ArticleSaver $articleSaver,
-        ArticlePlaceholders $articlePlaceholders,
+        PlaceholdersCreator $articlePlaceholders,
         Environment $twig,
     ): Response
     {
         /** @var User $authUser */
         $authUser = $this->getUser();
         $licenseInfo = $licenseLevelControl->update($authUser);
-        $isBlocked = $articleCreatePeriodControl->checkBlock($authUser, $licenseInfo);
+        $isBlocked = $articleCreatePeriodController->checkBlock($authUser, $licenseInfo);
 
         // Берем статью Через ID, чтобы работала пустая форма
         /** @var Article $article */

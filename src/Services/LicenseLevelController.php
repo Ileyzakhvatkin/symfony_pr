@@ -7,7 +7,7 @@ use App\Repository\PaymentRepository;
 use Carbon\Carbon;
 use Doctrine\ORM\EntityManagerInterface;
 
-class LicenseLevelControl
+class LicenseLevelController
 {
     private PaymentRepository $paymentRepository;
     private EntityManagerInterface $em;

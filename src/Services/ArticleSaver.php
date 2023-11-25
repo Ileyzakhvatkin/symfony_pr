@@ -85,7 +85,7 @@ class ArticleSaver
         $this->em->flush();
 
         if (!isset($id)) {
-            $newId = $this->articleRepository->lastArticle($authUser->getId())[0]->getId();
+            $newId = $this->articleRepository->getLastArticle($authUser->getId())[0]->getId();
         }
 
         return $newId;

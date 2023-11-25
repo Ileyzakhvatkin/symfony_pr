@@ -5,7 +5,7 @@ namespace App\Controller;
 use App\Entity\Module;
 use App\Form\ModuleFormType;
 use App\Repository\ModuleRepository;
-use App\Services\LicenseLevelControl;
+use App\Services\LicenseLevelController;
 use Carbon\Carbon;
 use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\PaginatorInterface;
@@ -21,16 +21,16 @@ class ModuleController extends AbstractController
 {
     #[Route('/dashboard-modules/', name: 'modules')]
     public function modules(
-        ModuleRepository $moduleRepository,
-        LicenseLevelControl $licenseLevelControl,
-        Request $request,
-        PaginatorInterface $paginator,
+        ModuleRepository       $moduleRepository,
+        LicenseLevelController $licenseLevelController,
+        Request                $request,
+        PaginatorInterface     $paginator,
         EntityManagerInterface $em,
-        Filesystem $filesystem,
+        Filesystem             $filesystem,
     ): Response
     {
         $authUser = $this->getUser();
-        $licenseInfo = $licenseLevelControl->update($authUser);
+        $licenseInfo = $licenseLevelController->update($authUser);
 
         $pagination = $paginator->paginate(
             $moduleRepository->modulesListQuery($authUser->getId()),
@@ -84,7 +84,8 @@ class ModuleController extends AbstractController
         ModuleRepository $moduleRepository,
         EntityManagerInterface $em,
         Filesystem $filesystem,
-    ) {
+    ): Response
+    {
         $module = $moduleRepository->find($id);
 
         if ($module->getUser() && $module->getUser()->getId() == $this->getUser()->getId()) {

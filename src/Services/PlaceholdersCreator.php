@@ -5,7 +5,7 @@ namespace App\Services;
 use App\Entity\Article;
 use Twig\Environment;
 
-class ArticlePlaceholders
+class PlaceholdersCreator
 {
     private $twig;
 
@@ -43,7 +43,6 @@ class ArticlePlaceholders
                 'imageSrc' => $sameImage,
             ];
         }
-
 
         return [];
     }

@@ -23,13 +23,22 @@ class ApiTokenRepository extends ServiceEntityRepository
 
     public function getActualToken($user): array
     {
-        return $this->createQueryBuilder('a')
-            ->andWhere('a.user = :val')
+        return $this->createQueryBuilder('t')
+            ->andWhere('t.user = :val')
             ->setParameter('val', $user->getId())
-            ->orderBy('a.id', 'DESC')
+            ->orderBy('t.id', 'DESC')
             ->setMaxResults(1)
             ->getQuery()
             ->getResult();
+    }
+
+    public function findOneByValue($accessToken)
+    {
+        return $this->createQueryBuilder('t')
+            ->andWhere('t.token = :val')
+            ->setParameter('val', $accessToken)
+            ->getQuery()
+            ->getResult()[0];
     }
 
 }

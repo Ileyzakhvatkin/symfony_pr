@@ -16,7 +16,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
-#[IsGranted('ROLE_USER')]
+//#[IsGranted('ROLE_USER')]
 //#[IsGranted("IS_AUTHENTICATED_FULLY")]
 class ArticleController extends AbstractController
 {
