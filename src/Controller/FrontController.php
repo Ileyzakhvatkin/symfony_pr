@@ -39,8 +39,8 @@ class FrontController extends AbstractController
                 $randPoz = array_rand($testArr);
                 // array_merge(array_slice($a, 0, 2), [5], array_slice($a, 2, 2)
                 $text[] = implode(' ', array_merge(array_slice($testArr, 0, $randPoz),
-                    [$keyword],
-                    array_slice($testArr, $randPoz, $randPoz))
+                    ['<strong>' . $keyword . '</strong>'],
+                    array_slice($testArr, $randPoz, (count($testArr) - 1)))
                 );
             }
 

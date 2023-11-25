@@ -75,7 +75,7 @@
                     <div class="row">
                         <div class="p-3">
                             <h2>Добавляйте свои слова</h2>
-                            <p class="lead mb-0">{{ text[0] }}</p>
+                            <p class="lead mb-0">{{ text[0]|raw }}</p>
                         </div>
                     </div>
                     <div class="row">
@@ -83,7 +83,7 @@
                             <div class="media">
                                 <div class="media-body">
                                     <h2>Вставляйте изображения</h2>
-                                    <p class="lead mb-0">{{ text[1] }}</p>
+                                    <p class="lead mb-0">{{ text[1]|raw }}</p>
                                 </div>
                                 <img class="ml-3" src="{{ asset('img/bg-showcase-2.jpg') }}" width="518" height="345" alt="">
                             </div>
@@ -93,7 +93,7 @@
                     <div class="row">
                         <div class="p-3">
                             <h2>Интегрируйтесь по API</h2>
-                            <p class="lead mb-0">{{ text[2] }}</p>
+                            <p class="lead mb-0">{{ text[2]|raw }}</p>
                         </div>
                     </div>
                 {% endif %}

@@ -52,7 +52,7 @@ class ArticleRepository extends ServiceEntityRepository
             ;
     }
 
-    public function lastAarticle($id): array
+    public function getLastArticle($id): array
     {
         return $this->createQueryBuilder('a')
             ->andWhere('a.user = :val')
@@ -64,16 +64,18 @@ class ArticleRepository extends ServiceEntityRepository
             ;
     }
 
-    public function getArticleByKeyword($keyword)
+    public function getArticleByIdWithWordsImages($id)
     {
         return $this->createQueryBuilder('a')
-            ->andWhere('a.user = :val')
-            ->setParameter('val', $keyword)
-            ->orderBy('a.id', 'DESC')
-            ->setMaxResults(1)
+            ->andWhere('a.id = :val')
+            ->setParameter('val', $id)
+            ->leftJoin('a.words', 'w')
+            ->addSelect('w')
+            ->leftJoin('a.images', 'i')
+            ->addSelect('i')
             ->getQuery()
             ->getResult()
-            ;;
+        ;
     }
 
 }

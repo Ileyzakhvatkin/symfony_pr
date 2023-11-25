@@ -44,7 +44,7 @@ class DashboardController extends AbstractController
             'licenseInfo' => $licenseLevelControl->update($authUser),
             'allArticles' => $articleRepository->getAllArticleCount($authUserId)[0]['1'],
             'articlesLastMonth' => $articleRepository->getArticleCountFromPeriod($lastMonth)[0]['1'],
-            'latestArticle' => $articleRepository->lastAarticle($authUserId) ? $articleRepository->lastAarticle($authUserId)[0] : null,
+            'latestArticle' => $articleRepository->getLastArticle($authUserId) ? $articleRepository->getLastArticle($authUserId)[0] : null,
         ]);
     }
 
