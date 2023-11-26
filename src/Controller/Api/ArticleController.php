@@ -41,23 +41,54 @@ class ArticleController extends AbstractController
     ): JsonResponse
     {
         $authUser = $this->getUser();
-        $errors = [];
-        if ($articleCreatePeriodController->checkBlock($authUser, $licenseLevelController->update($authUser))) {
+        $license = $licenseLevelController->update($authUser);
+        if ($articleCreatePeriodController->checkBlock($authUser, $license)) {
             return $this->json([
-                'errors' => 'Статья НЕ создана - на вашем тарифе есть ограничения по генерации статей.',
+                'access' => 'Статья НЕ создана - на вашем тарифе есть ограничения по генерации статей.',
             ]);
         }
 
         $req = json_decode($request->getContent(), true);
+        if (!isset($req['theme']) || !isset($req['size']) || !isset($req['keyword']) ) {
+            return $this->json([
+                'errors' => 'Статья НЕ создана - загружены не все необходимые поля (theme, size, keyword).',
+            ]);
+        }
 
+        if (isset($req['images']) && $license['type'] == 'FREE') {
+            return $this->json([
+                'access' => 'Статья НЕ создана - на вашем тарифе нельзя загружать картинки для создания статьи.',
+            ]);
+        }
+        if (isset($req['images']) && count($req['keyword']) > 1 && $license['type'] == 'FREE')  {
+            return $this->json([
+                'access' => 'Статья НЕ создана - на вашем тарифе нельзя загружать склонения и множественные формы существительных.',
+            ]);
+        }
+        if (!in_array($req['theme'], DemoThemes::getThemes())) {
+            return $this->json([
+                'error' => 'Указанной темы нет в сервисе',
+            ]);
+        }
+
+        $errors = [];
         $article = new Article();
         $article
             ->setUser($authUser)
             ->setTheme($req['theme'])
-            ->setTitle($req['title'])
-            ->setModule($moduleRepository->find(3))
+            ->setTitle($req['title'] ? $req['title'] : $req['theme'] . ' - ' . $req['keyword'][0])
+            ->setModule($moduleRepository->listAuthUser()[2])
             ->setSize($req['size'])
-            ->setKeyword([
+            ->setCreatedAt(Carbon::now())
+            ->setUpdatedAt(Carbon::now())
+        ;
+
+        if ($license['type'] == 'FREE') {
+            $article->setKeyword([
+                '0' => $req['keyword'][0],
+            ]);
+        } else {
+            $article->setKeyword([
                 '0' => $req['keyword'][0],
                 '1' => $this->getKeyword($req['keyword'], 1),
                 '2' => $this->getKeyword($req['keyword'], 2),
@@ -65,10 +96,8 @@ class ArticleController extends AbstractController
                 '4' => $this->getKeyword($req['keyword'], 4),
                 '5' => $this->getKeyword($req['keyword'], 5),
                 '6' => $this->getKeyword($req['keyword'], 6),
-            ])
-            ->setCreatedAt(Carbon::now())
-            ->setUpdatedAt(Carbon::now())
-        ;
+            ]);
+        }
 
         if ($req['words'] && count($req['words']) > 0) {
             foreach ($req['words'] as $word) {
@@ -102,9 +131,7 @@ class ArticleController extends AbstractController
             }
         }
 
-        if (!in_array($req['theme'], DemoThemes::getThemes())) {
-            $errors[] = 'Указанной темы нет в сервисе';
-        }
+
         $errArticle = $validator->validate($article);
         if (count($errArticle) > 0) {
             $errors[] = $errArticle;

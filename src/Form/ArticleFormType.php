@@ -65,9 +65,9 @@ class ArticleFormType extends AbstractType
             ])
         ;
 
-        $checkAccess = $this->licenseLevelController->update();
+        $license = $this->licenseLevelController->update();
 
-        if ($checkAccess['type'] == 'PLUS' || $checkAccess['type'] == 'PRO') {
+        if ($license['type'] == 'PLUS' || $license['type'] == 'PRO') {
             $builder->add('images', FileType::class, [
                 'mapped' => false,
                 'required' => false,
@@ -86,7 +86,7 @@ class ArticleFormType extends AbstractType
                 ]
             ]);
         }
-        if ($checkAccess['type'] == 'PRO') {
+        if ($license['type'] == 'PRO') {
             $builder->add('module', EntityType::class, [
                 'required' => false,
                 'class' => Module::class,
@@ -111,7 +111,7 @@ class ArticleFormType extends AbstractType
                     ]
                 ]);
             } else {
-                if ($checkAccess['type'] == 'PLUS' || $checkAccess['type'] == 'PRO') {
+                if ($license['type'] == 'PLUS' || $license['type'] == 'PRO') {
                     $builder->add($word, TextType::class, [
                         'mapped' => false,
                         'required' => false,

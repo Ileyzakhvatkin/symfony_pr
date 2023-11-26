@@ -74,11 +74,11 @@ $(function() {
             'count': 4
           },
       ],
-    'images': [
-      'http://zis-symfony.tw1.ru/demo/img-1.jpg',
-      'http://zis-symfony.tw1.ru/demo/img-2.jpg',
-      'http://zis-symfony.tw1.ru/demo/img-3.jpg',
-    ]
+      'images': [
+          'http://zis-symfony.tw1.ru/demo/img-1.jpg',
+          'http://zis-symfony.tw1.ru/demo/img-2.jpg',
+          'http://zis-symfony.tw1.ru/demo/img-3.jpg',
+      ]
   };
 
   $('[data-id=apiBtn]').on('click', (e) => {

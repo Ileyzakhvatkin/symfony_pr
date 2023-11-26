@@ -21,7 +21,7 @@ class TryFormValidator
         if (!$keyword) {
             $errors[] = 'Введите ключевое слово для статьи';
         } elseif (!in_array($keyword, (new RussianNouns())->getNouns())) {
-            $errors[] = 'Ключевое слово не является существительным русского языка';
+            $errors[] = 'Продвигаемое слово не является существительным русского языка';
         }
 
         return $errors;
