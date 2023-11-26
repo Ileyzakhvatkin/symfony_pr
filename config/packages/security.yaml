@@ -20,9 +20,9 @@ security:
                 path: app_logout
             custom_authenticator:
                 - App\Security\LoginFormAuthenticator
-            access_token:
-                token_handler: App\Security\AccessTokenHandler
-                # token_extractors: request_body
+                - App\Security\ApiTokenAuthenticator
+            # access_token:
+                # token_handler: App\Security\AccessTokenHandler
 
             remember_me:
                 secret: '%kernel.secret%'

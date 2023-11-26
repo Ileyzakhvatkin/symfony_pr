@@ -23,7 +23,6 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Twig\Environment;
 
 #[IsGranted('ROLE_USER')]
-//#[IsGranted("IS_AUTHENTICATED_FULLY")]
 class ArticleController extends AbstractController
 {
     #[Route('/api/article_create', name: 'app_api_article_create', methods: ['POST'])]

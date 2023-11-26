@@ -30,7 +30,7 @@ class ApiToken
     public function __construct(User $user)
     {
         $this->user = $user;
-        $this->token = 'Bearer ' . sha1(uniqid('token'));
+        $this->token = sha1(uniqid('token'));
         $this->expiresAt = new \DateTime('+1 day');
     }
 
