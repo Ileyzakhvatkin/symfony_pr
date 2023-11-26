@@ -8,8 +8,8 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
-//#[IsGranted('ROLE_USER')]
-#[IsGranted("IS_AUTHENTICATED_FULLY")]
+#[IsGranted('ROLE_USER')]
+//#[IsGranted("IS_AUTHENTICATED_FULLY")]
 class UserController extends AbstractController
 {
     #[Route('/api/user', name: 'app_api_user')]

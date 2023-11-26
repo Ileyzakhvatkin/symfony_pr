@@ -72,7 +72,7 @@ class ArticleController extends AbstractController
         LicenseLevelController $licenseLevelControl,
         ArticleCreatePeriodController $articleCreatePeriodController,
         ArticleSaver $articleSaver,
-        PlaceholdersCreator $articlePlaceholders,
+        PlaceholdersCreator $placeholdersCreator,
         Environment $twig,
     ): Response
     {
@@ -97,9 +97,9 @@ class ArticleController extends AbstractController
         $twigNull = null;
         if ($article) {
             if ($article->getModule()) {
-                $twigNull = $twig->render($article->getModule()->getTwig(), $articlePlaceholders->create($article));
+                $twigNull = $twig->render($article->getModule()->getTwig(), $placeholdersCreator->create($article));
             } else {
-                $twigNull = $twig->render($moduleRepository->find(1)->getTwig(), $articlePlaceholders->create($article));
+                $twigNull = $twig->render($moduleRepository->find(1)->getTwig(), $placeholdersCreator->create($article));
             }
         }
 

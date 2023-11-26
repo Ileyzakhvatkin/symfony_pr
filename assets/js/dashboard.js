@@ -49,4 +49,49 @@ $(function() {
       }
     });
   })
+
+  // Тестируем API
+  const data = {
+      'theme': 'FOOD',
+      'keyword': {
+        '0': 'Основа',
+        '1': 'Основе',
+        '2': 'Основе',
+        '3': 'Основе',
+        '4': 'Основой',
+        '5': 'Основе',
+        '6': 'Основы'
+      },
+      'title': 'Тестовая статья',
+      'size': 2000,
+      'words': [
+          {
+            'word': 'Инсталляция',
+            'count': 2
+          },
+          {
+            'word': 'Изоляция',
+            'count': 4
+          },
+      ],
+    'images': [
+      'http://zis-symfony.tw1.ru/demo/img-1.jpg',
+      'http://zis-symfony.tw1.ru/demo/img-2.jpg',
+      'http://zis-symfony.tw1.ru/demo/img-3.jpg',
+    ]
+  };
+
+  $('[data-id=apiBtn]').on('click', (e) => {
+    e.preventDefault();
+    console.log('Click API');
+    $.ajax({
+        url: '/api/article_create',
+        method: 'POST',
+        data: JSON.stringify(data),
+        dataType: 'json',
+    }).then((resp) => {
+        console.log(resp);
+    });
+  })
+
 });

@@ -4,9 +4,14 @@ namespace App\Controller\Api;
 
 use App\Entity\Article;
 use App\Entity\Image;
-use App\Repository\ArticleRepository;
+use App\Entity\Word;
+use App\Repository\ModuleRepository;
+use App\Services\ArticleCreatePeriodController;
 use App\Services\ArticleTextGenerator;
+use App\Services\Constants\DemoThemes;
 use App\Services\FileUploader;
+use App\Services\LicenseLevelController;
+use App\Services\PlaceholdersCreator;
 use Carbon\Carbon;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -15,83 +20,96 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
+use Twig\Environment;
 
-//#[IsGranted('ROLE_USER')]
+#[IsGranted('ROLE_USER')]
 //#[IsGranted("IS_AUTHENTICATED_FULLY")]
 class ArticleController extends AbstractController
 {
-    #[Route('/api/article/{id}', name: 'app_api_article', defaults: ["id" => null])]
-    public function index($id, ArticleRepository $articleRepository): JsonResponse
-    {
-        if (!$id) {
-            return $this->json([ 'error' => 'Sent article id' ]);
-        }
-        if (!$articleRepository->find($id) || $articleRepository->find($id)->getUser() !== $this->getUser()){
-            return $this->json([ 'error' => 'There is no article with this id' ]);
-        }
-        $article = $articleRepository->getArticleByIdWithWordsImages($id)[0];
-
-        return $this->json([
-            'theme' => $article->getTheme(),
-            'keyword' => $article->getKeyword(),
-            'title' => $article->getTitle(),
-            'size' => $article->getSize(),
-            'words' => $this->getArticleWords($article),
-            'images' => $this->getArticleImages($article),
-        ]);
-
-    }
-
-    #[Route('/api/article_create', name: 'app_api_article_create')]
+    #[Route('/api/article_create', name: 'app_api_article_create', methods: ['POST'])]
     public function create(
         Request $request,
         EntityManagerInterface $em,
-        FileUploader           $fileUploader,
-        ArticleTextGenerator   $articleTextGenerator,
-        ValidatorInterface $validator
+        ModuleRepository $moduleRepository,
+        ValidatorInterface $validator,
+        ArticleTextGenerator $articleTextGenerator,
+        FileUploader $fileUploader,
+        ArticleCreatePeriodController $articleCreatePeriodController,
+        LicenseLevelController $licenseLevelController,
+        PlaceholdersCreator $placeholdersCreator,
+        Environment $twig,
     ): JsonResponse
     {
-        /** @var User $authUser */
         $authUser = $this->getUser();
-        $article = new Article();
+        $errors = [];
+        if ($articleCreatePeriodController->checkBlock($authUser, $licenseLevelController->update($authUser))) {
+            return $this->json([
+                'errors' => 'В рамках вашего тарифа, можно создавать не более 2 статей в час',
+            ]);
+        }
 
+        $req = json_decode($request->getContent(), true);
+
+
+        $article = new Article();
         $article
             ->setUser($authUser)
-            ->setTheme($request->request->get('theme'))
-            ->setSize($request->request->get('size'))
+            ->setTheme($req['theme'])
+            ->setTitle($req['title'])
+            ->setModule($moduleRepository->find(3))
+            ->setSize($req['size'])
             ->setKeyword([
-                '0' => $request->request->get('keyword0'),
-                '1' => $this->getKeyword('keyword1', $request),
-                '2' => $this->getKeyword('keyword2', $request),
-                '3' => $this->getKeyword('keyword3', $request),
-                '4' => $this->getKeyword('keyword4', $request),
-                '5' => $this->getKeyword('keyword5', $request),
-                '6' => $this->getKeyword('keyword6', $request),
+                '0' => $req['keyword'][0],
+                '1' => $this->getKeyword($req['keyword'], 1),
+                '2' => $this->getKeyword($req['keyword'], 2),
+                '3' => $this->getKeyword($req['keyword'], 3),
+                '4' => $this->getKeyword($req['keyword'], 4),
+                '5' => $this->getKeyword($req['keyword'], 5),
+                '6' => $this->getKeyword($req['keyword'], 6),
             ])
             ->setCreatedAt(Carbon::now())
             ->setUpdatedAt(Carbon::now())
         ;
-
-        if (!$request->request->has('title') || $request->request->get('title') === null) {
-            $article->setTitle($request->request->get('theme') . ' - ' . $request->request->get('keyword0'));
-        }
-        if ($request->request->has('words') && count($request->request->get('words')) > 0) {
-            foreach ($request->request->get('words') as $word) {
-                $article->addWord($word);
+        if ($req['words'] && count($req['words']) > 0) {
+            foreach ($req['words'] as $word) {
+                $newWord = new Word();
+                $newWord
+                    ->setTitle($word['word'])
+                    ->setCount($word['count'])
+                    ->setArticle($article)
+                ;
+                $errWord = $validator->validate($newWord);
+                if (count($errWord) > 0) {
+                    $errors[] = $errWord;
+                }
+                $em->persist($article);
             }
         }
-//        if ($request->request->has('images') && count($request->request->get('images')) > 0) {
-//            foreach ($request->request->get('images') as $img) {
-//                $image = new Image();
-//                $image
-//                    ->setImgUrl($fileUploader->uploadFile($img))
-//                    ->setImage($img)
-//                    ->setArticle($article);
-//                $em->persist($image);
-//            }
-//        }
+        if ($req['images'] && count($req['images']) > 0) {
+            foreach ($req['images'] as $key => $img) {
+                if($key < 6) {
+//                    $image = new Image();
+//                    $image
+//                        ->setImgUrl($this->fileUploader->uploadFileUrl($img))
+//                        ->setImage('/tmp/phpOOzm2z')
+//                        ->setArticle($article);
+//                    $errImage = $validator->validate($image);
+//                    if (count($errImage) > 0) {
+//                        $errors[] = $errImage;
+//                    }
+//                    $em->persist($image);
+                }
+            }
+        }
 
-        $errors = $validator->validate($article);
+        if (!in_array($req['theme'], DemoThemes::getThemes())) {
+            $errors[] = 'Указанной темы нет в сервисе';
+        }
+        $errArticle = $validator->validate($article);
+        if (count($errArticle) > 0) {
+            $errors[] = $errArticle;
+        }
+
         if (count($errors) > 0) {
             return $this->json([
                 'errors' => $errors,
@@ -103,41 +121,19 @@ class ArticleController extends AbstractController
         $em->persist($article);
         $em->flush();
 
+        $content = $twig->render($moduleRepository->find(3)->getTwig(), $placeholdersCreator->create($article));
+
         return $this->json([
-            'theme' => $article->getTheme(),
-            'keyword' => $article->getKeyword(),
             'title' => $article->getTitle(),
-            'size' => $article->getSize(),
-            'words' => $this->getArticleWords($article),
-//            'images' => $this->getArticleImages($article),
+            'description' => 'Статья о ' . $article->getKeyword()[5],
+            'content' => $content,
         ]);
+
     }
 
-    public function getKeyword(string $word, Request $request): string
+     public function getKeyword(array $arr, $key): string
     {
-        return $request->request->get($word) ? $request->request->get($word) : $request->request->get('keyword0');
+        return $arr[$key] ? $arr[$key] : $arr[0];
     }
 
-    public function getArticleWords($article): array
-    {
-        $words = [];
-        foreach ($article->getWords() as &$el) {
-            $words[] = [
-                'word' => $el->getTitle(),
-                'count' => $el->getCount(),
-            ];
-        }
-
-        return $words;
-    }
-
-    public function getArticleImages($article): array
-    {
-        $images = [];
-        foreach ($article->getImages() as &$el) {
-            $images[] = $el->getImgUrl();
-        }
-
-        return $images;
-    }
 }

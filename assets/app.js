@@ -4,3 +4,4 @@ require('bootstrap');
 require('./js/scripts');
 require('./js/dashboard');
 require('./js/wordFields');
+

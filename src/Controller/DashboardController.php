@@ -59,4 +59,12 @@ class DashboardController extends AbstractController
         ]);
     }
 
+    #[Route('/dashboard-test-api/', name: 'dashboard-test-api')]
+    public function testAPI()
+    {
+        return $this->render('dashboard/testAPI.html.twig', [
+            'itemActive' => 4,
+        ]);
+    }
+
 }

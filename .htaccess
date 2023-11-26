@@ -1,0 +1,5 @@
+<IfModule mod_rewrite.c>
+    CGIPassAuth On
+</IfModule>
+
+
