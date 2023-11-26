@@ -5,6 +5,7 @@ namespace App\Form;
 use App\Entity\Article;
 use App\Entity\Module;
 use App\Repository\ModuleRepository;
+use App\Services\LicenseLevelController;
 use App\Validator\CheckRusLetter;
 use App\Validator\CheckRusNoun;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
@@ -24,10 +25,15 @@ use Symfony\Component\Validator\Constraints\NotBlank;
 class ArticleFormType extends AbstractType
 {
     private ModuleRepository $moduleRepository;
+    private LicenseLevelController $licenseLevelController;
 
-    public function __construct(ModuleRepository $moduleRepository)
+    public function __construct(
+        ModuleRepository $moduleRepository,
+        LicenseLevelController $licenseLevelController
+    )
     {
         $this->moduleRepository = $moduleRepository;
+        $this->licenseLevelController = $licenseLevelController;
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options): void
@@ -48,13 +54,7 @@ class ArticleFormType extends AbstractType
                 ],
                 'placeholder' => 'Выберете тему',
             ])
-            ->add('module', EntityType::class, [
-                'required' => false,
-                'class' => Module::class,
-                'choice_label' => 'title',
-                'placeholder' => 'Выберете модуль',
-                'choices' => $this->moduleRepository->listAuthUser()
-            ])
+
             ->add('size', NumberType::class, [
                 'required' => false,
                 'attr' => ['maxlength' => 4],
@@ -63,7 +63,12 @@ class ArticleFormType extends AbstractType
                 'required' => false,
                 'attr' => ['maxlength' => 4],
             ])
-            ->add('images', FileType::class, [
+        ;
+
+        $checkAccess = $this->licenseLevelController->update();
+
+        if ($checkAccess['type'] == 'PLUS' || $checkAccess['type'] == 'PRO') {
+            $builder->add('images', FileType::class, [
                 'mapped' => false,
                 'required' => false,
                 'multiple' => true,
@@ -80,6 +85,16 @@ class ArticleFormType extends AbstractType
                     ])
                 ]
             ]);
+        }
+        if ($checkAccess['type'] == 'PRO') {
+            $builder->add('module', EntityType::class, [
+                'required' => false,
+                'class' => Module::class,
+                'choice_label' => 'title',
+                'placeholder' => 'Выберете модуль',
+                'choices' => $this->moduleRepository->listAuthUser()
+            ]);
+        }
 
         $keywords = ['keyword0', 'keyword1', 'keyword2', 'keyword3', 'keyword4', 'keyword5', 'keyword6'];
         foreach ($keywords as $key => $word) {
@@ -96,14 +111,16 @@ class ArticleFormType extends AbstractType
                     ]
                 ]);
             } else {
-                $builder->add($word, TextType::class, [
-                    'mapped' => false,
-                    'required' => false,
-                    'data' => isset($article) ? $article->getKeyword()[$key] : '',
-                    'constraints' => [
-                        new CheckRusLetter(),
-                    ]
-                ]);
+                if ($checkAccess['type'] == 'PLUS' || $checkAccess['type'] == 'PRO') {
+                    $builder->add($word, TextType::class, [
+                        'mapped' => false,
+                        'required' => false,
+                        'data' => isset($article) ? $article->getKeyword()[$key] : '',
+                        'constraints' => [
+                            new CheckRusLetter(),
+                        ]
+                    ]);
+                }
             }
         }
 

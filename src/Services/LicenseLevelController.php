@@ -6,20 +6,31 @@ use App\Entity\Payment;
 use App\Repository\PaymentRepository;
 use Carbon\Carbon;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Bundle\SecurityBundle\Security;
 
 class LicenseLevelController
 {
     private PaymentRepository $paymentRepository;
     private EntityManagerInterface $em;
+    private Security $security;
 
-    public function __construct(PaymentRepository $paymentRepository, EntityManagerInterface $em)
+    public function __construct(
+        PaymentRepository $paymentRepository,
+        EntityManagerInterface $em,
+        Security $security
+    )
     {
         $this->paymentRepository = $paymentRepository;
         $this->em = $em;
+        $this->security = $security;
     }
 
-    public function update($authUser)
+    public function update($authUser = null)
     {
+        if (!$authUser) {
+            $authUser = $this->security->getUser();
+        }
+
         if (isset($this->paymentRepository->getLastPayment($authUser)[0]))
         {
             /** @var Payment $license */

@@ -18,10 +18,12 @@
                     {{ form_widget(formArt.title, {'attr': {placeholder: 'Заголовок статьи'}}) }}
                     {{ form_label(formArt.title, 'Заголовок статьи') }}
                 </div>
-                <div class="form-group">
-                    {{ form_label(formArt.module, 'Модуль') }}
-                    {{ form_widget(formArt.module) }}
-                </div>
+                {% if licenseInfo['type'] == 'PRO' %}
+                    <div class="form-group">
+                        {{ form_label(formArt.module, 'Модуль') }}
+                        {{ form_widget(formArt.module) }}
+                    </div>
+                {% endif %}
                 <div class="card mb-4">
                     <div class="card-body">
                         <p class="card-title">Ключевое слово</p>
@@ -29,48 +31,51 @@
                             {{ form_widget(formArt.keyword0, {'attr': {placeholder: 'Ключевое слово'}}) }}
                             {{ form_label(formArt.keyword0, 'Ключевое слово') }}
                         </div>
-                        <div class="row">
-                            <div class="col">
-                                <div class="form-label-group">
-                                    {{ form_widget(formArt.keyword1, {'attr': {placeholder: 'Родительный падеж'}}) }}
-                                    {{ form_label(formArt.keyword1, 'Родительный падеж') }}
+                        {% if licenseInfo['type'] == 'FREE' %}
+                        {% else %}
+                            <div class="row">
+                                <div class="col">
+                                    <div class="form-label-group">
+                                        {{ form_widget(formArt.keyword1, {'attr': {placeholder: 'Родительный падеж'}}) }}
+                                        {{ form_label(formArt.keyword1, 'Родительный падеж') }}
+                                    </div>
+                                </div>
+                                <div class="col">
+                                    <div class="form-label-group">
+                                        {{ form_widget(formArt.keyword2, {'attr': {placeholder: 'Дательный падеж'}}) }}
+                                        {{ form_label(formArt.keyword2, 'Дательный падеж') }}
+                                    </div>
                                 </div>
                             </div>
-                            <div class="col">
-                                <div class="form-label-group">
-                                    {{ form_widget(formArt.keyword2, {'attr': {placeholder: 'Дательный падеж'}}) }}
-                                    {{ form_label(formArt.keyword2, 'Дательный падеж') }}
+                            <div class="row">
+                                <div class="col">
+                                    <div class="form-label-group">
+                                        {{ form_widget(formArt.keyword3, {'attr': {placeholder: 'Венительный падеж'}}) }}
+                                        {{ form_label(formArt.keyword3, 'Венительный падеж') }}
+                                    </div>
+                                </div>
+                                <div class="col">
+                                    <div class="form-label-group">
+                                        {{ form_widget(formArt.keyword4, {'attr': {placeholder: 'Творительный падеж'}}) }}
+                                        {{ form_label(formArt.keyword4, 'Творительный падеж') }}
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                        <div class="row">
-                            <div class="col">
-                                <div class="form-label-group">
-                                    {{ form_widget(formArt.keyword3, {'attr': {placeholder: 'Венительный падеж'}}) }}
-                                    {{ form_label(formArt.keyword3, 'Венительный падеж') }}
+                            <div class="row">
+                                <div class="col">
+                                    <div class="form-label-group">
+                                        {{ form_widget(formArt.keyword5, {'attr': {placeholder: 'Предложный падеж'}}) }}
+                                        {{ form_label(formArt.keyword5, 'Предложный падеж') }}
+                                    </div>
+                                </div>
+                                <div class="col">
+                                    <div class="form-label-group">
+                                        {{ form_widget(formArt.keyword6, {'attr': {placeholder: 'Множественное число'}}) }}
+                                        {{ form_label(formArt.keyword6, 'Множественное число') }}
+                                    </div>
                                 </div>
                             </div>
-                            <div class="col">
-                                <div class="form-label-group">
-                                    {{ form_widget(formArt.keyword4, {'attr': {placeholder: 'Творительный падеж'}}) }}
-                                    {{ form_label(formArt.keyword4, 'Творительный падеж') }}
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col">
-                                <div class="form-label-group">
-                                    {{ form_widget(formArt.keyword5, {'attr': {placeholder: 'Предложный падеж'}}) }}
-                                    {{ form_label(formArt.keyword5, 'Предложный падеж') }}
-                                </div>
-                            </div>
-                            <div class="col">
-                                <div class="form-label-group">
-                                    {{ form_widget(formArt.keyword6, {'attr': {placeholder: 'Множественное число'}}) }}
-                                    {{ form_label(formArt.keyword6, 'Множественное число') }}
-                                </div>
-                            </div>
-                        </div>
+                        {% endif %}
                     </div>
                 </div>
 
@@ -122,22 +127,25 @@
                         {% endif %}
                     </div>
                 </div>
-                <div class="form-group">
-                    {{ form_label(formArt.images, 'Изображения') }}
-                    {{ form_widget(formArt.images, {'attr': {placeholder: 'Выбрать изображения'}}) }}
-                </div>
-                <div class="row mb-4">
-                    {% if article %}
-                        {% for image in article.images %}
-                            <div class="col-2" data-id="imageBlock">
-                                <img src="{{ uploaded_asset('article_uploads', image.imgUrl) | imagine_filter('articles_preview') }}" height="100">
-                                <a data-id="imageDelete" class="my-2 d-flex justify-content-center" href="{{ path('delete-image', {id: image.id, articleId: article.id}) }}" class="text-danger">
-                                    <i class="fas fa-trash text-danger"></i>
-                                </a>
-                            </div>
-                        {% endfor %}
-                    {% endif %}
-                </div>
+                {% if licenseInfo['type'] == 'FREE' %}
+                {% else %}
+                    <div class="form-group">
+                        {{ form_label(formArt.images, 'Изображения') }}
+                        {{ form_widget(formArt.images, {'attr': {placeholder: 'Выбрать изображения'}}) }}
+                    </div>
+                    <div class="row mb-4">
+                        {% if article %}
+                            {% for image in article.images %}
+                                <div class="col-2" data-id="imageBlock">
+                                    <img src="{{ uploaded_asset('article_uploads', image.imgUrl) | imagine_filter('articles_preview') }}" height="100">
+                                    <a data-id="imageDelete" class="my-2 d-flex justify-content-center" href="{{ path('delete-image', {id: image.id, articleId: article.id}) }}" class="text-danger">
+                                        <i class="fas fa-trash text-danger"></i>
+                                    </a>
+                                </div>
+                            {% endfor %}
+                        {% endif %}
+                    </div>
+                {% endif %}
                 <button class="btn btn-lg btn-primary btn-block text-uppercase" type="submit">{{ article ? 'Обновить' : 'Добавить' }}</button>
 
             {{ form_end(formArt) }}

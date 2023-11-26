@@ -37,23 +37,6 @@ class ArticleSaver
     {
         /** @var Article $newArticle */
         $newArticle = $formArt->getData();
-        $images = $formArt->get('images')->getData();
-
-        $maxImage = count($images);
-        if ($id) $maxImage = count($images) + $this->imageRepository->countImages($id)[0]['1'];
-        if (count($images) > 0) {
-            foreach ($images as $img) {
-                if ($maxImage < 6) {
-                    $image = new Image();
-                    $image
-                        ->setImgUrl($this->fileUploader->uploadFile($img))
-                        ->setImage($img)
-                        ->setArticle($newArticle);
-                    $this->em->persist($image);
-                }
-            }
-        }
-
         $newArticle
             ->setUser($authUser)
             ->setKeyword([
@@ -79,6 +62,25 @@ class ArticleSaver
                 $newArticle->addWord($word);
             }
         }
+
+        if ($formArt->has('images')) {
+            $images = $formArt->get('images')->getData();
+            $maxImage = count($images);
+            if ($id) $maxImage = count($images) + $this->imageRepository->countImages($id)[0]['1'];
+            if (count($images) > 0) {
+                foreach ($images as $img) {
+                    if ($maxImage < 6) {
+                        $image = new Image();
+                        $image
+                            ->setImgUrl($this->fileUploader->uploadFile($img))
+                            ->setImage($img)
+                            ->setArticle($newArticle);
+                        $this->em->persist($image);
+                    }
+                }
+            }
+        }
+
         $newArticle->setContent($this->articleTextGenerator->createText($newArticle));
 
         $this->em->persist($newArticle);
@@ -93,6 +95,6 @@ class ArticleSaver
 
     public function getKeyword(string $word, $formArt)
     {
-        return $formArt->get($word)->getData() ? $formArt->get($word)->getData() : $formArt->get('keyword0')->getData();
+        return $formArt->has($word) ? $formArt->get($word)->getData() : $formArt->get('keyword0')->getData();
     }
 }

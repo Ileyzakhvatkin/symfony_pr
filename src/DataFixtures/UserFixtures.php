@@ -42,12 +42,9 @@ class UserFixtures extends BaseFixtures
                 $manager->persist(new ApiToken($user));
 
                 $this->addPayment($user, $manager);
-                for ($i = 0; $i < 5; $i++) {
+                for ($i = 4; $i >= 0; $i--) {
                     $this->addModule($user, $manager, $i);
                 }
-//                for ($i = 0; $i < 25; $i++) {
-//                    $this->addArticle($user, $manager);
-//                }
             });
         }
     }

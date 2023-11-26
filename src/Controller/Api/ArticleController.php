@@ -44,12 +44,11 @@ class ArticleController extends AbstractController
         $errors = [];
         if ($articleCreatePeriodController->checkBlock($authUser, $licenseLevelController->update($authUser))) {
             return $this->json([
-                'errors' => 'В рамках вашего тарифа, можно создавать не более 2 статей в час',
+                'errors' => 'Статья НЕ создана - на вашем тарифе есть ограничения по генерации статей.',
             ]);
         }
 
         $req = json_decode($request->getContent(), true);
-
 
         $article = new Article();
         $article
@@ -70,6 +69,7 @@ class ArticleController extends AbstractController
             ->setCreatedAt(Carbon::now())
             ->setUpdatedAt(Carbon::now())
         ;
+
         if ($req['words'] && count($req['words']) > 0) {
             foreach ($req['words'] as $word) {
                 $newWord = new Word();
