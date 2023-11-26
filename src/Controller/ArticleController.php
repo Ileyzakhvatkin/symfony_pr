@@ -51,7 +51,7 @@ class ArticleController extends AbstractController
         ModuleRepository    $moduleRepository,
     ): Response
     {
-        $twigNull = $moduleRepository->find(1)->getTwig();
+        $twigNull = $moduleRepository->listAuthUser()[0]->getTwig();
         if ($article->getModule()) {
             $twigNull = $article->getModule()->getTwig();
         }
@@ -99,7 +99,7 @@ class ArticleController extends AbstractController
             if ($article->getModule()) {
                 $twigNull = $twig->render($article->getModule()->getTwig(), $placeholdersCreator->create($article));
             } else {
-                $twigNull = $twig->render($moduleRepository->find(1)->getTwig(), $placeholdersCreator->create($article));
+                $twigNull = $twig->render($moduleRepository->listAuthUser()[0]->getTwig(), $placeholdersCreator->create($article));
             }
         }
 

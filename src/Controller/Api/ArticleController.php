@@ -55,16 +55,17 @@ class ArticleController extends AbstractController
             ]);
         }
 
-        if (isset($req['images']) && $license['type'] == 'FREE') {
+        if (isset($req['images']) && $req['images'] && $license['type'] == 'FREE') {
             return $this->json([
                 'access' => 'Статья НЕ создана - на вашем тарифе нельзя загружать картинки для создания статьи.',
             ]);
         }
-        if (isset($req['images']) && count($req['keyword']) > 1 && $license['type'] == 'FREE')  {
+        if (count($req['keyword']) > 1 && $license['type'] == 'FREE')  {
             return $this->json([
                 'access' => 'Статья НЕ создана - на вашем тарифе нельзя загружать склонения и множественные формы существительных.',
             ]);
         }
+
         if (!in_array($req['theme'], DemoThemes::getThemes())) {
             return $this->json([
                 'error' => 'Указанной темы нет в сервисе',
@@ -76,19 +77,10 @@ class ArticleController extends AbstractController
         $article
             ->setUser($authUser)
             ->setTheme($req['theme'])
-            ->setTitle($req['title'] ? $req['title'] : $req['theme'] . ' - ' . $req['keyword'][0])
+            ->setTitle(isset($req['title']) ? $req['title'] : $req['theme'] . ' - ' . $req['keyword'][0])
             ->setModule($moduleRepository->listAuthUser()[2])
             ->setSize($req['size'])
-            ->setCreatedAt(Carbon::now())
-            ->setUpdatedAt(Carbon::now())
-        ;
-
-        if ($license['type'] == 'FREE') {
-            $article->setKeyword([
-                '0' => $req['keyword'][0],
-            ]);
-        } else {
-            $article->setKeyword([
+            ->setKeyword([
                 '0' => $req['keyword'][0],
                 '1' => $this->getKeyword($req['keyword'], 1),
                 '2' => $this->getKeyword($req['keyword'], 2),
@@ -96,10 +88,12 @@ class ArticleController extends AbstractController
                 '4' => $this->getKeyword($req['keyword'], 4),
                 '5' => $this->getKeyword($req['keyword'], 5),
                 '6' => $this->getKeyword($req['keyword'], 6),
-            ]);
-        }
+            ])
+            ->setCreatedAt(Carbon::now())
+            ->setUpdatedAt(Carbon::now())
+        ;
 
-        if ($req['words'] && count($req['words']) > 0) {
+        if (isset($req['words']) && $req['words'] && count($req['words']) > 0) {
             foreach ($req['words'] as $word) {
                 $newWord = new Word();
                 $newWord
@@ -114,12 +108,14 @@ class ArticleController extends AbstractController
                 $em->persist($article);
             }
         }
-        if ($req['images'] && count($req['images']) > 0) {
+
+
+        if (isset($req['images']) && $req['images'] && count($req['images']) > 0) {
             foreach ($req['images'] as $key => $img) {
                 if($key < 6) {
-//                    $image = new Image();
+                    $image = new Image();
 //                    $image
-//                        ->setImgUrl($this->fileUploader->uploadFileUrl($img))
+//                        ->setImgUrl('file_name.jpg')
 //                        ->setImage('/tmp/phpOOzm2z')
 //                        ->setArticle($article);
 //                    $errImage = $validator->validate($image);
@@ -130,7 +126,6 @@ class ArticleController extends AbstractController
                 }
             }
         }
-
 
         $errArticle = $validator->validate($article);
         if (count($errArticle) > 0) {
@@ -148,7 +143,7 @@ class ArticleController extends AbstractController
         $em->persist($article);
         $em->flush();
 
-        $content = $twig->render($moduleRepository->find(3)->getTwig(), $placeholdersCreator->create($article));
+        $content = $twig->render($moduleRepository->listAuthUser()[3]->getTwig(), $placeholdersCreator->create($article));
 
         return $this->json([
             'title' => $article->getTitle(),
@@ -160,7 +155,7 @@ class ArticleController extends AbstractController
 
      public function getKeyword(array $arr, $key): string
     {
-        return $arr[$key] ? $arr[$key] : $arr[0];
+        return isset($arr[$key]) ? $arr[$key] : $arr[0];
     }
 
 }

@@ -5,6 +5,7 @@ namespace App\Services;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\String\Slugger\SluggerInterface;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Symfony\Component\HttpFoundation\File\File;
 
 class FileUploader
 {
@@ -25,26 +26,11 @@ class FileUploader
             ->slug(pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME))
             ->append('-' . uniqid())
             ->append('.' . $file->guessExtension())
-            ->toString()
-        ;
+            ->toString();
 
         $file->move($this->uploadsPath, $fileName);
 
         return $fileName;
     }
 
-    public function uploadFileUrl($fileUrl): string
-    {
-        $file = ''; // Тут должна быть загрузка файла
-        $fileName = $this->slugger
-            ->slug(pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME))
-            ->append('-' . uniqid())
-            ->append('.' . $file->guessExtension())
-            ->toString()
-        ;
-
-        $file->move($this->uploadsPath, $fileName);
-
-        return $fileName;
-    }
 }
